@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: default
+
+  liquibase:
+    default-schema: public
+    drop-first: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/KeyInfo
+    username: postgres
+    password: 1489qq
+    driver-class-name:  org.postgresql.Driver
+
+  jooq:
+    sql-dialect: postgres
+
+jwt:
+  secret:
+    access: qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
+    refresh: zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg==
+  ttl:
+    access: 600
+    refresh: 2592000
