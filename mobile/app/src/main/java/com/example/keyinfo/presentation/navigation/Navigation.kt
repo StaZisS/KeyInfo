@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.presentation.navigation.graph.authNavigationGraph
 import com.example.keyinfo.presentation.navigation.router.AppRouter
+import com.example.keyinfo.presentation.screen.login.LoginViewModel
 
 const val ROOT_ROUTE = "root"
 
@@ -14,10 +15,15 @@ const val ROOT_ROUTE = "root"
 fun Navigation() {
     val navController = rememberNavController()
 
-   val registrationViewModel = RegistrationViewModel(
+    val registrationViewModel = RegistrationViewModel(
+         context = LocalContext.current,
+         router = AppRouter(navController)
+    )
+
+    val loginViewModel = LoginViewModel(
         context = LocalContext.current,
         router = AppRouter(navController)
-   )
+    )
 
     NavHost(
         navController = navController,
@@ -26,7 +32,8 @@ fun Navigation() {
     ) {
         authNavigationGraph(
             navController = navController,
-            registrationViewModel = registrationViewModel
+            registrationViewModel = registrationViewModel,
+            loginViewModel = loginViewModel
         )
     }
 }

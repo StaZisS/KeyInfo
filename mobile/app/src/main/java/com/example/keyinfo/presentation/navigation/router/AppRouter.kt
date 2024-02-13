@@ -30,11 +30,11 @@ class AppRouter(
         navController.navigate(Destinations.REGISTRATION_SECOND_SCREEN)
     }
 
-//    fun toMain() {
-//        navController.navigate(Routes.HomeScreen.route) {
-//            popUpTo(navController.graph.id){
-//                inclusive = true
-//            }
-//        }
-//    }
+    fun toMain() {
+        navController.navigate("main") {
+            popUpTo(navController.graph.id){
+                inclusive = true
+            }
+        }
+    }
 }
