@@ -91,12 +91,6 @@ fun RegistrationFirstScreen(
                     modifier = Modifier
                 )
 
-                RoleSelectionButton(
-                    updateRole = { viewModel.processIntent(RegistrationIntent.UpdateGender(it)) },
-                    state = registrationState.gender,
-                    modifier = Modifier.padding(top = SpaceBetweenObjects)
-                )
-
                 OutlinedTextFieldWithLabel(
                     label = stringResource(R.string.email),
                     value = registrationState.email,
