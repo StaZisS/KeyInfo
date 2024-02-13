@@ -27,7 +27,7 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Destinations.REGISTRATION_FIRST_SCREEN,
+        startDestination = Destinations.SELECT_AUTH_SCREEN,
         route = ROOT_ROUTE
     ) {
         authNavigationGraph(
