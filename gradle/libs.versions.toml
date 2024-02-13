@@ -40,14 +40,6 @@ picocli = { module = "info.picocli:picocli", version = "4.6.3" }
 #Tomcat lib
 tomcat-annotations-api = { module = "org.apache.tomcat:annotations-api", version = "6.0.53" }
 
-#gRPC lib
-spring-grpc = { module = "io.github.lognet:grpc-spring-boot-starter", version = "5.1.0" }
-grpc = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
-grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
-grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
-grpc-server = { module = "net.devh:grpc-server-spring-boot-starter", version = "2.15.0.RELEASE" }
-protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version = "3.23.0" }
-
 #Jwt libs
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }

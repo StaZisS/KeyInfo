@@ -32,7 +32,7 @@ public class ExceptionInterceptor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
-        final String exceptionBody = "Что-то пошло не так";
+        final String exceptionBody = "Internal server error";
         return handleExceptionInternal(ex, exceptionBody, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }

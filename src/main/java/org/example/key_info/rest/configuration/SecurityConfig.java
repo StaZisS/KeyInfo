@@ -20,7 +20,9 @@ public class SecurityConfig {
     private final String[] whiteList = new String[] {
             "/api/auth/login",
             "/api/auth/register",
-            "/api/auth/token"
+            "/api/auth/token",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
     };
 
     private final JwtFilter jwtFilter;
