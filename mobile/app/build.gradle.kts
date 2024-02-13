@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.keyinfo"
     compileSdk = 34
 
@@ -60,17 +61,18 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.material:material-icons-extended")
-    implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation ("androidx.compose.foundation:foundation:1.6.1")
-    implementation ("androidx.compose.foundation:foundation-layout:1.6.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("androidx.compose.foundation:foundation:1.6.1")
+    implementation("androidx.compose.foundation:foundation-layout:1.6.1")
     implementation("androidx.paging:paging-common-android:3.3.0-alpha03")
-    implementation ("androidx.paging:paging-compose:3.3.0-alpha03")
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha03")
+    implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("com.github.GIGAMOLE:ComposeShadowsPlus:1.0.4")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -79,4 +81,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }

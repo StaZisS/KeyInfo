@@ -26,6 +26,8 @@ val DisabledButtonColor = Color(0xFF6692CE)
 val Gray400Color = Color(0xFF909499)
 val YellowStarColor = Color(0xFFFFD54F)
 val MenuGrayColor = Color(0xFF55595D)
+val LightGrayColor = Color(0xFFF5F5F5)
+val LightBlueColor = Color(0xFF8696BB)
 val RedColor = Color(0xFFE64646)
 
 val BaseButtonColor = ButtonColors(

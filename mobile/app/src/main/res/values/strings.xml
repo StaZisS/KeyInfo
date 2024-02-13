@@ -74,4 +74,16 @@
     <string name="error_connection">Произошла ошибка соединения</string>
     <string name="error_description">Попробуйте проверить интернет-соединение или перезайдите в аккаунт</string>
     <string name="to_main">На главный</string>
+
+    <string name="registration_wait_title">Ваша заявка на регистрацию находится на рассмотрении</string>
+    <string name="registration_wait_description">Как только деканат подтвердит заявку, вы получите уведомление</string>
+
+    <string name="main_approved">Одобренные заявки</string>
+    <string name="main_cancelled">Отклоенные заявки</string>
+    <string name="main_waiting">Заявки на рассмотрении</string>
+
+    <string name="card_audience">Аудитория 222</string>
+    <string name="card_building">Корпус 2</string>
+    <string name="card_date">Пн, 12 февраля</string>
+    <string name="card_time">12:25 – 14:00</string>
 </resources>
