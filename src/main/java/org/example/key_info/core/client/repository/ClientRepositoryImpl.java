@@ -15,6 +15,8 @@ public class ClientRepositoryImpl implements ClientRepository {
     private final DSLContext create;
     private final ClientEntityMapper clientEntityMapper = new ClientEntityMapper();
 
+    //TODO: Надо дополнительно мапить роли пользователя
+
     @Override
     public Optional<UUID> createClient(ClientEntity entity) {
         return create.insertInto(CLIENT)
@@ -23,7 +25,6 @@ public class ClientRepositoryImpl implements ClientRepository {
                 .set(CLIENT.PASSWORD, entity.password())
                 .set(CLIENT.GENDER, entity.gender())
                 .set(CLIENT.CREATED_DATE, entity.createdDate())
-                .set(CLIENT.ROLE, entity.role().name())
                 .returning(CLIENT.CLIENT_ID)
                 .fetchOptional(r -> r.get(CLIENT.CLIENT_ID));
     }

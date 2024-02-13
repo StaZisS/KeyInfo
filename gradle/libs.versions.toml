@@ -6,7 +6,7 @@ jjwt = "0.12.3"
 grpc = "1.58.0"
 
 [plugins]
-liquibase-plugin = { id = "org.liquibase.gradle", version = "2.2.0" }
+liquibase-plugin = { id = "org.liquibase.gradle", version = "2.2.1" }
 jooq-plugin = { id = "nu.studer.jooq", version = "8.2" }
 protobuf-plugin = { id = "com.google.protobuf", version = "0.9.4" }
 

@@ -13,7 +13,7 @@ public class ClientEntityMapper implements RecordMapper<ClientRecord, ClientEnti
                 clientRecord.getPassword(),
                 clientRecord.getGender(),
                 clientRecord.getCreatedDate(),
-                ClientRole.getClientRoleByName(clientRecord.getRole())
+                ClientRole.getClientRoleByName("")
         );
     }
 }

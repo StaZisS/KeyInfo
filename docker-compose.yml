@@ -20,6 +20,27 @@ services:
     networks:
       - my_network
 
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: liquibase
+    env_file:
+      - .env
+    environment:
+      - port=5432
+      - host=postgres
+      - tmout=28800
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/db/changelog:/liquibase/changelog
+      - ./liquibase_policy_init.sh:/liquibase/liquibase_policy_init.sh:ro
+      - ./nc.sh:/liquibase/nc.sh:ro
+      - ./wait_for_port.sh:/liquibase/wait_for_port.sh:ro
+    entrypoint: ./liquibase_policy_init.sh
+    networks:
+      - my_network
+
   redis:
     container_name: redis
     image: redis:latest
@@ -32,7 +53,6 @@ services:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
   key-info:
-    image: key_info
     env_file:
       - .env
     environment:
@@ -50,7 +70,12 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      - db
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
     networks:
       - my_network
 
