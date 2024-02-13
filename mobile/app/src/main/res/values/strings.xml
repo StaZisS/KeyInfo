@@ -1,3 +1,77 @@
 <resources>
     <string name="app_name">KeyInfo</string>
+    <string name="logo">FИЛЬМУС</string>
+    <string name="registration">Регистрация</string>
+    <string name="to_register">Зарегистрироваться</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="name">Имя</string>
+    <string name="email">Электронная почта</string>
+    <string name="date_of_birthday">Дата рождения</string>
+    <string name="continue_">Продолжить</string>
+    <string name="gender">Пол</string>
+    <string name="man">Мужчина</string>
+    <string name="woman">Женщина</string>
+    <string name="login_to">Вход</string>
+    <string name="login_button">Войти</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="avatar_link">Ссылка на аватар</string>
+    <string name="favourite">Любимое</string>
+    <string name="catalog">Каталог</string>
+
+    <string name="need_register">Еще нет аккаунта?</string>
+    <string name="need_register_clickable">Зарегистрируйтесь</string>
+
+    <string name="need_login">Уже есть аккаунт?</string>
+    <string name="need_login_clickable">Войдите</string>
+
+    <string name="auth_description_first">Погрузись в мир кино</string>
+    <string name="auth_description_second">Мы предлагаем удобный и легкий способ насладиться любимыми фильмами прямо с Вашего мобильного устройства.</string>
+
+    <string name="login_error">Неверный логин или пароль.</string>
+    <string name="registration_error">Ошибка регистрации.</string>
+
+    <string name="email_error">Некорректный адрес электронной почты.</string>
+    <string name="password_result1">Пароль должен быть не менее 8-ми символов.</string>
+    <string name="password_result2">Пароль должен содержать хотя-бы 1 цифру и 1 большую букву.</string>
+    <string name="password_result3">Пароли не совпадают.</string>
+    <string name="auth_error">Неправильный логин или пароль.</string>
+    <string name="name_error">Имя не может быть пустым.</string>
+    <string name="login_str_error">Некорретный логин.</string>
+
+    <string name="empty_favourite1">У вас пока нет любимых фильмов</string>
+    <string name="empty_favourite2">Выберите понравившийся фильм в каталоге и добавьте его в любимые</string>
+
+    <string name="genres">Жанры</string>
+    <string name="about_movie">О фильме</string>
+    <string name="year">Год</string>
+    <string name="country">Страна</string>
+    <string name="slogan">Слоган</string>
+    <string name="director">Режиссёр</string>
+    <string name="budget">Бюджет</string>
+    <string name="fees">Сборы в мире</string>
+    <string name="age_limit">Возраст</string>
+    <string name="time">Время</string>
+
+    <string name="reviews">Отзывы</string>
+    <string name="my_review">мой отзыв</string>
+    <string name="anonymous">Анонимный пользователь</string>
+
+    <string name="leave">Выйти из аккаунта</string>
+
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="write_review">Напишите отзыв</string>
+    <string name="leave_review">Оставить отзыв</string>
+    <string name="anon_review">Анонимный отзыв</string>
+
+    <string name="more">Подробнее</string>
+    <string name="less">Свернуть</string>
+
+    <string name="error_connection">Произошла ошибка соединения</string>
+    <string name="error_description">Попробуйте проверить интернет-соединение или перезайдите в аккаунт</string>
+    <string name="to_main">На главный</string>
 </resources>
