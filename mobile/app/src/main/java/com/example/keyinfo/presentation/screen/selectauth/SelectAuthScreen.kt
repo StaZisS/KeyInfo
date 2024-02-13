@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,11 +35,11 @@ fun SelectAuthScreen(router: AppRouter) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.keys),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 56.dp)
+                .padding(top = 80.dp)
         )
 
         Box(

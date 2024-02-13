@@ -28,8 +28,8 @@
     <string name="need_login">Уже есть аккаунт?</string>
     <string name="need_login_clickable">Войдите</string>
 
-    <string name="auth_description_first">Погрузись в мир кино</string>
-    <string name="auth_description_second">Мы предлагаем удобный и легкий способ насладиться любимыми фильмами прямо с Вашего мобильного устройства.</string>
+    <string name="auth_description_first">Бронирование ключей</string>
+    <string name="auth_description_second">Легкий доступ к вашим заявкам на бронирование и управление ими прямо с вашего мобильного устройства.</string>
 
     <string name="login_error">Неверный логин или пароль.</string>
     <string name="registration_error">Ошибка регистрации.</string>
