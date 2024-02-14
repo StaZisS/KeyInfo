@@ -1,3 +1,4 @@
+import { Keys } from "../components/pages/keysList/keysList";
 import { Login } from "../components/pages/login/Login";
 import {Header} from "../components/snippets/header";
 
@@ -14,7 +15,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/key',
-        element: <><Header/></>
+        element: <><Header/><Keys/></>
     },
     {
         path: '/application',
