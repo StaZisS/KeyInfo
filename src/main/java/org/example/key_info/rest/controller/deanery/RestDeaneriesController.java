@@ -1,7 +1,11 @@
 package org.example.key_info.rest.controller.deanery;
 
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.key.service.KeyService;
+import org.example.key_info.public_interface.key.KeyCreateDto;
+import org.example.key_info.public_interface.key.KeyDeleteDto;
 import org.example.key_info.rest.controller.application.ApplicationResponseDto;
+import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +16,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/deaneries")
 public class RestDeaneriesController {
+    private final KeyService keyService;
+    private final JwtTools jwtTools;
 
     @GetMapping("/applications")
     public ResponseEntity<List<ApplicationResponseDto>> getPossibleApplications(@RequestHeader("Authorization") String accessToken) {
@@ -28,15 +34,36 @@ public class RestDeaneriesController {
     }
 
     @PostMapping("/keys")
-    public ResponseEntity<ResponseKeyDto> addKey(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<UUID> addKey(@RequestHeader("Authorization") String accessToken,
                                                  @RequestBody AddKeyDto dto) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var keyCreateDto = new KeyCreateDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                dto.room(),
+                dto.build()
+        );
+
+        var keyId = keyService.createKey(keyCreateDto);
+
+        return ResponseEntity.ok(keyId);
     }
 
     @DeleteMapping("/keys/{id}")
     public ResponseEntity<Void> deleteKey(@RequestHeader("Authorization") String accessToken,
                                           @PathVariable(name = "id") UUID keyId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var keyDeleteDto = new KeyDeleteDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                keyId
+        );
+
+        keyService.deleteKey(keyDeleteDto);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/keys/giving/{id}")

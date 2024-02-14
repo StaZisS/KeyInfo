@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record KeyDto(
+public record ResponseKeyDto(
         @JsonProperty("key_id")
         UUID keyId,
         int build,
