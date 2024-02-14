@@ -63,14 +63,19 @@ CREATE TABLE Lesson
 -- changeset gordey_dovydenko:6
 CREATE TABLE Request
 (
-    request_id      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    request_creator UUID                     NOT NULL,
-    start_time      TIMESTAMP WITH TIME ZONE NOT NULL,
-    end_time        TIMESTAMP WITH TIME ZONE NOT NULL,
-    status          VARCHAR(30)              NOT NULL CHECK ( status IN ('IN_PROCESS', 'ACCEPTED', 'DECLINED') ),
-    created_time    TIMESTAMP WITH TIME ZONE NOT NULL,
+    request_id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    request_creator    UUID                     NOT NULL,
+    start_time         TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_time           TIMESTAMP WITH TIME ZONE NOT NULL,
+    status             VARCHAR(30)              NOT NULL CHECK ( status IN ('IN_PROCESS', 'ACCEPTED', 'DECLINED') ),
+    created_time       TIMESTAMP WITH TIME ZONE NOT NULL,
+    room               INTEGER                  NOT NULL,
+    build              INTEGER                  NOT NULL,
+    duplicate          BOOLEAN          DEFAULT FALSE,
+    end_time_duplicate TIMESTAMP WITH TIME ZONE NOT NULL,
     FOREIGN KEY (start_time, end_time) REFERENCES TimeSlot (start_time, end_time),
-    FOREIGN KEY (request_creator) REFERENCES Client (client_id)
+    FOREIGN KEY (request_creator) REFERENCES Client (client_id),
+    FOREIGN KEY (room, build) REFERENCES StudyRoom (room, build)
 );
 -- rollback DROP TABLE Request;
 

@@ -25,6 +25,12 @@ public record ApplicationResponseDto(
         @JsonProperty("end_time")
         OffsetDateTime endTime,
 
-        String status
+        String status,
+
+        @JsonProperty("is_duplicate")
+        boolean isDuplicate,
+
+        @JsonProperty("end_time_duplicate")
+        OffsetDateTime endTimeToDuplicate
 ) {
 }
