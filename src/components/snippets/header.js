@@ -10,11 +10,11 @@ export function Header() {
                 <NavbarToggle aria-controls='basic-navbar-nav'/>
                 <NavbarCollapse id='basic-navbar-nav'>
                     <Nav className='me-auto'>
-                        <NavLink href='#'>Ключи</NavLink>
-                        <NavLink href='#'>Заявки</NavLink>
+                        <NavLink href='/key'>Ключи</NavLink>
+                        <NavLink href='/application'>Заявки</NavLink>
                     </Nav>
                     <Nav className='justify-content-end'>
-                        <NavLink href='#'>Вход</NavLink>
+                        <NavLink href='/login'>Вход</NavLink>
                     </Nav>
                 </NavbarCollapse>
             </Container>
