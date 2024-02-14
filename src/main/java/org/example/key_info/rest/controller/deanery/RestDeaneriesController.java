@@ -2,9 +2,14 @@ package org.example.key_info.rest.controller.deanery;
 
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.key.service.KeyService;
+import org.example.key_info.public_interface.deaneries.AcceptKeyDeaneriesDto;
+import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
+import org.example.key_info.public_interface.key.GetKeysDto;
 import org.example.key_info.public_interface.key.KeyCreateDto;
 import org.example.key_info.public_interface.key.KeyDeleteDto;
+import org.example.key_info.public_interface.key.KeyDto;
 import org.example.key_info.rest.controller.application.ApplicationResponseDto;
+import org.example.key_info.rest.controller.key.ResponseKeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +31,24 @@ public class RestDeaneriesController {
 
     @GetMapping("/keys")
     public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestHeader("Authorization") String accessToken,
-                                                           @RequestParam(required = false) String keyId,
-                                                           @RequestParam(required = false) String keyStatus,
-                                                           @RequestParam(required = false) int build,
-                                                           @RequestParam(required = false) int room) {
-        throw new UnsupportedOperationException("Not implemented yet");
+                                                           @RequestParam(required = false, name = "key_status") String keyStatus,
+                                                           @RequestParam(required = false) Integer build,
+                                                           @RequestParam(required = false) Integer room) {
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var getKeysDto = new GetKeysDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                keyStatus,
+                build,
+                room
+        );
+
+        var keys = keyService.getAllKeys(getKeysDto);
+        var body = keys.parallelStream()
+                .map(this::mapToResponseDto)
+                .toList();
+
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/keys")
@@ -67,16 +85,45 @@ public class RestDeaneriesController {
     }
 
     @PatchMapping("/keys/giving/{id}")
-    public ResponseEntity<ResponseKeyDto> giveKey(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<Void> giveKey(@RequestHeader("Authorization") String accessToken,
                                                   @PathVariable(name = "id") UUID keyId,
                                                   @RequestParam(required = false) UUID keyHolderId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var giveKeyDeaneriesDto = new GiveKeyDeaneriesDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                keyHolderId,
+                keyId
+        );
+        keyService.giveKeyDeaneries(giveKeyDeaneriesDto);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/keys/acceptance/{id}")
-    public ResponseEntity<ResponseKeyDto> acceptKey(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<Void> acceptKey(@RequestHeader("Authorization") String accessToken,
                                                     @PathVariable(name = "id") UUID keyId,
                                                     @RequestParam(required = false) UUID keyHolderId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var acceptKeyDeaneriesDto = new AcceptKeyDeaneriesDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                keyHolderId,
+                keyId
+        );
+        keyService.acceptKeyDeaneries(acceptKeyDeaneriesDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    private ResponseKeyDto mapToResponseDto(KeyDto dto) {
+        return new org.example.key_info.rest.controller.key.ResponseKeyDto(
+                dto.keyId(),
+                dto.buildId(),
+                dto.roomId(),
+                dto.lastAccess()
+        );
     }
 }
