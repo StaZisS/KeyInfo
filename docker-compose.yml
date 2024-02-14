@@ -51,6 +51,8 @@ services:
       - redis:/var/lib/redis/data
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    networks:
+      - my_network
 
   key-info:
     env_file:
