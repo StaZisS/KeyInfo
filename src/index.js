@@ -5,6 +5,7 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import {RouterProvider} from "react-router";
 import {router} from "./router/Router";
 import Store from "./store/store";
+import './styles/global.css'
 
 const store = new Store()
 
