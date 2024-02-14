@@ -22,20 +22,18 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<UUID> createClient(ClientEntity entity) {
-        var userIdRecord = create.insertInto(CLIENT)
+        var userId = create.insertInto(CLIENT)
                 .set(CLIENT.NAME, entity.name())
                 .set(CLIENT.EMAIL, entity.email())
                 .set(CLIENT.PASSWORD, entity.password())
                 .set(CLIENT.GENDER, entity.gender())
                 .set(CLIENT.CREATED_DATE, entity.createdDate())
                 .returning(CLIENT.CLIENT_ID)
-                .fetchOne();
-
-        var userId = userIdRecord.getClientId();
+                .fetchOne(CLIENT.CLIENT_ID);
 
         entity.role().forEach(r -> insertUserRole(r, userId, create));
 
-        return Optional.of(userId);
+        return Optional.ofNullable(userId);
     }
 
     @Override
