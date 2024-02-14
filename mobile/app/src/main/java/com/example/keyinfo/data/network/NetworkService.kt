@@ -1,5 +1,6 @@
 package com.example.keyinfo.data.network
 
+import com.example.keyinfo.data.network.api.AuthenticationApiService
 import com.example.keyinfo.data.network.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -7,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object NetworkService {
-    private const val BASE_URL = "https://react-midterm.kreosoft.space/"
+    private const val BASE_URL = "http://147.45.76.239:8080/"
 
     private val authInterceptor = AuthInterceptor()
 
@@ -28,4 +29,7 @@ object NetworkService {
     fun setAuthToken(token: String) {
         authInterceptor.setAuthToken(token)
     }
+
+    val authenticationApiService: AuthenticationApiService =
+        retrofit.create(AuthenticationApiService::class.java)
 }
