@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.keyinfo.common.Constants
 import com.example.keyinfo.domain.state.RegistrationState
+import com.example.keyinfo.domain.usecase.DataValidateUseCase
 import com.example.keyinfo.domain.validator.ConfirmPasswordValidator
 import com.example.keyinfo.domain.validator.EmailValidator
 import com.example.keyinfo.domain.validator.NameValidator
@@ -41,7 +42,7 @@ class RegistrationViewModel (
     val state: StateFlow<RegistrationState> get() = _state
 
 //    private val postRegistrationUseCase = PostRegistrationUseCase()
-//    private val dataValidateUseCase = DataValidateUseCase()
+    private val dataValidateUseCase = DataValidateUseCase()
 
     fun processIntent(intent: RegistrationIntent) {
         when (intent) {
@@ -81,12 +82,12 @@ class RegistrationViewModel (
             }
             is RegistrationIntent.Registration -> {
                 performRegistration(state.value) {
-                    //router.toMain()
+                    router.toMain()
                     clearData()
                 }
             }
             is RegistrationIntent.UpdateErrorText -> {
-                val result = null//dataValidateUseCase.invoke(intent.validator, intent.data, intent.secondData)
+                val result = dataValidateUseCase.invoke(intent.validator, intent.data, intent.secondData)
                 when (intent.validator) {
                     is EmailValidator -> _state.value = state.value.copy (
                         isErrorEmailText = result?.let { context.getString(it) }
