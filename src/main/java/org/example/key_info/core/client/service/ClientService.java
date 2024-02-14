@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -25,7 +26,7 @@ public class ClientService {
     public UUID createClient(ClientCreateDto dto) {
         clientValidationService.validateCreateClient(dto);
 
-        var entity = fromDtoToEntity(dto);
+        var entity = formatClientCreateEntity(dto);
         var clientId = clientRepository.createClient(entity)
                 .orElseThrow(() -> new ExceptionInApplication("Ошибка при создании клиента", ExceptionType.FATAL));
 
@@ -51,7 +52,7 @@ public class ClientService {
 
     }
 
-    private ClientEntity fromDtoToEntity(ClientCreateDto dto) {
+    private ClientEntity formatClientCreateEntity(ClientCreateDto dto) {
         return new ClientEntity(
                 null,
                 dto.name(),
@@ -59,7 +60,7 @@ public class ClientService {
                 PasswordTool.getHashPassword(dto.password()),
                 dto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Set.of(ClientRole.UNSPECIFIED)
         );
     }
 
@@ -68,7 +69,9 @@ public class ClientService {
                 entity.clientId(),
                 entity.name(),
                 entity.email(),
-                entity.gender()
+                entity.gender(),
+                entity.createdDate(),
+                entity.role()
         );
     }
 }

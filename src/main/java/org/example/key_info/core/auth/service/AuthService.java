@@ -15,6 +15,7 @@ import org.example.key_info.public_interface.exception.ExceptionType;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +78,10 @@ public class AuthService {
     }
 
     private DataForGenerateToken forGenerateToken(ClientEntity entity) {
-        return new DataForGenerateToken(entity.clientId().toString(), Role.getRoleByName(entity.role().name()));
+        var mappedRoles = entity.role().stream()
+                .map(r -> Role.getRoleByName(r.name()))
+                .collect(Collectors.toSet());
+        return new DataForGenerateToken(entity.clientId().toString(), mappedRoles);
     }
 
     private UUID tryParseUUID(String id) {

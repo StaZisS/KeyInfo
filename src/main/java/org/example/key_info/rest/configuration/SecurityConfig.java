@@ -18,9 +18,9 @@ import org.example.key_info.core.auth.JwtFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final String[] whiteList = new String[] {
-            "/api/auth/login",
-            "/api/auth/register",
-            "/api/auth/token",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
+            "/api/v1/auth/token",
             "/swagger-ui/**",
             "/v3/api-docs/**"
     };

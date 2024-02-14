@@ -10,7 +10,8 @@ public enum Role implements GrantedAuthority {
     ADMIN("ADMIN"),
     STUDENT("STUDENT"),
     TEACHER("TEACHER"),
-    DEANERY("DEANERY")
+    DEANERY("DEANERY"),
+    UNSPECIFIED("UNSPECIFIED"),
     ;
 
     private final String value;

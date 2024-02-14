@@ -9,13 +9,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JwtUtils {
+    private static final String ROLES_NAME =  "Roles";
     public static JwtAuthentication generate(Claims claims) {
         final JwtAuthentication jwtInfoToken = new JwtAuthentication();
+        jwtInfoToken.setRoles(getRoles(claims));
         return jwtInfoToken;
     }
 
     private static Set<Role> getRoles(Claims claims) {
-        final List<String> roles = claims.get("roles", List.class);
+        final List<String> roles = claims.get(ROLES_NAME, List.class);
         return roles.stream()
                 .map(Role::valueOf)
                 .collect(Collectors.toSet());

@@ -22,6 +22,7 @@ import java.util.UUID;
 
 @Component
 public class JwtProvider {
+    private static final String ROLES_NAME =  "Roles";
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
     private final long jwtAccessTtlSecond;
@@ -44,7 +45,7 @@ public class JwtProvider {
         final String accessTokenId = UUID.randomUUID().toString();
         return Jwts.builder()
                 .subject(data.clientId())
-                .claim("ROLE", data.role())
+                .claim(ROLES_NAME, data.role())
                 .expiration(accessExpiration)
                 .id(accessTokenId)
                 .signWith(jwtAccessSecret)

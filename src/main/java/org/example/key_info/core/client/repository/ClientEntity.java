@@ -1,6 +1,7 @@
 package org.example.key_info.core.client.repository;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public record ClientEntity(
@@ -10,6 +11,6 @@ public record ClientEntity(
         String password,
         String gender,
         OffsetDateTime createdDate,
-        ClientRole role
+        Set<ClientRole> role
 ) {
 }

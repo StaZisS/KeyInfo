@@ -8,6 +8,7 @@ public enum ClientRole {
     STUDENT,
     TEACHER,
     DEANERY,
+    UNSPECIFIED,
     ;
 
     public static ClientRole getClientRoleByName(String name) {
