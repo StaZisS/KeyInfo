@@ -14,7 +14,9 @@ public class ApplicationEntityMapper implements RecordMapper<RequestRecord, Appl
                 ApplicationStatus.getApplicationStatusByName(requestRecord.getStatus()),
                 requestRecord.getCreatedTime(),
                 requestRecord.getBuild(),
-                requestRecord.getRoom()
+                requestRecord.getRoom(),
+                requestRecord.getDuplicate(),
+                requestRecord.getEndTimeDuplicate()
         );
     }
 }
