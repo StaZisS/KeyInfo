@@ -15,6 +15,7 @@ import AuthService from "../services/AuthService";
     async login(email,password){
         try{
             const response = await AuthService.login(email,password)
+            console.log(response.data)
             localStorage.setItem('token',response.data.accessToken)
             localStorage.setItem('refreshToken',response.data.refreshToken)
             this.setAuth(true)
@@ -25,7 +26,7 @@ import AuthService from "../services/AuthService";
 
     async logout(){
         try{
-            const response = await AuthService.logout()
+            const response = await AuthService.logout(localStorage.getItem('refreshToken'))
             localStorage.removeItem('token')
             localStorage.removeItem('refreshToken')
             this.setAuth(false)

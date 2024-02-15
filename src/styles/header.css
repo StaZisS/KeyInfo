@@ -2,6 +2,9 @@
 .link-hover{
     transition: background-color 0.35s ease;
 }
+.link-hover:focus{
+    color: white;
+}
 
 
 

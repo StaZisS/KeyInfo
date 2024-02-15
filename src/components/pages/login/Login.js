@@ -1,10 +1,13 @@
 import {useState} from "react";
 import {Button, Card, CardBody, CardTitle, Col, Container, Form} from "react-bootstrap"
 import Store from "../../../store/store";
+import {useNavigate} from "react-router-dom";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate()
 
     const handleLoginChange = (e) => {
         setEmail(e.target.value)
@@ -16,8 +19,18 @@ export const Login = () => {
 
     const handleEmail = (e) => {
         e.preventDefault();
-        console.log(email, password);
     }
+
+    const handleLogin = async () =>{
+        try{
+            await Store.login(email,password)
+            console.log(Store.isAuth)
+            navigate('/')
+        }catch (e){
+
+        }
+    }
+
     return (
         <Container className="mt-5 d-flex justify-content-center">
             <Card className='shadow border-0 col-10 col-md-8'>
@@ -44,7 +57,7 @@ export const Login = () => {
                                 required
                             />
                         </Form.Group>
-                        <Button onClick={() => {Store.login(email,password)}} variant="primary" type="submit" className="w-100 mt-3">
+                        <Button onClick={handleLogin} variant="primary" type="submit" className="w-100 mt-3">
                             Войти
                         </Button>
 

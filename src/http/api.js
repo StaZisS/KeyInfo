@@ -6,7 +6,6 @@ export const API_URL = 'http://147.45.76.239:8080/api/v1'
 const $api = axios.create({
     baseURL: API_URL
 })
-
 $api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token')
     if (token) {

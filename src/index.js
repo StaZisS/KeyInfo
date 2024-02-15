@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {QueryClient, QueryClientProvider} from "react-query";
 import {RouterProvider} from "react-router";
-import {router} from "./router/Router";
+import {Router, router} from "./router/Router";
 import Store from "./store/store";
 import './styles/global.css'
+import {BrowserRouter} from "react-router-dom";
 
 
 const queryClient = new QueryClient()
@@ -14,6 +15,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <QueryClientProvider client={queryClient}>
         {/*Компонент для роутинга */}
-        <RouterProvider router={router}/>
+        <BrowserRouter>
+            <Router/>
+        </BrowserRouter>
     </QueryClientProvider>
 );

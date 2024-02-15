@@ -1,23 +1,17 @@
-import { Login } from "../components/pages/login/Login";
+import {Login} from "../components/pages/login/Login";
 import {Header} from "../components/snippets/header";
+import {Route, Routes} from "react-router";
 
-const {createBrowserRouter} = require("react-router-dom");
-
-export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <><Header/></>
-    },
-    {
-        path: '/login',
-        element: <><Header/><Login/></>
-    },
-    {
-        path: '/key',
-        element: <><Header/></>
-    },
-    {
-        path: '/application',
-        element: <><Header/></>
-    }
-])
+export function Router() {
+    return (
+        <Routes>
+            <Route path='/' element={<Header/>}/>
+            <Route path='login' element={
+                <>
+                    <Header/>
+                    <Login/>
+                </>
+            }/>
+        </Routes>
+    )
+}
