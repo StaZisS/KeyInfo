@@ -23,8 +23,5 @@ fun NavBar(navController: NavHostController) {
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen()
         }
-        composable(route = "back"){
-            Navigation()
-        }
     }
 }
