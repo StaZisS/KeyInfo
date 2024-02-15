@@ -1,9 +1,17 @@
 package com.example.keyinfo.presentation.screen.registration
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.common.Constants
+import com.example.keyinfo.data.network.NetworkService
+import com.example.keyinfo.data.storage.LocalStorage
+import com.example.keyinfo.domain.model.authorization.Registration
 import com.example.keyinfo.domain.state.RegistrationState
+import com.example.keyinfo.domain.usecase.DataValidateUseCase
+import com.example.keyinfo.domain.usecase.PostRegistrationUseCase
 import com.example.keyinfo.domain.validator.ConfirmPasswordValidator
 import com.example.keyinfo.domain.validator.EmailValidator
 import com.example.keyinfo.domain.validator.NameValidator
@@ -11,6 +19,7 @@ import com.example.keyinfo.domain.validator.PasswordValidator
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class RegistrationViewModel (
     private val context: Context,
@@ -40,8 +49,8 @@ class RegistrationViewModel (
     private val _state = MutableStateFlow(emptyState)
     val state: StateFlow<RegistrationState> get() = _state
 
-//    private val postRegistrationUseCase = PostRegistrationUseCase()
-//    private val dataValidateUseCase = DataValidateUseCase()
+    private val postRegistrationUseCase = PostRegistrationUseCase()
+    private val dataValidateUseCase = DataValidateUseCase()
 
     fun processIntent(intent: RegistrationIntent) {
         when (intent) {
@@ -81,12 +90,12 @@ class RegistrationViewModel (
             }
             is RegistrationIntent.Registration -> {
                 performRegistration(state.value) {
-                    //router.toMain()
+                    router.toMain()
                     clearData()
                 }
             }
             is RegistrationIntent.UpdateErrorText -> {
-                val result = null//dataValidateUseCase.invoke(intent.validator, intent.data, intent.secondData)
+                val result = dataValidateUseCase.invoke(intent.validator, intent.data, intent.secondData)
                 when (intent.validator) {
                     is EmailValidator -> _state.value = state.value.copy (
                         isErrorEmailText = result?.let { context.getString(it) }
@@ -160,39 +169,39 @@ class RegistrationViewModel (
         registrationState: RegistrationState,
         afterRegistration: () -> Unit
     ) {
-//        val registration = Registration(
-//            name = registrationState.name.trim(),
-//            password = registrationState.password.trim(),
-//            email = registrationState.email.trim(),
-//            birthDate = registrationState.birthday,
-//            gender = registrationState.gender
-//        )
-//
-//        processIntent(RegistrationIntent.UpdateLoading)
-//        viewModelScope.launch {
-//            try {
-//                val result = postRegistrationUseCase.invoke(registration)
-//                if (result.isSuccess) {
-//                    val tokenResponse = result.getOrNull()
-//                    LocalStorage(context).saveToken(tokenResponse!!)
-//                    NetworkService.setAuthToken(tokenResponse.token)
-//                    afterRegistration()
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        "Ошибка регистрации",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            } catch (e: Exception) {
-//                Toast.makeText(
-//                    context,
-//                    "Ошибка соединения с сервером",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            } finally {
-//                processIntent(RegistrationIntent.UpdateLoading)
-//            }
-//        }
+        val registration = Registration(
+            name = registrationState.name.trim(),
+            password = registrationState.password.trim(),
+            email = registrationState.email.trim(),
+            gender = "MALE"
+        )
+
+        processIntent(RegistrationIntent.UpdateLoading)
+        viewModelScope.launch {
+            try {
+                val result = postRegistrationUseCase.invoke(registration)
+                if (result.isSuccess) {
+                    val tokenResponse = result.getOrNull()
+                    LocalStorage(context).saveToken(tokenResponse!!)
+                    NetworkService.setAuthToken(tokenResponse.accessToken)
+                    afterRegistration()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Ошибка регистрации",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Log.d("s", e.toString())
+                Toast.makeText(
+                    context,
+                    "Ошибка соединения с сервером",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                processIntent(RegistrationIntent.UpdateLoading)
+            }
+        }
     }
 }
