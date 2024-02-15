@@ -1,12 +1,21 @@
 package com.example.keyinfo.presentation.screen.login
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.keyinfo.R
 import com.example.keyinfo.common.Constants
+import com.example.keyinfo.data.network.NetworkService
+import com.example.keyinfo.data.storage.LocalStorage
+import com.example.keyinfo.domain.model.authorization.Login
 import com.example.keyinfo.domain.state.LoginState
+import com.example.keyinfo.domain.usecase.PostLoginUseCase
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class LoginViewModel (
     private val context: Context,
@@ -24,7 +33,7 @@ class LoginViewModel (
     private val _state = MutableStateFlow(emptyState)
     val state: StateFlow<LoginState> get() = _state
 
-    //private val postLoginUseCase = PostLoginUseCase()
+    private val postLoginUseCase = PostLoginUseCase()
 
     fun processIntent(intent: LoginIntent) {
         when (intent) {
@@ -76,30 +85,31 @@ class LoginViewModel (
     }
 
     private fun performLogin(username: String, password: String, routeAfterLogin: () -> Unit) {
-//        val login = Login(username, password)
-//        processIntent(LoginIntent.UpdateLoading)
-//        viewModelScope.launch {
-//            try {
-//                val result = postLoginUseCase.invoke(login)
-//                if (result.isSuccess) {
-//                    val tokenResponse = result.getOrNull()
-//                    if (tokenResponse != null) {
-//                        NetworkService.setAuthToken(tokenResponse.token)
-//                    }
-//                    LocalStorage(context).saveToken(tokenResponse!!)
-//                    routeAfterLogin()
-//                } else {
-//                    processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
-//                }
-//            } catch (e: Exception) {
-//                Toast.makeText(
-//                    context,
-//                    "Ошибка соединения с сервером",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            } finally {
-//                processIntent(LoginIntent.UpdateLoading)
-//            }
-//        }
+        val login = Login(username, password)
+        processIntent(LoginIntent.UpdateLoading)
+        viewModelScope.launch {
+            try {
+                val result = postLoginUseCase.invoke(login)
+                if (result.isSuccess) {
+                    val tokenResponse = result.getOrNull()
+                    if (tokenResponse != null) {
+                        NetworkService.setAuthToken(tokenResponse.accessToken)
+                    }
+                    LocalStorage(context).saveToken(tokenResponse!!)
+                    routeAfterLogin()
+                } else {
+                    processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
+                }
+            } catch (e: Exception) {
+                Log.d("SsS", e.toString())
+                Toast.makeText(
+                    context,
+                    "Ошибка соединения с сервером",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                processIntent(LoginIntent.UpdateLoading)
+            }
+        }
     }
 }
