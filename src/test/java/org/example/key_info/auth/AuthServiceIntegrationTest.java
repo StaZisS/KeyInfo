@@ -25,6 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,7 +98,7 @@ public class AuthServiceIntegrationTest {
                 PasswordTool.getHashPassword(registerDto.password()),
                 registerDto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
 
         when(clientService.getByEmail(registerDto.email()))
@@ -131,7 +132,7 @@ public class AuthServiceIntegrationTest {
                 PasswordTool.getHashPassword(registerDto.password()),
                 registerDto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
 
         when(clientService.getByEmail(registerDto.email()))
@@ -165,7 +166,7 @@ public class AuthServiceIntegrationTest {
                 PasswordTool.getHashPassword(registerDto.password()),
                 registerDto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
 
         when(clientService.getByEmail(registerDto.email()))
@@ -206,7 +207,7 @@ public class AuthServiceIntegrationTest {
                 PasswordTool.getHashPassword(dto.password()),
                 dto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
 
         when(clientService.getByEmail(dto.email()))

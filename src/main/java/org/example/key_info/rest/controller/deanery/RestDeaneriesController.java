@@ -1,5 +1,7 @@
 package org.example.key_info.rest.controller.deanery;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.application.ApplicationFilterDto;
 import org.example.key_info.core.application.ApplicationService;
@@ -28,11 +30,13 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/deaneries")
+@Tag(name = "Работа деканата")
 public class RestDeaneriesController {
     private final KeyService keyService;
     private final ApplicationService applicationService;
     private final JwtTools jwtTools;
 
+    @Operation(summary = "Получить доступные заявки для рассмотрения")
     @GetMapping("/applications")
     public ResponseEntity<List<ApplicationResponseDto>> getPossibleApplications(@RequestHeader("Authorization") String accessToken,
                                                                                 @RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
@@ -62,6 +66,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok(body);
     }
 
+    @Operation(summary = "Принять заявку")
     @PostMapping("/application/{id}/accept")
     public ResponseEntity<Void> acceptApplication(@RequestHeader("Authorization") String accessToken,
                                                   @PathVariable(name = "id") UUID applicationId) {
@@ -77,6 +82,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Отклонить заявку")
     @PostMapping("/application/{id}/decline")
     public ResponseEntity<Void> declineApplication(@RequestHeader("Authorization") String accessToken,
                                                   @PathVariable(name = "id") UUID applicationId) {
@@ -92,6 +98,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Получить все ключи (см. параметры)")
     @GetMapping("/keys")
     public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestHeader("Authorization") String accessToken,
                                                            @RequestParam(required = false, name = "key_status") String keyStatus,
@@ -114,6 +121,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok(body);
     }
 
+    @Operation(summary = "Добавить новый ключ")
     @PostMapping("/keys")
     public ResponseEntity<UUID> addKey(@RequestHeader("Authorization") String accessToken,
                                                  @RequestBody AddKeyDto dto) {
@@ -131,6 +139,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok(keyId);
     }
 
+    @Operation(summary = "Удалить ключ")
     @DeleteMapping("/keys/{id}")
     public ResponseEntity<Void> deleteKey(@RequestHeader("Authorization") String accessToken,
                                           @PathVariable(name = "id") UUID keyId) {
@@ -147,6 +156,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Передать ключ пользователю")
     @PatchMapping("/keys/giving/{id}")
     public ResponseEntity<Void> giveKey(@RequestHeader("Authorization") String accessToken,
                                                   @PathVariable(name = "id") UUID keyId,
@@ -164,6 +174,7 @@ public class RestDeaneriesController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Принять ключ от пользователя")
     @PatchMapping("/keys/acceptance/{id}")
     public ResponseEntity<Void> acceptKey(@RequestHeader("Authorization") String accessToken,
                                                     @PathVariable(name = "id") UUID keyId,

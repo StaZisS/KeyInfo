@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,7 +61,7 @@ public class AuthServiceUnitTest {
                 PasswordTool.getHashPassword(password),
                 "MALE",
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
         var loginDto = new LoginDto(clientEntity.email(), password);
 
@@ -95,7 +96,7 @@ public class AuthServiceUnitTest {
                 PasswordTool.getHashPassword(password),
                 "MALE",
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
         var loginDto = new LoginDto(clientEntity.email(), incorrectPassword);
 
@@ -122,7 +123,7 @@ public class AuthServiceUnitTest {
                 PasswordTool.getHashPassword(password),
                 registerDto.gender(),
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
 
         when(clientService.getByEmail(registerDto.email()))
@@ -158,10 +159,10 @@ public class AuthServiceUnitTest {
                 "12345678",
                 "MALE",
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
         final String clientId = clientEntity.clientId().toString();
-        var dataForGenerateToken = new DataForGenerateToken(clientId, Role.STUDENT);
+        var dataForGenerateToken = new DataForGenerateToken(clientId, Collections.singleton(Role.STUDENT));
         var refreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
         var refreshTokenEntity = new RefreshTokenEntity(
                 jwtProvider.getRefreshClaims(refreshToken).getId(),
@@ -189,10 +190,10 @@ public class AuthServiceUnitTest {
                 "12345678",
                 "MALE",
                 OffsetDateTime.now(),
-                ClientRole.STUDENT
+                Collections.singleton(ClientRole.STUDENT)
         );
         final String clientId = clientEntity.clientId().toString();
-        var dataForGenerateToken = new DataForGenerateToken(clientId, Role.STUDENT);
+        var dataForGenerateToken = new DataForGenerateToken(clientId, Collections.singleton(Role.STUDENT));
         var refreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
         var refreshTokenEntity = new RefreshTokenEntity(
                 jwtProvider.getRefreshClaims(refreshToken).getId(),

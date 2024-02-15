@@ -1,5 +1,7 @@
 package org.example.key_info.rest.controller.application;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.application.ApplicationFilterDto;
 import org.example.key_info.core.application.ApplicationService;
@@ -20,10 +22,12 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/requests")
+@Tag(name = "Заявки-запросы на передачу ключа (пользователь и деканат)")
 public class RestApplicationController {
     private final ApplicationService applicationService;
     private final JwtTools jwtTools;
 
+    @Operation(summary = "Получить свои заявки-запросы")
     @GetMapping()
     public ResponseEntity<List<ApplicationResponseDto>> getMyApplications(@RequestHeader("Authorization") String accessToken,
                                                                           @RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
@@ -52,6 +56,7 @@ public class RestApplicationController {
         return ResponseEntity.ok(body);
     }
 
+    @Operation(summary = "Создать заявку-запрос")
     @PostMapping()
     public ResponseEntity<UUID> createApplication(@RequestHeader("Authorization") String accessToken,
                                                                     @RequestBody CreateApplicationDtoRequest dto) {
@@ -73,6 +78,7 @@ public class RestApplicationController {
         return ResponseEntity.ok(applicationId);
     }
 
+    @Operation(summary = "Удалить мою заявку-запрос")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMyApplication(@RequestHeader("Authorization") String accessToken,
                                                     @PathVariable UUID id) {
@@ -87,6 +93,7 @@ public class RestApplicationController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Обновить мою заявку-запрос")
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateApplication(@RequestHeader("Authorization") String accessToken,
                                                                     @PathVariable UUID id,
