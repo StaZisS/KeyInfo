@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.navigation.graph
 
+import androidx.compose.material3.NavigationBar
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -8,6 +9,8 @@ import com.example.keyinfo.presentation.screen.registration.RegistrationFirstScr
 import com.example.keyinfo.presentation.screen.registration.RegistrationSecondScreen
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.presentation.navigation.Destinations
+import com.example.keyinfo.presentation.navigation.NavBar
+import com.example.keyinfo.presentation.navigation.bottombar.BottomNavBar
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.screen.login.LoginScreen
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
@@ -35,6 +38,9 @@ fun NavGraphBuilder.authNavigationGraph(
         }
         composable(Destinations.LOGIN_SCREEN){
             LoginScreen(viewModel = loginViewModel)
+        }
+        composable("main"){
+            BottomNavBar()
         }
     }
     composable(Destinations.SELECT_AUTH_SCREEN){

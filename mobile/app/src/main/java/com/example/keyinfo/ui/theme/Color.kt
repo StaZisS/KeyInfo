@@ -20,7 +20,7 @@ val GrayColor = Color(0xFFC4C8CC)
 val DarkGrayColor = Color(0xFF5E5E5E)
 val SuperDarkGrayColor = Color(0xFF767680)
 val ErrorAccentColor = Color(0xFFE64646)
-val BottomBarColor = Color(0xFF161616)
+val BottomBarColor = Color(0xFF63B4FF)
 val ChipColor = Color(0xFF404040)
 val DisabledButtonColor = Color(0xFF6692CE)
 val Gray400Color = Color(0xFF909499)
@@ -29,6 +29,7 @@ val MenuGrayColor = Color(0xFF55595D)
 val LightGrayColor = Color(0xFFF5F5F5)
 val LightBlueColor = Color(0xFF8696BB)
 val RedColor = Color(0xFFE64646)
+val buttonColor = Color(0xFF8696BB)
 
 val BaseButtonColor = ButtonColors(
     containerColor = AccentColor,

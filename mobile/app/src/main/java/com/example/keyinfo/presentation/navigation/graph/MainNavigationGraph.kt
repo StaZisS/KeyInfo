@@ -4,10 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.keyinfo.presentation.navigation.Destinations
-import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.screen.main.MainScreen
-import com.example.keyinfo.presentation.screen.selectauth.SelectAuthScreen
+import com.example.keyinfo.presentation.screen.profile.ProfileScreen
 
 const val MAIN_ROUTE = "main_root"
 
@@ -21,8 +19,14 @@ fun NavGraphBuilder.mainNavigationGraph(
         composable("main"){
             MainScreen()
         }
+        composable("profile"){
+            ProfileScreen()
+        }
+        composable("timetable"){
+            ProfileScreen()
+        }
     }
-    composable(Destinations.SELECT_AUTH_SCREEN){
-        SelectAuthScreen(router = AppRouter(navController))
+    composable("main"){
+        MainScreen()
     }
 }
