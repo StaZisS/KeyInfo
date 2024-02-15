@@ -4,6 +4,7 @@ import org.example.key_info.core.util.PasswordTool;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class PasswordToolUnitTest {
 
@@ -31,8 +32,8 @@ public class PasswordToolUnitTest {
     @Test
     public void testNullPassword() {
         String password = null;
-        String hashPassword = PasswordTool.getHashPassword(password);
-        assertThat(PasswordTool.isCorrectPassword(hashPassword, password)).isFalse();
+        assertThatThrownBy(() -> PasswordTool.getHashPassword(password))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
