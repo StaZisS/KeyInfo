@@ -62,4 +62,23 @@ public class TransferRepositoryImpl implements TransferRepository {
                 .and(TRANSFERREQUEST.STATUS.eq(status.name()))
                 .fetch(transferEntityMapper);
     }
+
+    @Override
+    public void declineNotActualTransfers(UUID keyId) {
+        create.update(TRANSFERREQUEST)
+                .set(TRANSFERREQUEST.STATUS, TransferStatus.DECLINED.name())
+                .where(TRANSFERREQUEST.KEY_ID.eq(keyId))
+                .and(TRANSFERREQUEST.STATUS.eq(TransferStatus.IN_PROCESS.name()))
+                .execute();
+    }
+
+    @Override
+    public boolean isNotDuplicate(UUID ownerId, UUID receiverId, UUID keyId) {
+        return create.selectFrom(TRANSFERREQUEST)
+                .where(TRANSFERREQUEST.OWNER_ID.eq(ownerId))
+                .and(TRANSFERREQUEST.RECEIVER_ID.eq(receiverId))
+                .and(TRANSFERREQUEST.KEY_ID.eq(keyId))
+                .fetch(transferEntityMapper)
+                .isEmpty();
+    }
 }

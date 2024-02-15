@@ -87,4 +87,12 @@ public class KeyRepositoryImpl implements KeyRepository {
                 .where(KEY.KEY_ID.eq(entity.keyId()))
                 .execute();
     }
+
+    @Override
+    public void updateKeyHolder(UUID keyId, UUID keyHolderId) {
+        create.update(KEY)
+                .set(KEY.KEY_HOLDER_ID, keyHolderId)
+                .where(KEY.KEY_ID.eq(keyId))
+                .execute();
+    }
 }

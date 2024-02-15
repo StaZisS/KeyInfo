@@ -10,4 +10,6 @@ public interface TransferRepository {
     void deleteTransfer(UUID transferId);
     void updateTransfer(TransferEntity entity);
     List<TransferEntity> getMyTransfers(UUID clientId, TransferStatus status);
+    void declineNotActualTransfers(UUID keyId);
+    boolean isNotDuplicate(UUID ownerId, UUID receiverId, UUID keyId);
 }

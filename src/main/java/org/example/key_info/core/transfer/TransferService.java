@@ -2,6 +2,7 @@ package org.example.key_info.core.transfer;
 
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.client.repository.ClientRepository;
+import org.example.key_info.core.key.repository.KeyRepository;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
 import org.example.key_info.public_interface.transfer.AcceptTransferDto;
@@ -21,8 +22,14 @@ import java.util.UUID;
 public class TransferService {
     private final TransferRepository transferRepository;
     private final ClientRepository clientRepository;
+    private final KeyRepository keyRepository;
 
     public UUID createTransfer(CreateTransferDto dto) {
+        var isDuplicate = !transferRepository.isNotDuplicate(dto.ownerId(), dto.receiverId(), dto.keyId());
+        if (isDuplicate) {
+            throw new ExceptionInApplication("Данная заявка уже существует", ExceptionType.INVALID);
+        }
+
         var transferEntity = new TransferEntity(
                 null,
                 dto.ownerId(),
@@ -53,6 +60,10 @@ public class TransferService {
             throw new ExceptionInApplication("Вы не можете удалить чужую заяку", ExceptionType.INVALID);
         }
 
+        if (transfer.status() != TransferStatus.IN_PROCESS) {
+            throw new ExceptionInApplication("Нельзя удалить заявку которая обработана", ExceptionType.INVALID);
+        }
+
         transferRepository.deleteTransfer(dto.transferId());
     }
 
@@ -64,6 +75,10 @@ public class TransferService {
             throw new ExceptionInApplication("Вы не можете принять чужую заяку", ExceptionType.INVALID);
         }
 
+        if (transfer.status() != TransferStatus.IN_PROCESS) {
+            throw new ExceptionInApplication("Нельзя изменить статус уже у обработанной заяки", ExceptionType.INVALID);
+        }
+
         var updatedTransfer = new TransferEntity(
                 transfer.transferId(),
                 transfer.ownerId(),
@@ -73,6 +88,8 @@ public class TransferService {
                 transfer.keyId()
         );
         transferRepository.updateTransfer(updatedTransfer);
+        keyRepository.updateKeyHolder(transfer.keyId(), transfer.receiverId());
+        transferRepository.declineNotActualTransfers(transfer.keyId());
     }
 
     public void declineTransfer(DeclineTransferDto dto) {
@@ -81,6 +98,10 @@ public class TransferService {
 
         if (transfer.receiverId() != dto.clientId()) {
             throw new ExceptionInApplication("Вы не можете отклонить чужую заяку", ExceptionType.INVALID);
+        }
+
+        if (transfer.status() != TransferStatus.IN_PROCESS) {
+            throw new ExceptionInApplication("Нельзя изменить статус уже у обработанной заяки", ExceptionType.INVALID);
         }
 
         var updatedTransfer = new TransferEntity(
