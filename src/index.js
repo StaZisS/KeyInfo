@@ -7,20 +7,13 @@ import {router} from "./router/Router";
 import Store from "./store/store";
 import './styles/global.css'
 
-const store = new Store()
-
-export const Context = createContext({
-    store,
-})
 
 const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <Context.Provider value={{store}}>
-        <QueryClientProvider client={queryClient}>
-            {/*Компонент для роутинга */}
-            <RouterProvider router={router}/>
-        </QueryClientProvider>
-    </Context.Provider>
+    <QueryClientProvider client={queryClient}>
+        {/*Компонент для роутинга */}
+        <RouterProvider router={router}/>
+    </QueryClientProvider>
 );

@@ -1,27 +1,28 @@
 import {useState} from "react";
 import {Button, Card, CardBody, CardTitle, Col, Container, Form} from "react-bootstrap"
+import Store from "../../../store/store";
 
 export const Login = () => {
-    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLoginChange = (e) => {
-        setLogin(e.target.value)
+        setEmail(e.target.value)
     }
 
     const handlePasswordChange = (e) => {
         setPassword(e.target.value)
     }
 
-    const handleLogIn = (e) => {
+    const handleEmail = (e) => {
         e.preventDefault();
-        console.log(login, password);
+        console.log(email, password);
     }
     return (
         <Container className="mt-5 d-flex justify-content-center">
             <Card className='shadow border-0 col-10 col-md-8'>
                 <CardBody>
-                    <Form className="p-5" onSubmit={handleLogIn}>
+                    <Form className="p-5" onSubmit={handleEmail}>
                         <h1>Вход</h1>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
@@ -29,7 +30,7 @@ export const Login = () => {
                                 type="email"
                                 placeholder="name@example.com"
                                 onChange={handleLoginChange}
-                                value={login}
+                                value={email}
                                 required
                             />
                         </Form.Group>
@@ -43,7 +44,7 @@ export const Login = () => {
                                 required
                             />
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="w-100 mt-3">
+                        <Button onClick={() => {Store.login(email,password)}} variant="primary" type="submit" className="w-100 mt-3">
                             Войти
                         </Button>
 

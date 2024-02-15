@@ -1,8 +1,7 @@
 import {makeAutoObservable} from "mobx";
 import AuthService from "../services/AuthService";
 
-export default class Store{
-    user = {}
+ class Store{
     isAuth = false
 
     constructor() {
@@ -13,28 +12,27 @@ export default class Store{
         this.isAuth = bool
     }
 
-    setUser(user){
-        this.user = user
-    }
-
     async login(email,password){
         try{
-            const response = AuthService.login(email,password)
+            const response = await AuthService.login(email,password)
             localStorage.setItem('token',response.data.accessToken)
+            localStorage.setItem('refreshToken',response.data.refreshToken)
             this.setAuth(true)
         }catch (e){
-            console.log(e.response.data.message)
+            console.log(e)
         }
     }
 
     async logout(){
         try{
-            const response = AuthService.logout()
+            const response = await AuthService.logout()
             localStorage.removeItem('token')
+            localStorage.removeItem('refreshToken')
             this.setAuth(false)
         }catch (e){
-            console.log(e.response.data.message)
+            console.log(e)
         }
     }
-
 }
+
+export default new Store()
