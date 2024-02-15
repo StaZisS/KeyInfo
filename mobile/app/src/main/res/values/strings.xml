@@ -79,11 +79,14 @@
     <string name="registration_wait_description">Как только деканат подтвердит заявку, вы получите уведомление</string>
 
     <string name="main_approved">Одобренные заявки</string>
-    <string name="main_cancelled">Отклоенные заявки</string>
-    <string name="main_waiting">Заявки на рассмотрении</string>
+    <string name="main_cancelled">Отклоненные заявки</string>
+    <string name="main_pending">Заявки на рассмотрении</string>
+    <string name="main_empty">У вас пока нет заявок</string>
+    <string name="main_empty_description">Создайте заявку на бронирование ключей во вкладке с расписанием</string>
 
-    <string name="card_audience">Аудитория 222</string>
-    <string name="card_building">Корпус 2</string>
+    <string name="card_audience">Аудитория</string>
+    <string name="card_building">Корпус</string>
     <string name="card_date">Пн, 12 февраля</string>
     <string name="card_time">12:25 – 14:00</string>
+
 </resources>

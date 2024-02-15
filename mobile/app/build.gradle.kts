@@ -73,6 +73,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("com.github.GIGAMOLE:ComposeShadowsPlus:1.0.4")
+    implementation("com.google.accompanist:accompanist-pager:0.27.1")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -81,5 +83,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
 
 }

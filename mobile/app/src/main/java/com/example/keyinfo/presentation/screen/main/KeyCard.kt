@@ -30,9 +30,17 @@ import com.example.keyinfo.R
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.example.keyinfo.ui.theme.LightGrayColor
 import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
-fun KeyCard() {
+fun KeyCard(
+    audience: String = "220",
+    building: String = "2",
+    startDate: OffsetDateTime = OffsetDateTime.now(),
+    endDate: OffsetDateTime = OffsetDateTime.now().plusHours(2)
+) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
@@ -54,7 +62,7 @@ fun KeyCard() {
             Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 20.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.card_audience),
+                text = stringResource(id = R.string.card_audience) + " $audience",
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight(700),
@@ -62,10 +70,12 @@ fun KeyCard() {
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
             Text(
-                text = stringResource(id = R.string.card_building), style = TextStyle(
+                text = stringResource(id = R.string.card_building) + " $building",
+                style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
-                ), color = LightBlueColor
+                ),
+                color = LightBlueColor
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -83,7 +93,8 @@ fun KeyCard() {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(id = R.string.card_date), style = TextStyle(
+                    text = formatOffsetDateTime(startDate),
+                    style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight(400),
                         fontFamily = FontFamily(Font(R.font.poppins_regular))
@@ -98,7 +109,10 @@ fun KeyCard() {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(id = R.string.card_time), style = TextStyle(
+                    text = "${formatOffsetDateTimeTime(startDate)} - ${
+                        formatOffsetDateTimeTime(endDate)
+                    }",
+                    style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight(400),
                         fontFamily = FontFamily(Font(R.font.poppins_regular))
@@ -108,6 +122,26 @@ fun KeyCard() {
 
         }
     }
+}
+
+// TODO: Move to viewmodel
+fun formatOffsetDateTime(dateTime: OffsetDateTime): String {
+    val dayOfWeek = dateTime.dayOfWeek.getDisplayName(
+        java.time.format.TextStyle.SHORT,
+        Locale.getDefault()
+    )
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    val dayOfMonth = dateTime.dayOfMonth
+    val month = dateTime.month.getDisplayName(
+        java.time.format.TextStyle.FULL,
+        Locale.getDefault()
+    )
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    return "$dayOfWeek, $dayOfMonth $month"
+}
+
+fun formatOffsetDateTimeTime(dateTime: OffsetDateTime): String {
+    return dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
 }
 
 @Preview
