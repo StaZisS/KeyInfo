@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.presentation.navigation.graph.authNavigationGraph
+import com.example.keyinfo.presentation.navigation.graph.mainNavigationGraph
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
 
@@ -34,6 +35,9 @@ fun Navigation() {
             navController = navController,
             registrationViewModel = registrationViewModel,
             loginViewModel = loginViewModel
+        )
+        mainNavigationGraph(
+            navController = navController
         )
     }
 }
