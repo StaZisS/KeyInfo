@@ -9,9 +9,6 @@ import org.example.key_info.public_interface.exception.ExceptionType;
 import org.example.key_info.public_interface.profile.ProfileDto;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 @AllArgsConstructor
 public class ProfileService {

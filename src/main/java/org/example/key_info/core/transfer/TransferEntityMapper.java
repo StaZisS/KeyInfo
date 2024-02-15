@@ -1,7 +1,6 @@
 package org.example.key_info.core.transfer;
 
 import com.example.shop.public_.tables.records.TransferrequestRecord;
-import org.jetbrains.annotations.Nullable;
 import org.jooq.RecordMapper;
 
 public class TransferEntityMapper implements RecordMapper<TransferrequestRecord, TransferEntity> {

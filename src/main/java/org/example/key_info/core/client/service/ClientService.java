@@ -27,10 +27,9 @@ public class ClientService {
         clientValidationService.validateCreateClient(dto);
 
         var entity = formatClientCreateEntity(dto);
-        var clientId = clientRepository.createClient(entity)
-                .orElseThrow(() -> new ExceptionInApplication("Ошибка при создании клиента", ExceptionType.FATAL));
 
-        return clientId;
+        return clientRepository.createClient(entity)
+                .orElseThrow(() -> new ExceptionInApplication("Ошибка при создании клиента", ExceptionType.FATAL));
     }
 
     public Optional<ClientEntity> getByEmail(String email) {
@@ -46,10 +45,6 @@ public class ClientService {
                 .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
 
         return formatToDto(clientEntity);
-    }
-
-    public void updateClient() {
-
     }
 
     private ClientEntity formatClientCreateEntity(ClientCreateDto dto) {

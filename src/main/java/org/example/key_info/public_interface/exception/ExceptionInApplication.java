@@ -1,5 +1,8 @@
 package org.example.key_info.public_interface.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ExceptionInApplication extends RuntimeException {
     private final ExceptionType type;
 
@@ -8,7 +11,4 @@ public class ExceptionInApplication extends RuntimeException {
         this.type = type;
     }
 
-    public ExceptionType getType() {
-        return type;
-    }
 }
