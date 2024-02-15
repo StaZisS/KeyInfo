@@ -100,7 +100,7 @@ CREATE TABLE TransferRequest
     owner_id            UUID                     NOT NULL,
     receiver_id         UUID                     NOT NULL,
     status              VARCHAR(30)              NOT NULL CHECK ( status IN ('IN_PROCESS', 'ACCEPTED', 'DECLINED') ),
-    last_access         TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_time        TIMESTAMP WITH TIME ZONE NOT NULL,
     key_id              UUID                     NOT NULL,
     FOREIGN KEY (owner_id) REFERENCES Client (client_id),
     FOREIGN KEY (receiver_id) REFERENCES Client (client_id),
