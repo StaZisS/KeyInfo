@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/requests")
-@Tag(name = "Заявки-запросы на передачу ключа (пользователь и деканат)")
+@Tag(name = "Заявки-запросы на бронь аудиторий")
 public class RestApplicationController {
     private final ApplicationService applicationService;
     private final JwtTools jwtTools;

@@ -14,7 +14,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class AccommodationService {
-    private static final List<ClientRole> ROLES_CONTROL_ACCOMMODATION_LIFECYCLE = List.of(ClientRole.DEANERY, ClientRole.ADMIN);
+    private static final List<ClientRole> ROLES_CONTROL_ACCOMMODATION_LIFECYCLE = List.of(ClientRole.ADMIN);
 
     private final AccommodationRepository accommodationRepository;
 
