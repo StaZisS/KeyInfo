@@ -50,7 +50,7 @@ public class RestApplicationController {
         );
         var applications = applicationService.getMyApplications(getMyApplicationDto);
 
-        var body = applications.parallelStream()
+        var body = applications.stream()
                 .map(this::mapToResponseDto)
                 .toList();
         return ResponseEntity.ok(body);

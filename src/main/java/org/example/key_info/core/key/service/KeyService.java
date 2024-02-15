@@ -124,7 +124,7 @@ public class KeyService {
 
     private boolean isClientHaveRoles(Set<ClientRole> clientRoles) {
         return clientRoles
-                .parallelStream()
+                .stream()
                 .anyMatch(ROLES_CONTROL_KEY_LIFECYCLE::contains);
     }
 }

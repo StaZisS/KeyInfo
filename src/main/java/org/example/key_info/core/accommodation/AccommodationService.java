@@ -40,7 +40,7 @@ public class AccommodationService {
 
     private boolean isClientHaveRole(Set<ClientRole> clientRoles) {
         return clientRoles
-                .parallelStream()
+                .stream()
                 .anyMatch(ROLES_CONTROL_ACCOMMODATION_LIFECYCLE::contains);
     }
 }

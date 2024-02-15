@@ -195,7 +195,7 @@ public class ApplicationService {
 
     private boolean isClientHaveRoles(Set<ClientRole> clientRoles) {
         return clientRoles
-                .parallelStream()
+                .stream()
                 .anyMatch(ROLES_CONTROL_APPLICATION::contains);
     }
 }
