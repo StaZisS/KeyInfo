@@ -36,3 +36,10 @@ val BaseButtonColor = ButtonColors(
     disabledContainerColor = DisabledButtonColor.copy(alpha = 0.36f),
     disabledContentColor = WhiteColor.copy(alpha = 0.36f)
 )
+
+val TextButtonColor = ButtonColors(
+    contentColor = AccentColor,
+    containerColor = Color.Transparent,
+    disabledContentColor = DisabledButtonColor.copy(alpha = 0.36f),
+    disabledContainerColor = Color.Transparent
+)
