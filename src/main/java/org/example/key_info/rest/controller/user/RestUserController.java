@@ -3,10 +3,14 @@ package org.example.key_info.rest.controller.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.public_interface.client.ClientProfileDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +20,9 @@ public class RestUserController {
 
     @Operation(summary = "Получить всех пользователей")
     @GetMapping()
-    public void getAllUsers(@RequestHeader("Authorization") String accessToken,
-                            @RequestHeader(required = false) String name,
-                            @RequestHeader(required = false) String email) {
+    public ResponseEntity<List<ClientProfileDto>> getAllUsers(@RequestHeader("Authorization") String accessToken,
+                                                             @RequestHeader(required = false) String name,
+                                                             @RequestHeader(required = false) String email) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }

@@ -32,7 +32,7 @@ public class AuthService {
             return tokenService.getTokens(dataForGenerateToken);
         }
 
-        throw new ExceptionInApplication("Неверная почта или пароль", ExceptionType.NOT_FOUND);
+        throw new ExceptionInApplication("Неверная почта или пароль", ExceptionType.INVALID);
     }
 
     public JwtResponseDto register(@NonNull ClientCreateDto dto) {
