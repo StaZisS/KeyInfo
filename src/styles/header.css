@@ -3,17 +3,19 @@
     transition: background-color 0.35s ease;
 }
 .link-hover:focus{
-    color: white;
+    color: white !important;
 }
 
 
 
 
+.link-hover:hover{
+    color: white;
+}
 
 @media (min-width: 992px) {
     .link-hover:hover{
         background-color: var(--color-blue);
-        color: white;
     }
 }
 

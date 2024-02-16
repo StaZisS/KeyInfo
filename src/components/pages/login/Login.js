@@ -9,13 +9,13 @@ export const Login = () => {
 
     const navigate = useNavigate()
 
-    const handleLogin = async (e) =>{
+    const handleLogin = async (e) => {
         e.preventDefault();
-        try{
-            await Store.login(email,password)
-            console.log('isAuth = ' + Store.isAuth)
+        try {
+            await Store.login(email, password)
+            console.log('Вход. isAuth = ' + Store.isAuth)
             navigate('/')
-        }catch (e){
+        } catch (e) {
 
         }
     }
@@ -31,7 +31,9 @@ export const Login = () => {
                             <Form.Control
                                 type="email"
                                 placeholder="name@example.com"
-                                onChange={(e) => {setEmail(e.target.value)}}
+                                onChange={(e) => {
+                                    setEmail(e.target.value)
+                                }}
                                 value={email}
                                 required
                             />
@@ -41,7 +43,9 @@ export const Login = () => {
                             <Form.Label>Пароль</Form.Label>
                             <Form.Control
                                 type="password"
-                                onChange={(e) => {setPassword(e.target.value)}}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}
                                 value={password}
                                 required
                             />

@@ -1,5 +1,5 @@
 import {Login} from "../components/pages/login/Login";
-import {Header} from "../components/snippets/header";
+import {Header} from "../components/snippets/Header";
 import {Route, Routes} from "react-router";
 import {MainLayout} from "../components/layouts/MainLayout";
 
