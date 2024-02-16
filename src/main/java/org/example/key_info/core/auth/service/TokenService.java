@@ -22,6 +22,7 @@ public class TokenService {
         final String refreshToken = jwtProvider.generateRefreshToken(data);
 
         final RefreshTokenEntity refreshTokenEntity = getRefreshTokenEntity(refreshToken);
+
         refreshRepository.saveRefreshToken(refreshTokenEntity);
 
         return new JwtResponseDto(accessToken, refreshToken);

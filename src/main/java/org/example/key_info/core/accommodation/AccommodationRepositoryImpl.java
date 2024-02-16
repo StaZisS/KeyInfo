@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
 
 @Repository
@@ -25,5 +27,12 @@ public class AccommodationRepositoryImpl implements AccommodationRepository {
                 .where(STUDYROOM.BUILD.eq(buildId))
                 .and(STUDYROOM.ROOM.eq(roomId))
                 .execute();
+    }
+
+    @Override
+    public List<AccommodationEntity> getAllAccommodations() {
+        return create.selectFrom(STUDYROOM)
+                .fetch()
+                .map(record -> new AccommodationEntity(record.get(STUDYROOM.BUILD), record.get(STUDYROOM.ROOM)));
     }
 }
