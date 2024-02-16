@@ -9,22 +9,11 @@ export const Login = () => {
 
     const navigate = useNavigate()
 
-    const handleLoginChange = (e) => {
-        setEmail(e.target.value)
-    }
-
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value)
-    }
-
-    const handleEmail = (e) => {
+    const handleLogin = async (e) =>{
         e.preventDefault();
-    }
-
-    const handleLogin = async () =>{
         try{
             await Store.login(email,password)
-            console.log(Store.isAuth)
+            console.log('isAuth = ' + Store.isAuth)
             navigate('/')
         }catch (e){
 
@@ -35,14 +24,14 @@ export const Login = () => {
         <Container className="mt-5 d-flex justify-content-center">
             <Card className='shadow border-0 col-10 col-md-8'>
                 <CardBody>
-                    <Form className="p-5" onSubmit={handleEmail}>
+                    <Form className="p-5" onSubmit={handleLogin}>
                         <h1>Вход</h1>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="email"
                                 placeholder="name@example.com"
-                                onChange={handleLoginChange}
+                                onChange={(e) => {setEmail(e.target.value)}}
                                 value={email}
                                 required
                             />
@@ -52,12 +41,12 @@ export const Login = () => {
                             <Form.Label>Пароль</Form.Label>
                             <Form.Control
                                 type="password"
-                                onChange={handlePasswordChange}
+                                onChange={(e) => {setPassword(e.target.value)}}
                                 value={password}
                                 required
                             />
                         </Form.Group>
-                        <Button onClick={handleLogin} variant="primary" type="submit" className="w-100 mt-3">
+                        <Button variant="primary" type="submit" className="w-100 mt-3">
                             Войти
                         </Button>
 

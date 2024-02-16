@@ -21,7 +21,7 @@ export function Header() {
         <div className='header'>
             <Navbar expand='lg' className='p-0' style={{backgroundColor: '#0D1B34'}}>
                 <Container fluid className='ms-5 me-5'>
-                    <Link to={'/'} className='nav-link'>
+                    <Link to={'/'} className='nav-link d-flex align-items-start'>
                         <Image src='../../icons/logo-icon.svg'></Image>
                             <NavbarBrand className='header-logo ms-2'>KeyInfo</NavbarBrand>
                     </Link>
