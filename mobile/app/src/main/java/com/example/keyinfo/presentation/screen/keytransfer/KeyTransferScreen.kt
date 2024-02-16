@@ -25,7 +25,10 @@ import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButt
 import com.example.keyinfo.ui.theme.Values
 
 @Composable
-fun KeyTransferScreen(viewModel: KeyTransferViewModel){
+fun KeyTransferScreen(
+    viewModel: KeyTransferViewModel,
+    clickOnBar: () -> Unit
+){
     val state by viewModel.state.collectAsState()
 
     Column(
@@ -35,7 +38,7 @@ fun KeyTransferScreen(viewModel: KeyTransferViewModel){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        AppBar{}
+        AppBar{ clickOnBar() }
 
         Text(
             text = stringResource(R.string.key_tranfser),

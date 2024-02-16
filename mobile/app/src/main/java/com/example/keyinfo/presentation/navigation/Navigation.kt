@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.keyinfo.presentation.navigation.router.AppRouter
+import com.example.keyinfo.presentation.navigation.router.BottomBarRouter
+import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferScreen
+import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
 import com.example.keyinfo.presentation.screen.login.LoginScreen
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
 import com.example.keyinfo.presentation.screen.main.MainScreen
@@ -29,6 +32,8 @@ fun AppNavigation(
         context = LocalContext.current,
         router = AppRouter(navController)
     )
+    val keyViewModel = KeyTransferViewModel()
+
     NavHost(
         navController,
         startDestination = Screen.Welcome.route,
@@ -52,8 +57,6 @@ fun AppNavigation(
                 viewModel = registrationViewModel
             )
         }
-        composable(Screen.Key.route) {
-        }
         composable(Screen.Schedule.route) {
             ScheduleScreen(navController = navController)
         }
@@ -61,7 +64,16 @@ fun AppNavigation(
             MainScreen(navController = navController)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen(navController = navController)
+            ProfileScreen(
+                clickOnKey = { BottomBarRouter(navController).toKey() },
+                clickOnLeave =  { BottomBarRouter(navController).toAuth() }
+            )
+        }
+        composable(Screen.Key.route){
+            KeyTransferScreen(
+                viewModel = keyViewModel,
+                clickOnBar = { BottomBarRouter(navController).toProfile() }
+            )
         }
     }
 }

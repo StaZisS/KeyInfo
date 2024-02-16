@@ -35,18 +35,20 @@ import com.example.keyinfo.ui.theme.TextButtonColor
 
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    clickOnKey: () -> Unit,
+    clickOnLeave: () -> Unit
+) {
     val name = "John Doe"
     Box(Modifier.padding(16.dp)) {
         IconButton(
-            onClick = { /*TODO*/ }, modifier = Modifier
+            onClick = { clickOnKey() }, modifier = Modifier
                 .align(Alignment.TopEnd)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.key),
                 contentDescription = null,
                 Modifier.size(20.dp)
-
             )
         }
 
@@ -83,7 +85,7 @@ fun ProfileScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(20.dp))
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { clickOnLeave() },
                 colors = TextButtonColor,
                 modifier = Modifier.fillMaxWidth(0.5f),
                 shape = RoundedCornerShape(10.dp)
@@ -104,5 +106,5 @@ fun ProfileScreen(navController: NavController) {
 @Preview
 @Composable
 fun ProfilePreview() {
-    ProfileScreen(rememberNavController())
+    ProfileScreen({}, {})
 }
