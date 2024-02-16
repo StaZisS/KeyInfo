@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,10 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.AppBar
+import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
+import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButtonsRow
 import com.example.keyinfo.ui.theme.Values
 
 @Composable
-fun KeyTransferScreen(){
+fun KeyTransferScreen(viewModel: KeyTransferViewModel){
+    val state by viewModel.state.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,8 +51,8 @@ fun KeyTransferScreen(){
         )
 
         ToggleButtonsRow(
-            selectedButton = 1,
-            changeButtonClick = {}
+            selectedButton = state.currentButton,
+            changeButtonClick = { viewModel.processIntent(KeyTransferIntent.ClickOnButton(it)) }
         )
 
         LazyColumn(
@@ -59,10 +65,4 @@ fun KeyTransferScreen(){
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun KeyTransferScreenPreview(){
-    KeyTransferScreen()
 }

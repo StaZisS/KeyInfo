@@ -23,8 +23,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.PairButtons
-import com.example.keyinfo.presentation.screen.keytransfer.SmallKeyCard
-import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.ui.theme.Values
 
 @Composable

@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.keyinfo.presentation.navigation.Navigation
 import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferScreen
+import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
 import com.example.keyinfo.ui.theme.KeyInfoTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    KeyTransferScreen()
+                    Navigation()
                 }
             }
         }

@@ -1,14 +1,11 @@
-package com.example.keyinfo.presentation.screen.keytransfer
+package com.example.keyinfo.presentation.screen.keytransfer.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -22,19 +19,18 @@ import com.example.keyinfo.ui.theme.BottomBarColor
 @Composable
 fun ToggleButtonsRow(
     selectedButton: Int = 1,
-    changeButtonClick: () -> Unit
+    changeButtonClick: (Int) -> Unit
 ) {
     Row(modifier = Modifier.padding(top = 10.dp)) {
-        val buttons = listOf("Заявки мне", "Все заявки", "Заявки от меня")
+        val buttons = listOf("Заявки мне", "Заявки от меня")
 
         buttons.forEachIndexed { index, label ->
             Button(
                 onClick = {
-                    changeButtonClick()
+                    changeButtonClick(index)
                     when (index) {
                         0 -> Unit
                         1 -> Unit
-                        2 -> Unit
                         else -> {}
                     }
                 },

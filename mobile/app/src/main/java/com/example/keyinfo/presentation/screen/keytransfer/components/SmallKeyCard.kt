@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.keytransfer
+package com.example.keyinfo.presentation.screen.keytransfer.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
-import com.example.keyinfo.presentation.screen.main.KeyCard
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
 
