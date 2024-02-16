@@ -29,7 +29,7 @@ export const Login = () => {
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
-                                type="email"
+                                type="text"
                                 placeholder="name@example.com"
                                 onChange={(e) => {
                                     setEmail(e.target.value)

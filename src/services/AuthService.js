@@ -6,6 +6,6 @@ export default class AuthService{
     }
 
     static  async logout(refreshToken){
-        return $api.post('/auth/logout', {refresh_token:`${refreshToken}`})
+        return $api.post('/auth/logout', {refresh_token: refreshToken}, {headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}})
     }
 }
