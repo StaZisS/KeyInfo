@@ -18,11 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.AdviceText
 import com.example.keyinfo.presentation.screen.components.AppBar
@@ -37,7 +38,7 @@ import com.example.keyinfo.ui.theme.Values.SpaceBetweenObjects
 
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val loginState by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
 
@@ -99,10 +100,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
             )
         }
 
-        if (loginState.isLoading){
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = BasePadding))
+        if (loginState.isLoading) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = BasePadding)
+            )
             LoadingItem()
         }
 

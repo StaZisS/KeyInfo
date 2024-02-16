@@ -30,7 +30,6 @@ import com.example.keyinfo.presentation.screen.components.AdviceText
 import com.example.keyinfo.presentation.screen.components.AppBar
 import com.example.keyinfo.presentation.screen.components.DatePickerField
 import com.example.keyinfo.presentation.screen.components.OutlinedTextFieldWithLabel
-import com.example.keyinfo.presentation.screen.components.RoleSelectionButton
 import com.example.keyinfo.ui.theme.BaseButtonColor
 import com.example.keyinfo.ui.theme.Values.BasePadding
 import com.example.keyinfo.ui.theme.Values.BigRound

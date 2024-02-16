@@ -13,13 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.keyinfo.presentation.navigation.Screen
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Timetable,
-        BottomBarScreen.Profile
+        Screen.Main,
+        Screen.Schedule,
+        Screen.Profile,
     )
 
     val navStackBackEntry by navController.currentBackStackEntryAsState()

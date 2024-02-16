@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,15 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.keyinfo.R
-import com.example.keyinfo.presentation.navigation.router.AppRouter
+import com.example.keyinfo.presentation.navigation.Screen
 import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.ui.theme.Values.BasePadding
 import com.example.keyinfo.ui.theme.Values.MiddlePadding
 import com.example.keyinfo.ui.theme.Values.MoreSpaceBetweenObjects
 
 @Composable
-fun SelectAuthScreen(router: AppRouter) {
+fun SelectAuthScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,9 +70,9 @@ fun SelectAuthScreen(router: AppRouter) {
 
         PairButtons(
             firstLabel = stringResource(R.string.registration),
-            firstClick = { router.toRegistration() },
+            firstClick = { navController.navigate(Screen.Registration.route) },
             secondLabel = stringResource(R.string.login_button),
-            secondClick = { router.toLogin() },
+            secondClick = { navController.navigate(Screen.Login.route) },
             modifier = Modifier.padding(top = MoreSpaceBetweenObjects, bottom = BasePadding)
         )
     }

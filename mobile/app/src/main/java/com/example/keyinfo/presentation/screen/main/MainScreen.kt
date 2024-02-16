@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.ui.theme.AccentColor
@@ -31,7 +33,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavController) {
     val pagerState = rememberPagerState(1)
     val pages = listOf(
         stringResource(id = R.string.main_cancelled),
@@ -118,5 +120,5 @@ fun MainScreen() {
 @Composable
 fun MainScreenPrev() {
 //    PageEmptyScreen()
-    MainScreen()
+    MainScreen(rememberNavController())
 }

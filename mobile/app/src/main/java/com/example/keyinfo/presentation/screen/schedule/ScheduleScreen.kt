@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.main.KeyCard
 import com.example.keyinfo.ui.theme.CalendarDayColor
@@ -34,7 +35,7 @@ import java.util.Locale
 
 // todo add button for month and year selection
 @Composable
-fun ScheduleScreen() {
+fun ScheduleScreen(navController: NavController) {
     val items = listOf(
         ClassTime("1 пара", "8:00-9:35"),
         ClassTime("2 пара", "9:45-11:20"),
@@ -126,5 +127,5 @@ data class ClassTime(
 @Composable
 fun ScheduleScreenPrev() {
 //    TimePickerDialog()
-    ScheduleScreen()
+//    ScheduleScreen()
 }

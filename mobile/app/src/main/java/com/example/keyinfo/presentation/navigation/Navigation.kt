@@ -4,37 +4,64 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import com.example.keyinfo.presentation.navigation.graph.authNavigationGraph
-import com.example.keyinfo.presentation.navigation.graph.mainNavigationGraph
+import androidx.navigation.compose.composable
 import com.example.keyinfo.presentation.navigation.router.AppRouter
+import com.example.keyinfo.presentation.screen.login.LoginScreen
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
+import com.example.keyinfo.presentation.screen.main.MainScreen
+import com.example.keyinfo.presentation.screen.profile.ProfileScreen
+import com.example.keyinfo.presentation.screen.registration.RegistrationFirstScreen
+import com.example.keyinfo.presentation.screen.registration.RegistrationSecondScreen
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
+import com.example.keyinfo.presentation.screen.schedule.ScheduleScreen
+import com.example.keyinfo.presentation.screen.selectauth.SelectAuthScreen
 
-const val ROOT_ROUTE = "root"
 
 @Composable
-fun Navigation() {
-    val navController = rememberNavController()
+fun AppNavigation(
+    navController: NavHostController,
+) {
     val registrationViewModel = RegistrationViewModel(
         context = LocalContext.current,
         router = AppRouter(navController)
     )
-
     val loginViewModel = LoginViewModel(
         context = LocalContext.current,
         router = AppRouter(navController)
     )
-
     NavHost(
-        navController = navController,
-        startDestination = Destinations.SELECT_AUTH_SCREEN,
-        route = ROOT_ROUTE
+        navController,
+        startDestination = Screen.Welcome.route,
     ) {
-        authNavigationGraph(
-            navController = navController,
-            registrationViewModel = registrationViewModel,
-            loginViewModel = loginViewModel
-        )
+
+        composable(Screen.Splash.route) {
+        }
+        composable(Screen.Welcome.route) {
+            SelectAuthScreen(navController = navController)
+        }
+        composable(Screen.Login.route) {
+            LoginScreen(navController = navController, viewModel = loginViewModel)
+        }
+        composable(Screen.Registration.route) {
+            RegistrationFirstScreen(
+                viewModel = registrationViewModel
+            )
+        }
+        composable(Screen.RegistrationPwd.route) {
+            RegistrationSecondScreen(
+                viewModel = registrationViewModel
+            )
+        }
+        composable(Screen.Key.route) {
+        }
+        composable(Screen.Schedule.route) {
+            ScheduleScreen(navController = navController)
+        }
+        composable(Screen.Main.route) {
+            MainScreen(navController = navController)
+        }
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController = navController)
+        }
     }
 }

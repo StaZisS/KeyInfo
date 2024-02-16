@@ -1,38 +1,38 @@
 package com.example.keyinfo.presentation.navigation.router
 
 import androidx.navigation.NavController
-import com.example.keyinfo.presentation.navigation.Destinations
+import com.example.keyinfo.presentation.navigation.Screen
 
 class AppRouter(
     private val navController: NavController
 ) {
     fun toLogin() {
-        navController.navigate(Destinations.LOGIN_SCREEN) {
-            popUpTo(Destinations.SELECT_AUTH_SCREEN)
+        navController.navigate(Screen.Login.route) {
+            popUpTo(Screen.Welcome.route)
         }
     }
 
     fun toRegistration() {
-        navController.navigate(Destinations.REGISTRATION_FIRST_SCREEN) {
-            popUpTo(Destinations.SELECT_AUTH_SCREEN)
+        navController.navigate(Screen.Registration.route) {
+            popUpTo(Screen.Welcome.route)
         }
     }
 
     fun toAuth() {
-        navController.navigate(Destinations.SELECT_AUTH_SCREEN) {
-            popUpTo(navController.graph.id){
+        navController.navigate(Screen.Welcome.route) {
+            popUpTo(navController.graph.id) {
                 inclusive = true
             }
         }
     }
 
     fun toPasswordRegistration() {
-        navController.navigate(Destinations.REGISTRATION_SECOND_SCREEN)
+        navController.navigate(Screen.RegistrationPwd.route)
     }
 
     fun toMain() {
-        navController.navigate("main") {
-            popUpTo(navController.graph.id){
+        navController.navigate(Screen.Main.route) {
+            popUpTo(navController.graph.id) {
                 inclusive = true
             }
         }
