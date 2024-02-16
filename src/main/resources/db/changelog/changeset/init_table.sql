@@ -72,7 +72,7 @@ CREATE TABLE Request
     room               INTEGER                  NOT NULL,
     build              INTEGER                  NOT NULL,
     duplicate          BOOLEAN          DEFAULT FALSE,
-    end_time_duplicate TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_time_duplicate TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (start_time, end_time) REFERENCES TimeSlot (start_time, end_time),
     FOREIGN KEY (request_creator) REFERENCES Client (client_id),
     FOREIGN KEY (room, build) REFERENCES StudyRoom (room, build)
@@ -109,9 +109,10 @@ CREATE TABLE TransferRequest
 -- rollback DROP TABLE TransferRequest;
 
 -- changeset T9404:9
-INSERT INTO Client VALUES
-    ('8904ab0d-40e8-445d-9578-6254661e85b4', '1', '1', '$2a$10$p/SE0M1upWg1Szb3eGLn0.t4lLC5hbOpmL.VuY0CpTQYmiP8kXG/W',
-     'MALE', '2024-02-16 05:00:28.746955 +00:00');
+INSERT INTO Client
+VALUES ('8904ab0d-40e8-445d-9578-6254661e85b4', '1', '1',
+        '$2a$10$p/SE0M1upWg1Szb3eGLn0.t4lLC5hbOpmL.VuY0CpTQYmiP8kXG/W',
+        'MALE', '2024-02-16 05:00:28.746955 +00:00');
 
-INSERT INTO Role VALUES
-    ('8904ab0d-40e8-445d-9578-6254661e85b4', 'ADMIN');
+INSERT INTO Role
+VALUES ('8904ab0d-40e8-445d-9578-6254661e85b4', 'ADMIN');

@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/Shop
     username: postgres
-    password: 123
+    password: 1489qq
     driver-class-name:  org.postgresql.Driver
 
   jooq:
