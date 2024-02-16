@@ -5,11 +5,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.presentation.navigation.graph.authNavigationGraph
 import com.example.keyinfo.presentation.navigation.graph.mainNavigationGraph
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
+import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 
 const val ROOT_ROUTE = "root"
 
@@ -17,8 +17,8 @@ const val ROOT_ROUTE = "root"
 fun Navigation() {
     val navController = rememberNavController()
     val registrationViewModel = RegistrationViewModel(
-         context = LocalContext.current,
-         router = AppRouter(navController)
+        context = LocalContext.current,
+        router = AppRouter(navController)
     )
 
     val loginViewModel = LoginViewModel(

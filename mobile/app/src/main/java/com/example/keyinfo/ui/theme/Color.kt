@@ -30,6 +30,8 @@ val LightGrayColor = Color(0xFFF5F5F5)
 val LightBlueColor = Color(0xFF8696BB)
 val RedColor = Color(0xFFE64646)
 val buttonColor = Color(0xFF8696BB)
+val CalendarTopColor = Color(0xFFA4B9DE)
+val CalendarDayColor = Color(0xFF202020)
 
 val BaseButtonColor = ButtonColors(
     containerColor = AccentColor,

@@ -75,6 +75,9 @@ dependencies {
     implementation("com.github.GIGAMOLE:ComposeShadowsPlus:1.0.4")
     implementation("com.google.accompanist:accompanist-pager:0.27.1")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
+
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
