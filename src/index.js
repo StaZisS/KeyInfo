@@ -7,7 +7,13 @@ import {Router, router} from "./router/Router";
 import Store from "./store/store";
 import './styles/global.css'
 import {BrowserRouter} from "react-router-dom";
+import {spy} from "mobx";
 
+spy((event) =>{
+    if (event.type === 'action'){
+        console.log(event)
+    }
+})
 
 const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'));
