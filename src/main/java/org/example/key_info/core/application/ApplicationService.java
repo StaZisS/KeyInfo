@@ -3,6 +3,8 @@ package org.example.key_info.core.application;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.client.repository.ClientRepository;
 import org.example.key_info.core.client.repository.ClientRole;
+import org.example.key_info.core.schedule.TimeSlotEntity;
+import org.example.key_info.core.timeslot.TimeSlotService;
 import org.example.key_info.public_interface.application.AcceptApplicationDto;
 import org.example.key_info.public_interface.application.ApplicationDto;
 import org.example.key_info.public_interface.application.CreateApplicationDto;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class ApplicationService {
     private static final List<ClientRole> ROLES_CONTROL_APPLICATION = List.of(ClientRole.DEANERY, ClientRole.ADMIN);
 
+    private final TimeSlotService timeSlotService;
     private final ApplicationRepository applicationRepository;
     private final ClientRepository clientRepository;
 
@@ -74,6 +77,9 @@ public class ApplicationService {
                 dto.isDuplicate(),
                 dto.endTimeToDuplicate()
         );
+
+        var timeslot = new TimeSlotEntity(dto.startTime(), dto.endTime());
+        timeSlotService.createTimeslot(timeslot);
 
         return applicationRepository.createApplication(applicationEntity);
     }

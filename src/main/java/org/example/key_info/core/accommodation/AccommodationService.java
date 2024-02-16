@@ -6,6 +6,7 @@ import org.example.key_info.public_interface.accommodation.AccommodationCreateDt
 import org.example.key_info.public_interface.accommodation.AccommodationDeleteDto;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
+import org.example.key_info.rest.controller.deanery.StudyRoomDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,15 @@ public class AccommodationService {
         validateClientRoles(dto.clientRoles());
 
         accommodationRepository.deleteAccommodation(dto.buildId(), dto.roomId());
+    }
+
+    public List<StudyRoomDto> getAllAccommodations() {
+        var accommodations = accommodationRepository.getAllAccommodations();
+
+        return accommodations.stream()
+                .map(accommodationEntity ->
+                        new StudyRoomDto(accommodationEntity.buildId(), accommodationEntity.roomId()))
+                .toList();
     }
 
     private void validateClientRoles(Set<ClientRole> roles) {

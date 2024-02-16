@@ -59,7 +59,7 @@ public class RestApplicationController {
     @Operation(summary = "Создать заявку-запрос")
     @PostMapping()
     public ResponseEntity<UUID> createApplication(@RequestHeader("Authorization") String accessToken,
-                                                                    @RequestBody CreateApplicationDtoRequest dto) {
+                                                  @RequestBody CreateApplicationDtoRequest dto) {
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
 
         var createApplicationDto = new CreateApplicationDto(
