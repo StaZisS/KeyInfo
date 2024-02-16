@@ -17,7 +17,7 @@ export function Header() {
                     <NavbarCollapse id='basic-navbar-nav'>
                             <Nav className='w-100'>
                                 <NavLink className='link-hover p-lg-4' href='/key'>Ключи</NavLink>
-                                <NavLink className='link-hover p-lg-4' href='/application'>Заявки</NavLink>
+                                <NavLink className='link-hover p-lg-4' href='/application'>Пользователи</NavLink>
                                 <NavLink className='link-hover p-lg-4 ms-lg-auto' href='/login'>Вход</NavLink>
                             </Nav>
                             <Nav>

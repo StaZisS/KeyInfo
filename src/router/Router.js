@@ -1,5 +1,6 @@
 import { Keys } from "../components/pages/keysList/keysList";
 import { Login } from "../components/pages/login/Login";
+import { People } from "../components/pages/peopleList/peopleList";
 import {Header} from "../components/snippets/header";
 
 const {createBrowserRouter} = require("react-router-dom");
@@ -19,6 +20,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/application',
-        element: <><Header/></>
+        element: <><Header/><People/></>
     }
 ])
