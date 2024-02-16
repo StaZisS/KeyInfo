@@ -4,7 +4,9 @@ import com.example.shop.public_.tables.records.ClientRecord;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -73,6 +75,29 @@ public class ClientRepositoryImpl implements ClientRepository {
                                 .from(ROLE)
                                 .where(ROLE.ROLE_.eq(role.name()))
                 ))
+                .fetchStream()
+                .map(clientRecord -> {
+                    var clientRoles = getClientRoles(clientRecord.getClientId(), create);
+                    return mapClientEntity(clientRecord, clientRoles);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClientEntity> getAllClients(ClientInfo info) {
+        var query = create.selectFrom(CLIENT);
+
+        Condition condition = DSL.trueCondition();
+
+        if (info.name() != null) {
+            condition = condition.and(CLIENT.NAME.eq(info.name()));
+        }
+
+        if (info.email() != null) {
+            condition = condition.and(CLIENT.EMAIL.eq(info.email()));
+        }
+
+        return query.where(condition)
                 .fetchStream()
                 .map(clientRecord -> {
                     var clientRoles = getClientRoles(clientRecord.getClientId(), create);

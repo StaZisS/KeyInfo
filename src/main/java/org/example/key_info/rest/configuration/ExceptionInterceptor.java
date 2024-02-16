@@ -20,7 +20,8 @@ public class ExceptionInterceptor extends ResponseEntityExceptionHandler {
             ExceptionType.ALREADY_EXISTS, HttpStatus.BAD_REQUEST,
             ExceptionType.NOT_FOUND, HttpStatus.NOT_FOUND,
             ExceptionType.UNAUTHORIZED, HttpStatus.UNAUTHORIZED,
-            ExceptionType.ILLEGAL, HttpStatus.BAD_REQUEST
+            ExceptionType.ILLEGAL, HttpStatus.BAD_REQUEST,
+            ExceptionType.FORBIDDEN, HttpStatus.FORBIDDEN
     );
 
     @ExceptionHandler(value = {ExceptionInApplication.class})

@@ -9,4 +9,5 @@ public interface ClientRepository {
     Optional<ClientEntity> getClientByEmail(String email);
     Optional<ClientEntity> getClientByClientId(UUID clientId);
     List<ClientEntity> getClientsByRole(ClientRole role);
+    List<ClientEntity> getAllClients(ClientInfo info);
 }
