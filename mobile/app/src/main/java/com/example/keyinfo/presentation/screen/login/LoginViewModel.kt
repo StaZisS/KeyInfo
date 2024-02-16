@@ -13,9 +13,14 @@ import com.example.keyinfo.domain.model.authorization.Login
 import com.example.keyinfo.domain.state.LoginState
 import com.example.keyinfo.domain.usecase.PostLoginUseCase
 import com.example.keyinfo.presentation.navigation.router.AppRouter
+import com.example.keyinfo.presentation.screen.registration.RegistrationIntent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 class LoginViewModel (
     private val context: Context,
@@ -84,32 +89,54 @@ class LoginViewModel (
         processIntent(LoginIntent.UpdatePassword(Constants.EMPTY_STRING))
     }
 
+
     private fun performLogin(username: String, password: String, routeAfterLogin: () -> Unit) {
         val login = Login(username, password)
         processIntent(LoginIntent.UpdateLoading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = postLoginUseCase.invoke(login)
-                if (result.isSuccess) {
-                    val tokenResponse = result.getOrNull()
-                    if (tokenResponse != null) {
-                        NetworkService.setAuthToken(tokenResponse.accessToken)
-                    }
-                    LocalStorage(context).saveToken(tokenResponse!!)
-                    routeAfterLogin()
-                } else {
-                    processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
+                withContext(Dispatchers.Main) {
+                    result.fold(
+                        onSuccess = { tokenResponse ->
+                            LocalStorage(context).saveToken(tokenResponse)
+                            NetworkService.setAuthToken(tokenResponse.accessToken)
+                            routeAfterLogin()
+                        },
+                        onFailure = { exception ->
+                            Log.d("Exc", exception.message.toString())
+                            handleRegistrationError(exception)
+                        }
+                    )
+                }
+            } catch (e: SocketTimeoutException) {
+                withContext(Dispatchers.Main) {
+                    showToast("Превышено время ожидания соединения. " +
+                            "Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
-                Log.d("SsS", e.toString())
-                Toast.makeText(
-                    context,
-                    "Ошибка соединения с сервером",
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    showToast("Произошла ошибка: ${e.message}")
+                }
             } finally {
                 processIntent(LoginIntent.UpdateLoading)
             }
         }
+    }
+
+
+    private fun handleRegistrationError(exception: Throwable) {
+        when (exception) {
+            is HttpException -> when (exception.code()) {
+                400 -> processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
+                404 -> processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
+                else -> showToast("Неизвестная ошибка: ${exception.code()}")
+            }
+            else -> showToast("Ошибка соединения с сервером")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

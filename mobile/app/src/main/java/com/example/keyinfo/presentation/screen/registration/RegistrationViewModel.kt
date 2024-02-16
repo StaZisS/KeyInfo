@@ -17,9 +17,15 @@ import com.example.keyinfo.domain.validator.EmailValidator
 import com.example.keyinfo.domain.validator.NameValidator
 import com.example.keyinfo.domain.validator.PasswordValidator
 import com.example.keyinfo.presentation.navigation.router.AppRouter
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 class RegistrationViewModel (
     private val context: Context,
@@ -165,10 +171,7 @@ class RegistrationViewModel (
         processIntent(RegistrationIntent.UpdateGender(Constants.ZERO))
     }
 
-    private fun performRegistration(
-        registrationState: RegistrationState,
-        afterRegistration: () -> Unit
-    ) {
+    private fun performRegistration(registrationState: RegistrationState, afterRegistration: () -> Unit) {
         val registration = Registration(
             name = registrationState.name.trim(),
             password = registrationState.password.trim(),
@@ -177,31 +180,48 @@ class RegistrationViewModel (
         )
 
         processIntent(RegistrationIntent.UpdateLoading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = postRegistrationUseCase.invoke(registration)
-                if (result.isSuccess) {
-                    val tokenResponse = result.getOrNull()
-                    LocalStorage(context).saveToken(tokenResponse!!)
-                    NetworkService.setAuthToken(tokenResponse.accessToken)
-                    afterRegistration()
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Ошибка регистрации",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                withContext(Dispatchers.Main) {
+                    result.fold(
+                        onSuccess = { tokenResponse ->
+                            LocalStorage(context).saveToken(tokenResponse)
+                            NetworkService.setAuthToken(tokenResponse.accessToken)
+                            afterRegistration()
+                        },
+                        onFailure = { exception ->
+                            handleRegistrationError(exception)
+                        }
+                    )
+                }
+            } catch (e: SocketTimeoutException) {
+                withContext(Dispatchers.Main) {
+                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
-                Log.d("s", e.toString())
-                Toast.makeText(
-                    context,
-                    "Ошибка соединения с сервером",
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    showToast("Произошла ошибка: ${e.message}")
+                }
             } finally {
                 processIntent(RegistrationIntent.UpdateLoading)
             }
         }
+
     }
+
+    private fun handleRegistrationError(exception: Throwable) {
+        when (exception) {
+            is HttpException -> when (exception.code()) {
+                400 -> showToast("Ошибка регистрации")
+                else -> showToast("Неизвестная ошибка: ${exception.code()}")
+            }
+            else -> showToast("Ошибка соединения с сервером")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
 }
