@@ -19,7 +19,7 @@ export const KeyFilter = () => {
 
     return (
         <Container
-            className='mt-3'>
+            className='mt-5'>
             <Button
                 className='w-100 d-md-none mb-2'
                 aria-expanded={isOpen}
@@ -61,7 +61,9 @@ export const KeyFilter = () => {
                                     </Col>
                                     <Col
                                         lg={2}
-                                        sm={4}>
+                                        sm={4}
+                                        xs={6}
+                                    >
                                         <FormCheck
                                             className='mt-2 mt-lg-0'
                                             type={'switch'}
@@ -70,7 +72,9 @@ export const KeyFilter = () => {
                                     </Col>
                                     <Col
                                         lg={2}
-                                        sm={4}>
+                                        sm={4}
+                                        xs={6}
+                                    >
                                         <FormCheck
                                             className='mt-2 mt-lg-0'
                                             type={'switch'}
