@@ -5,6 +5,7 @@ import KeysStore from "../../../store/keysStore";
 import {Loading} from "../../snippets/Loading";
 import KeyService from "../../../services/KeyService";
 import keysStore from "../../../store/keysStore";
+import {KeyFilter} from "../../snippets/KeyFilter";
 
 export const Keys = () => {
     const {key_status, build, room} = useParams()
@@ -37,7 +38,7 @@ export const Keys = () => {
 
     return (
         <>
-            Keys
+            <KeyFilter/>
         </>
     )
 

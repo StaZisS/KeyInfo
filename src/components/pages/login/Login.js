@@ -21,7 +21,7 @@ export const Login = () => {
     }
 
     return (
-        <Container className="mt-5 d-flex justify-content-center">
+        <Container className="mt-3 d-flex justify-content-center">
             <Card className='shadow border-0 col-10 col-md-8'>
                 <CardBody>
                     <Form className="p-5" onSubmit={handleLogin}>
