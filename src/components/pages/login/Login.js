@@ -1,35 +1,40 @@
 import {useState} from "react";
 import {Button, Card, CardBody, CardTitle, Col, Container, Form} from "react-bootstrap"
+import Store from "../../../store/store";
+import {useNavigate} from "react-router-dom";
 
 export const Login = () => {
-    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLoginChange = (e) => {
-        setLogin(e.target.value)
-    }
+    const navigate = useNavigate()
 
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value)
-    }
-
-    const handleLogIn = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(login, password);
+        try {
+            await Store.login(email, password)
+            console.log('Вход. isAuth = ' + Store.isAuth)
+            navigate('/')
+        } catch (e) {
+
+        }
     }
+
     return (
         <Container className="mt-5 d-flex justify-content-center">
             <Card className='shadow border-0 col-10 col-md-8'>
                 <CardBody>
-                    <Form className="p-5" onSubmit={handleLogIn}>
+                    <Form className="p-5" onSubmit={handleLogin}>
                         <h1>Вход</h1>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
-                                type="email"
+                                type="text"
                                 placeholder="name@example.com"
-                                onChange={handleLoginChange}
-                                value={login}
+                                onChange={(e) => {
+                                    setEmail(e.target.value)
+                                }}
+                                value={email}
                                 required
                             />
                         </Form.Group>
@@ -38,7 +43,9 @@ export const Login = () => {
                             <Form.Label>Пароль</Form.Label>
                             <Form.Control
                                 type="password"
-                                onChange={handlePasswordChange}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}
                                 value={password}
                                 required
                             />

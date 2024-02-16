@@ -1,23 +1,16 @@
-import { Login } from "../components/pages/login/Login";
-import {Header} from "../components/snippets/header";
+import {Login} from "../components/pages/login/Login";
+import {Header} from "../components/snippets/Header";
+import {Route, Routes} from "react-router";
+import {MainLayout} from "../components/layouts/MainLayout";
 
-const {createBrowserRouter} = require("react-router-dom");
-
-export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <><Header/></>
-    },
-    {
-        path: '/login',
-        element: <><Header/><Login/></>
-    },
-    {
-        path: '/key',
-        element: <><Header/></>
-    },
-    {
-        path: '/application',
-        element: <><Header/></>
-    }
-])
+export function Router() {
+    return (
+        <Routes>
+            <Route path='/' element={<MainLayout children={<>Main</>}/>}/>
+            <Route path='/login' element={<MainLayout children={<Login/>}/>}/>
+            <Route path='/key' element={<MainLayout children={<>keys</>}/>}/>
+            <Route path='/application' element={<MainLayout children={<>application</>}/>}/>
+            <Route path='*' element={<MainLayout children={<>Not found</>}/>}/>
+        </Routes>
+    )
+}
