@@ -17,8 +17,8 @@ public class RestUserController {
     @Operation(summary = "Получить всех пользователей")
     @GetMapping()
     public void getAllUsers(@RequestHeader("Authorization") String accessToken,
-                            @RequestHeader(required = false) boolean name,
-                            @RequestHeader(required = false) boolean email) {
+                            @RequestHeader(required = false) String name,
+                            @RequestHeader(required = false) String email) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }
