@@ -3,10 +3,13 @@ package org.example.key_info.rest.controller.deanery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.accommodation.AccommodationService;
 import org.example.key_info.core.application.ApplicationFilterDto;
 import org.example.key_info.core.application.ApplicationService;
 import org.example.key_info.core.application.ApplicationStatus;
 import org.example.key_info.core.key.service.KeyService;
+import org.example.key_info.public_interface.accommodation.AccommodationCreateDto;
+import org.example.key_info.public_interface.accommodation.AccommodationDeleteDto;
 import org.example.key_info.public_interface.application.AcceptApplicationDto;
 import org.example.key_info.public_interface.application.ApplicationDto;
 import org.example.key_info.public_interface.application.DeclineApplicationDto;
@@ -32,9 +35,46 @@ import java.util.UUID;
 @RequestMapping("/api/v1/deaneries")
 @Tag(name = "Работа деканата")
 public class RestDeaneriesController {
-    private final KeyService keyService;
+    private final AccommodationService accommodationService;
     private final ApplicationService applicationService;
+    private final KeyService keyService;
     private final JwtTools jwtTools;
+
+    @Operation(summary = "Деканат добавляет новую аудиторию в здание")
+    @PostMapping("/accommodations/{build_id}/{room_id}")
+    public ResponseEntity<Void> createAccommodation(@RequestHeader("Authorization") String accessToken,
+                                                    @PathVariable(name = "build_id") int buildId,
+                                                    @PathVariable(name = "room_id") int roomId) {
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var accommodationCreateDto = new AccommodationCreateDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                buildId,
+                roomId
+        );
+        accommodationService.createAccommodation(accommodationCreateDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Деканат удаляет аудиторию из здания")
+    @DeleteMapping("/accommodations/{build_id}/{room_id}")
+    public ResponseEntity<Void> deleteAccommodation(@RequestHeader("Authorization") String accessToken,
+                                                    @PathVariable(name = "build_id") int buildId,
+                                                    @PathVariable(name = "room_id") int roomId) {
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var accommodationDeleteDto = new AccommodationDeleteDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                buildId,
+                roomId
+        );
+        accommodationService.deleteAccommodation(accommodationDeleteDto);
+
+        return ResponseEntity.ok().build();
+    }
 
     @Operation(summary = "Получить доступные заявки для рассмотрения")
     @GetMapping("/applications")

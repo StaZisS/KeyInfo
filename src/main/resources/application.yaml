@@ -4,7 +4,7 @@ spring:
 
   liquibase:
     default-schema: public
-    drop-first: false # !!!!!!!!
+    drop-first: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/KeyInfo
