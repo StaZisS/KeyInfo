@@ -7,6 +7,7 @@ import org.example.key_info.public_interface.exception.ExceptionType;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -62,6 +63,22 @@ public class ClientRepositoryImpl implements ClientRepository {
         var clientRoles = getClientRoles(clientEntityRecord.getClientId(), create);
 
         return Optional.of(mapClientEntity(clientEntityRecord, clientRoles));
+    }
+
+    @Override
+    public List<ClientEntity> getClientsByRole(ClientRole role) {
+        return create.selectFrom(CLIENT)
+                .where(CLIENT.CLIENT_ID.in(
+                        create.select(ROLE.CLIENT_ID)
+                                .from(ROLE)
+                                .where(ROLE.ROLE_.eq(role.name()))
+                ))
+                .fetchStream()
+                .map(clientRecord -> {
+                    var clientRoles = getClientRoles(clientRecord.getClientId(), create);
+                    return mapClientEntity(clientRecord, clientRoles);
+                })
+                .collect(Collectors.toList());
     }
 
     private void insertUserRole(ClientRole role, UUID clientId, DSLContext localCtx) {

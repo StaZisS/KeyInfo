@@ -3,6 +3,9 @@ package org.example.key_info.rest.controller.schedule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.schedule.GetFreeTimeSlotsDto;
+import org.example.key_info.core.schedule.ScheduleService;
+import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +17,18 @@ import java.util.List;
 @RequestMapping("/api/v1/schedules")
 @Tag(name = "Для работы с расписанием")
 public class RestScheduleController {
+    private final ScheduleService scheduleService;
 
     @Operation(summary = "Получить свободные временные слоты")
     @GetMapping()
     public ResponseEntity<List<DayTimeSlots>> getFreeTimeSlots(@RequestParam(required = false, name = "start_time") OffsetDateTime startTime,
                                                                @RequestParam(required = false, name = "end_time") OffsetDateTime endTime,
-                                                               @RequestParam(required = false, name = "build_id") int buildId,
-                                                               @RequestParam(required = false, name = "room_id") int roomId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+                                                               @RequestParam(required = false, name = "build_id") Integer buildId,
+                                                               @RequestParam(required = false, name = "room_id") Integer roomId) {
+        var getFreeTimeSlotsDto = new GetFreeTimeSlotsDto(startTime, endTime, buildId, roomId);
+
+        var freeTimeSlots = scheduleService.getFreeTimeSlots(getFreeTimeSlotsDto);
+
+        return ResponseEntity.ok(freeTimeSlots);
     }
 }
