@@ -56,7 +56,7 @@
 }
 .has-requests:hover{
     cursor: pointer;
-    border-radius: 15px;
+    border-radius: 15px 0 0 15px;
     -webkit-box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
 -moz-box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
 box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
