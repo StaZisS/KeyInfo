@@ -559,7 +559,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 false,
                 null
         );

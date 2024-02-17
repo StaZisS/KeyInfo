@@ -149,8 +149,36 @@ public class ApplicationService {
         );
         applicationRepository.updateApplication(updatedApplication);
 
-        if (application.isDuplicate())
+
+        var filter = ApplicationFilterDto.builder()
+                .start(application.startTime())
+                .end(application.endTime())
+                .buildId(application.buildId())
+                .roomId(application.roomId())
+                .status(ApplicationStatus.IN_PROCESS)
+                .build();
+
+        var applications = applicationRepository.getAllApplication(filter);
+
+        for (ApplicationEntity app : applications) {
+            var updatedApp = new ApplicationEntity(
+                    app.applicationId(),
+                    app.applicationCreatorId(),
+                    app.startTime(),
+                    app.endTime(),
+                    ApplicationStatus.DECLINED,
+                    app.createdTime(),
+                    app.buildId(),
+                    app.roomId(),
+                    app.isDuplicate(),
+                    app.endTimeToDuplicate()
+            );
+            applicationRepository.updateApplication(updatedApp);
+        }
+
+        if (application.isDuplicate()) {
             handleDuplicateApplication(application);
+        }
     }
 
     public void declineApplication(DeclineApplicationDto dto) {
