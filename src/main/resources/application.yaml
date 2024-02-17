@@ -4,12 +4,12 @@ spring:
 
   liquibase:
     default-schema: public
-    drop-first: true
+    drop-first: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/KeyInfo
     username: postgres
-    password: 1489qq
+    password: 123
     driver-class-name:  org.postgresql.Driver
 
   jooq:

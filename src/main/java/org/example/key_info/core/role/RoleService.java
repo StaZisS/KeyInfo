@@ -7,6 +7,7 @@ import org.example.key_info.public_interface.exception.ExceptionType;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +19,8 @@ public class RoleService {
         Set<ClientRole> appointUserRoles = userStatusUpdateDto.appointUserRoles();
 
         validateClientRoles(userStatusUpdateDto.clientRoles(), appointUserRoles);
+
+        checkDuplicateRoles(userStatusUpdateDto.appointUserId(), appointUserRoles);
 
         appointUserRoles.forEach(role -> roleRepository.assignRoleToUser(userStatusUpdateDto.appointUserId(), role));
         roleRepository.removeRoleFromUser(userStatusUpdateDto.appointUserId(), ClientRole.UNSPECIFIED);
@@ -43,6 +46,16 @@ public class RoleService {
                 roles, appointUserRoles), ExceptionType.INVALID);
     }
 
+    private void checkDuplicateRoles(UUID appointUserId, Set<ClientRole> appointUserRoles) {
+        var roles = roleRepository.getUserRoles(appointUserId);
+
+        appointUserRoles.forEach(role -> {
+            if (roles.contains(role)) {
+                throw new ExceptionInApplication(String.format("Пользователь %s уже имеет роль %s", appointUserId, role),
+                        ExceptionType.INVALID);
+            }
+        });
+    }
 
     private boolean isClientHaveAdminRole(Set<ClientRole> clientRoles) {
         return clientRoles.contains(ClientRole.ADMIN);
