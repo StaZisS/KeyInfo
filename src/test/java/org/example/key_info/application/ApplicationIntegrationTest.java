@@ -12,6 +12,7 @@ import org.example.key_info.core.application.ApplicationService;
 import org.example.key_info.core.application.ApplicationStatus;
 import org.example.key_info.core.client.repository.ClientEntity;
 import org.example.key_info.core.client.repository.ClientRole;
+import org.example.key_info.core.client.service.ClientService;
 import org.example.key_info.public_interface.application.AcceptApplicationDto;
 import org.example.key_info.public_interface.application.CreateApplicationDto;
 import org.example.key_info.public_interface.application.DeclineApplicationDto;
@@ -78,7 +79,11 @@ public class ApplicationIntegrationTest {
 
     private static DSLContext dslContext;
 
-    @Autowired private ApplicationService applicationService;
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ClientService clientService;
 
     @BeforeAll
     public static void setup() throws SQLException, LiquibaseException {
@@ -268,6 +273,7 @@ public class ApplicationIntegrationTest {
                 false,
                 null
         );
+
 
         var applicationId = applicationService.createApplication(createApplicationDto);
 

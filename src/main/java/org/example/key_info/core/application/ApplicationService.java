@@ -88,7 +88,7 @@ public class ApplicationService {
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
 
-        if(dto.clientId() != application.applicationCreatorId()) {
+        if(!dto.clientId().equals(application.applicationCreatorId())) {
             throw new ExceptionInApplication("Вы не можете удалить чужую заявку", ExceptionType.INVALID);
         }
 
