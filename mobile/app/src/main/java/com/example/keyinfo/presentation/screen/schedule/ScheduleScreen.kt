@@ -96,7 +96,6 @@ fun ScheduleScreen(navController: NavController) {
                 monthHeader = {
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek)
                 },
-                userScrollEnabled = false
             )
             Spacer(modifier = Modifier.height(10.dp))
         }
