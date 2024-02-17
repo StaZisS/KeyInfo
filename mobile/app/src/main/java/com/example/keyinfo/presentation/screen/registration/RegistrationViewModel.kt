@@ -33,7 +33,7 @@ class RegistrationViewModel (
 ) : ViewModel() {
     private val emptyState = RegistrationState(
         Constants.EMPTY_STRING,
-        Constants.ZERO,
+        "MALE",
         Constants.EMPTY_STRING,
         Constants.EMPTY_STRING,
         Constants.EMPTY_STRING,
@@ -168,7 +168,7 @@ class RegistrationViewModel (
             RegistrationIntent.UpdateBirthday(
             Constants.EMPTY_STRING, Constants.EMPTY_STRING)
         )
-        processIntent(RegistrationIntent.UpdateGender(Constants.ZERO))
+        processIntent(RegistrationIntent.UpdateGender(Constants.EMPTY_STRING))
     }
 
     private fun performRegistration(registrationState: RegistrationState, afterRegistration: () -> Unit) {

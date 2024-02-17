@@ -2,7 +2,7 @@ package com.example.keyinfo.domain.state
 
 data class RegistrationState (
     val name: String,
-    val gender: Int,
+    val gender: String,
     val email: String,
     val birthday: String,
     val date: String,

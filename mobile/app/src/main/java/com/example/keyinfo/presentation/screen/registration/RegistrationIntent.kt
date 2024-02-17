@@ -6,7 +6,7 @@ import com.example.keyinfo.domain.validator.Validator
 
 sealed class RegistrationIntent {
     data class UpdateName(val name: String) : RegistrationIntent()
-    data class UpdateGender(val gender: Int) : RegistrationIntent()
+    data class UpdateGender(val gender: String) : RegistrationIntent()
     data class UpdateEmail(val email: String) : RegistrationIntent()
     data class UpdateBirthday(val birthday: String, val date: String) : RegistrationIntent()
     data object UpdateDatePickerVisibility : RegistrationIntent()

@@ -15,12 +15,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
+import com.example.keyinfo.ui.theme.AccentColor
+import com.example.keyinfo.ui.theme.ChipColor
+import com.example.keyinfo.ui.theme.LightGrayColor
 import com.example.keyinfo.ui.theme.SecondButtonColor
 import com.example.keyinfo.ui.theme.SuperDarkGrayColor
 import com.example.keyinfo.ui.theme.Values.MicroPadding
@@ -28,9 +33,9 @@ import com.example.keyinfo.ui.theme.Values.MiddlePadding
 import com.example.keyinfo.ui.theme.Values.MiddleRound
 
 @Composable
-fun RoleSelectionButton(
-    updateRole: (Int) -> Unit,
-    state: Int,
+fun GenderSelectionButton(
+    updateRole: (String) -> Unit,
+    state: String,
     modifier: Modifier
 ) {
     val man = stringResource(R.string.man)
@@ -52,13 +57,13 @@ fun RoleSelectionButton(
                 modifier = Modifier
                     .padding(top = MiddlePadding)
                     .background(
-                        color = SecondButtonColor,
+                        color = LightGrayColor,
                         shape = RoundedCornerShape(MiddleRound)
                     )
             ) {
                 Button(
                     onClick = {
-                        updateRole(0)
+                        updateRole("MALE")
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -71,9 +76,10 @@ fun RoleSelectionButton(
                         ),
                     shape = RoundedCornerShape(7.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (state == 0)
-                            MaterialTheme.colorScheme.tertiary else SecondButtonColor,
-                        contentColor = SuperDarkGrayColor
+                        containerColor = if (state == "MALE")
+                            AccentColor else LightGrayColor,
+                        contentColor = if (state == "MALE")
+                            Color.White else ChipColor
                     )
                 ) {
                     Text(man)
@@ -81,7 +87,7 @@ fun RoleSelectionButton(
 
                 Button(
                     onClick = {
-                        updateRole(1)
+                        updateRole("FEMALE")
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -94,9 +100,10 @@ fun RoleSelectionButton(
                         ),
                     shape = RoundedCornerShape(7.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (state == 1)
-                            MaterialTheme.colorScheme.tertiary else SecondButtonColor,
-                        contentColor = SuperDarkGrayColor
+                        containerColor = if (state == "FEMALE")
+                            AccentColor else LightGrayColor,
+                        contentColor = if (state == "FEMALE")
+                            Color.White else ChipColor
                     )
                 ) {
                     Text(woman)
@@ -104,4 +111,10 @@ fun RoleSelectionButton(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun GenderPreview(){
+    GenderSelectionButton(updateRole = { }, state = "Male", modifier = Modifier)
 }

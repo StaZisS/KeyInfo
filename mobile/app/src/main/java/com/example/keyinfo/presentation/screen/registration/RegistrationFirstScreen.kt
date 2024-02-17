@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
 import com.example.keyinfo.domain.validator.EmailValidator
@@ -29,6 +30,7 @@ import com.example.keyinfo.domain.validator.NameValidator
 import com.example.keyinfo.presentation.screen.components.AdviceText
 import com.example.keyinfo.presentation.screen.components.AppBar
 import com.example.keyinfo.presentation.screen.components.DatePickerField
+import com.example.keyinfo.presentation.screen.components.GenderSelectionButton
 import com.example.keyinfo.presentation.screen.components.OutlinedTextFieldWithLabel
 import com.example.keyinfo.ui.theme.BaseButtonColor
 import com.example.keyinfo.ui.theme.Values.BasePadding
@@ -105,6 +107,12 @@ fun RegistrationFirstScreen(
                     },
                     error = registrationState.isErrorEmailText,
                     modifier = Modifier.padding(top = SpaceBetweenObjects)
+                )
+
+                GenderSelectionButton(
+                    updateRole = { viewModel.processIntent(RegistrationIntent.UpdateGender(it)) },
+                    state = registrationState.gender,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
 
                 DatePickerField(
