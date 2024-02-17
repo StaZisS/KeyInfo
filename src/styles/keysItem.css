@@ -1,0 +1,64 @@
+.delit{
+    background-color: #DF7575;
+}
+.delit:hover{
+    background-color: #ac6767;
+}
+.get{
+    background-color: #6DC376;
+}
+.get:hover{
+    background-color: #5ba062;
+}
+.action{
+    border-radius: 0 15px 15px 0;
+    color: white;
+    height: 100%;
+    width: 110px;
+    display: flex;
+}
+.button:hover{
+    cursor: pointer;
+}
+.item{
+    font-weight: 500;
+    align-items: center;
+    /* justify-content: space-between; */
+    /* border: 1px solid gray; */
+    border-radius: 15px;
+    height: 50px;
+    margin-bottom: 15px;
+}
+.border:last-of-type {
+    margin-bottom: 0;
+}
+.border:first-of-type {
+    margin-top: 16px;
+}
+.buttonName{
+    display: block;
+    width: fit-content;
+    margin: auto;
+}
+.mark{
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #0FAF1F;
+    position: absolute;
+    left: 70px;
+}
+.key-number{
+    padding-right: 10px;
+}
+.number{
+    position: relative;
+}
+.has-requests:hover{
+    cursor: pointer;
+    border-radius: 15px 0 0 15px;
+    -webkit-box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
+-moz-box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
+box-shadow: 1px 1px 8px 1px rgba(136,  136,  136, 0.42) inset;
+
+}

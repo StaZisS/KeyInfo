@@ -1,0 +1,34 @@
+.button-role{
+    margin-right: 8px;
+    padding-inline: 15px;
+    background-color: #4894FE;
+    border-radius: 15px;
+    color: white;
+    height: 70%;
+    display: flex;
+}
+
+.buttonName{
+    display: block;
+    width: fit-content;
+    margin: auto;
+}
+.button-role:hover{
+    cursor: pointer;
+    background-color: #306ec5;
+}
+.item{
+    font-weight: 500;
+    align-items: center;
+    /* justify-content: space-between; */
+    /* border: 1px solid gray; */
+    border-radius: 15px;
+    height: 50px;
+    margin-bottom: 15px;
+}
+.border:last-of-type {
+    margin-bottom: 0;
+}
+.border:first-of-type {
+    margin-top: 16px;
+}
