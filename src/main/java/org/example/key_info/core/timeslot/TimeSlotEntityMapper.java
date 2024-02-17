@@ -5,6 +5,9 @@ import org.example.key_info.core.schedule.TimeSlotEntity;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.RecordMapper;
 
+import java.time.OffsetDateTime;
+import java.util.TimeZone;
+
 public class TimeSlotEntityMapper implements RecordMapper<TimeslotRecord, TimeSlotEntity> {
 
     @Override

@@ -656,7 +656,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 false,
                 null
         );
@@ -686,7 +686,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 true,
                 endTimeToDuplicate
         );
@@ -697,6 +697,9 @@ public class ApplicationIntegrationTest {
                 DEANERY_ENTITY.role(),
                 applicationId
         );
+
+
+
         applicationService.acceptApplication(acceptApplicationDto);
 
         var filterDto = new ApplicationFilterDto(

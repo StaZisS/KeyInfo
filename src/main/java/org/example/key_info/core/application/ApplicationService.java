@@ -16,6 +16,7 @@ import org.example.key_info.public_interface.application.UpdateApplicationDto;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -50,6 +51,7 @@ public class ApplicationService {
     }
 
     //TODO: если есть бронь на время от преподавателя то заявку студента должна отклоняться
+    @Transactional
     public UUID createApplication(CreateApplicationDto dto) {
         var role = ClientRole.getClientRoleByName(dto.role());
         var isClientNotHaveThisRole = !dto.clientRoles().contains(role);
@@ -61,8 +63,13 @@ public class ApplicationService {
             throw new ExceptionInApplication("Только учитель может создавать дублирющиеся заявки", ExceptionType.INVALID);
         }
 
-        if(dto.isDuplicate() && dto.endTimeToDuplicate() == null) {
+        if (dto.isDuplicate() && dto.endTimeToDuplicate() == null) {
             throw new ExceptionInApplication("Необходимо назначить дату док которой дублировать заявку", ExceptionType.INVALID);
+        }
+
+        var teacherApplications = applicationRepository.getAcceptedTeacherApplications(dto.buildId(), dto.roomId(), dto.startTime(), dto.endTime());
+        if (!teacherApplications.isEmpty() && role == ClientRole.STUDENT) {
+            throw new ExceptionInApplication("В это время уже занято учителем", ExceptionType.INVALID);
         }
 
         var applicationEntity = new ApplicationEntity(
@@ -149,6 +156,31 @@ public class ApplicationService {
         );
         applicationRepository.updateApplication(updatedApplication);
 
+        if (updatedApplication.isDuplicate()) {
+            OffsetDateTime startTime = updatedApplication.startTime().plusDays(7);
+            OffsetDateTime endTime = updatedApplication.endTime().plusDays(7);
+
+            while (endTime.isBefore(updatedApplication.endTimeToDuplicate())) {
+                var tempApplication = new ApplicationEntity(
+                        null,
+                        updatedApplication.applicationCreatorId(),
+                        startTime,
+                        endTime,
+                        ApplicationStatus.ACCEPTED,
+                        OffsetDateTime.now(),
+                        updatedApplication.buildId(),
+                        updatedApplication.roomId(),
+                        true,
+                        updatedApplication.endTimeToDuplicate()
+                );
+                var timeslot = new TimeSlotEntity(startTime, endTime);
+                timeSlotService.createTimeslot(timeslot);
+                applicationRepository.createApplication(tempApplication);
+
+                startTime = startTime.plusDays(7);
+                endTime = endTime.plusDays(7);
+            }
+        }
 
         var filter = ApplicationFilterDto.builder()
                 .start(application.startTime())
