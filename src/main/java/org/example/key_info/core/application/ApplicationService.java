@@ -16,6 +16,7 @@ import org.example.key_info.public_interface.application.UpdateApplicationDto;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -50,6 +51,7 @@ public class ApplicationService {
     }
 
     //TODO: если есть бронь на время от преподавателя то заявку студента должна отклоняться
+    @Transactional
     public UUID createApplication(CreateApplicationDto dto) {
         var role = ClientRole.getClientRoleByName(dto.role());
         var isClientNotHaveThisRole = !dto.clientRoles().contains(role);
@@ -61,8 +63,13 @@ public class ApplicationService {
             throw new ExceptionInApplication("Только учитель может создавать дублирющиеся заявки", ExceptionType.INVALID);
         }
 
-        if(dto.isDuplicate() && dto.endTimeToDuplicate() == null) {
+        if (dto.isDuplicate() && dto.endTimeToDuplicate() == null) {
             throw new ExceptionInApplication("Необходимо назначить дату док которой дублировать заявку", ExceptionType.INVALID);
+        }
+
+        var teacherApplications = applicationRepository.getAcceptedTeacherApplications(dto.buildId(), dto.roomId(), dto.startTime(), dto.endTime());
+        if (!teacherApplications.isEmpty() && role == ClientRole.STUDENT) {
+            throw new ExceptionInApplication("В это время уже занято учителем", ExceptionType.INVALID);
         }
 
         var applicationEntity = new ApplicationEntity(
@@ -88,7 +95,7 @@ public class ApplicationService {
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
 
-        if(dto.clientId() != application.applicationCreatorId()) {
+        if(!dto.clientId().equals(application.applicationCreatorId())) {
             throw new ExceptionInApplication("Вы не можете удалить чужую заявку", ExceptionType.INVALID);
         }
 
@@ -103,7 +110,7 @@ public class ApplicationService {
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
 
-        if(dto.clientId() != application.applicationCreatorId()) {
+        if(!dto.clientId().equals(application.applicationCreatorId())) {
             throw new ExceptionInApplication("Вы не можете изменить чужую заявку", ExceptionType.INVALID);
         }
 
@@ -123,6 +130,10 @@ public class ApplicationService {
                 dto.isDuplicate(),
                 dto.endTimeToDuplicate()
         );
+
+        var timeslot = new TimeSlotEntity(dto.startTime(), dto.endTime());
+        timeSlotService.createTimeslot(timeslot);
+
         applicationRepository.updateApplication(updatedApplication);
     }
 
@@ -145,8 +156,61 @@ public class ApplicationService {
         );
         applicationRepository.updateApplication(updatedApplication);
 
-        if (application.isDuplicate())
+        if (updatedApplication.isDuplicate()) {
+            OffsetDateTime startTime = updatedApplication.startTime().plusDays(7);
+            OffsetDateTime endTime = updatedApplication.endTime().plusDays(7);
+
+            while (endTime.isBefore(updatedApplication.endTimeToDuplicate())) {
+                var tempApplication = new ApplicationEntity(
+                        null,
+                        updatedApplication.applicationCreatorId(),
+                        startTime,
+                        endTime,
+                        ApplicationStatus.ACCEPTED,
+                        OffsetDateTime.now(),
+                        updatedApplication.buildId(),
+                        updatedApplication.roomId(),
+                        true,
+                        updatedApplication.endTimeToDuplicate()
+                );
+                var timeslot = new TimeSlotEntity(startTime, endTime);
+                timeSlotService.createTimeslot(timeslot);
+                applicationRepository.createApplication(tempApplication);
+
+                startTime = startTime.plusDays(7);
+                endTime = endTime.plusDays(7);
+            }
+        }
+
+        var filter = ApplicationFilterDto.builder()
+                .start(application.startTime())
+                .end(application.endTime())
+                .buildId(application.buildId())
+                .roomId(application.roomId())
+                .status(ApplicationStatus.IN_PROCESS)
+                .build();
+
+        var applications = applicationRepository.getAllApplication(filter);
+
+        for (ApplicationEntity app : applications) {
+            var updatedApp = new ApplicationEntity(
+                    app.applicationId(),
+                    app.applicationCreatorId(),
+                    app.startTime(),
+                    app.endTime(),
+                    ApplicationStatus.DECLINED,
+                    app.createdTime(),
+                    app.buildId(),
+                    app.roomId(),
+                    app.isDuplicate(),
+                    app.endTimeToDuplicate()
+            );
+            applicationRepository.updateApplication(updatedApp);
+        }
+
+        if (application.isDuplicate()) {
             handleDuplicateApplication(application);
+        }
     }
 
     public void declineApplication(DeclineApplicationDto dto) {

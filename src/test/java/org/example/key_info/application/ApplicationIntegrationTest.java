@@ -44,6 +44,7 @@ import java.util.UUID;
 import static com.example.shop.public_.tables.Client.CLIENT;
 import static com.example.shop.public_.tables.Role.ROLE;
 import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -78,7 +79,8 @@ public class ApplicationIntegrationTest {
 
     private static DSLContext dslContext;
 
-    @Autowired private ApplicationService applicationService;
+    @Autowired
+    private ApplicationService applicationService;
 
     @BeforeAll
     public static void setup() throws SQLException, LiquibaseException {
@@ -269,6 +271,7 @@ public class ApplicationIntegrationTest {
                 null
         );
 
+
         var applicationId = applicationService.createApplication(createApplicationDto);
 
         var deleteApplicationDto = new DeleteApplicationDto(STUDENT_ENTITY.clientId(), applicationId);
@@ -326,8 +329,8 @@ public class ApplicationIntegrationTest {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Заявка не найдена"));
 
-        assertEquals(updateApplicationDto.startTime(), updatedApplication.startTime());
-        assertEquals(updateApplicationDto.endTime(), updatedApplication.endTime());
+        assertThat(updateApplicationDto.startTime().isEqual(updatedApplication.startTime()));
+        assertThat(updateApplicationDto.endTime().isEqual(updatedApplication.endTime()));
     }
 
     @Test
@@ -556,7 +559,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 false,
                 null
         );
@@ -653,7 +656,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 false,
                 null
         );
@@ -683,7 +686,7 @@ public class ApplicationIntegrationTest {
                 getEndTime(timeSlot, year),
                 BUILD_ID,
                 ROOM_ID,
-                ClientRole.STUDENT.name(),
+                ClientRole.TEACHER.name(),
                 true,
                 endTimeToDuplicate
         );
@@ -694,6 +697,9 @@ public class ApplicationIntegrationTest {
                 DEANERY_ENTITY.role(),
                 applicationId
         );
+
+
+
         applicationService.acceptApplication(acceptApplicationDto);
 
         var filterDto = new ApplicationFilterDto(

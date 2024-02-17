@@ -1,16 +1,19 @@
 package org.example.key_info.core.application;
 
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.client.repository.ClientRole;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.shop.public_.tables.Request.REQUEST;
+import static com.example.shop.public_.tables.Role.ROLE;
 
 @Repository
 @RequiredArgsConstructor
@@ -80,6 +83,26 @@ public class ApplicationRepositoryImpl implements ApplicationRepository {
         return create.selectFrom(REQUEST)
                 .where(REQUEST.REQUEST_ID.eq(applicationId))
                 .fetchOptional(applicationEntityMapper);
+    }
+
+    @Override
+    public List<ApplicationEntity> getAcceptedTeacherApplications(int buildId, int roomId, OffsetDateTime startTime, OffsetDateTime endTime) {
+        return create.selectFrom(REQUEST)
+                .where(REQUEST.BUILD.eq(buildId))
+                .and(REQUEST.ROOM.eq(roomId))
+                .and(REQUEST.START_TIME.eq(startTime))
+                .and(REQUEST.END_TIME.eq(endTime))
+                .and(REQUEST.STATUS.eq(ApplicationStatus.ACCEPTED.name()))
+                .fetchStream()
+                .map(applicationEntityMapper)
+                .filter(a ->
+                        create.selectFrom(ROLE)
+                        .where(ROLE.CLIENT_ID.eq(a.applicationCreatorId()))
+                        .and(ROLE.ROLE_.eq(ClientRole.TEACHER.name()))
+                        .fetch()
+                        .isNotEmpty()
+                )
+                .toList();
     }
 
     private Condition getFilterCondition(ApplicationFilterDto filter) {

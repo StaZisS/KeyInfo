@@ -119,4 +119,3 @@ VALUES ('8904ab0d-40e8-445d-9578-6254661e85b4', 'ADMIN');
 --changeset T9404:10
 ALTER TABLE Request
 ALTER COLUMN end_time_duplicate DROP NOT NULL;
-
