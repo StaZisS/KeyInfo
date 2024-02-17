@@ -56,11 +56,32 @@ public class KeyRepositoryImpl implements KeyRepository {
         if (dto.status() != null) {
             condition = condition.and(KEY.STATUS.eq(dto.status().name()));
         }
+
         if (dto.buildId() != null) {
             condition = condition.and(KEY.BUILD.eq(dto.buildId()));
         }
         if (dto.roomId() != null) {
             condition = condition.and(KEY.ROOM.eq(dto.roomId()));
+        }
+
+        return query.where(condition)
+                .fetchStream()
+                .map(keyEntityMapper)
+                .toList();
+    }
+
+    @Override
+    public List<KeyEntity> getAllKeys(Integer build, Integer room) {
+        var query = create.selectFrom(KEY);
+
+        Condition condition = DSL.trueCondition();
+
+        if (build != null) {
+            condition = condition.and(KEY.BUILD.eq(build));
+        }
+
+        if (room != null) {
+            condition = condition.and(KEY.ROOM.eq(room));
         }
 
         return query.where(condition)

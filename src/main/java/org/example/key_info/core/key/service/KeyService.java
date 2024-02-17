@@ -32,6 +32,17 @@ public class KeyService {
     public List<KeyDto> getAllKeys(GetKeysDto dto) {
         checkClientRoles(dto.roles());
 
+        try {
+        if (dto.keyStatus() == null) {
+            return keyRepository.getAllKeys(dto.buildId(), dto.roomId())
+                    .stream()
+                    .map(this::mapEntityToDto)
+                    .toList();
+        } }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         var filterKeyDto = new FilterKeyDto(
                 KeyStatus.getKeyStatusByName(dto.keyStatus()),
                 dto.buildId(),
@@ -39,7 +50,7 @@ public class KeyService {
         );
 
         return keyRepository.getAllKeys(filterKeyDto)
-                .parallelStream()
+                .stream()
                 .map(this::mapEntityToDto)
                 .toList();
     }
