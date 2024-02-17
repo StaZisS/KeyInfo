@@ -12,7 +12,6 @@ import org.example.key_info.core.application.ApplicationService;
 import org.example.key_info.core.application.ApplicationStatus;
 import org.example.key_info.core.client.repository.ClientEntity;
 import org.example.key_info.core.client.repository.ClientRole;
-import org.example.key_info.core.client.service.ClientService;
 import org.example.key_info.public_interface.application.AcceptApplicationDto;
 import org.example.key_info.public_interface.application.CreateApplicationDto;
 import org.example.key_info.public_interface.application.DeclineApplicationDto;
@@ -45,6 +44,7 @@ import java.util.UUID;
 import static com.example.shop.public_.tables.Client.CLIENT;
 import static com.example.shop.public_.tables.Role.ROLE;
 import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -81,9 +81,6 @@ public class ApplicationIntegrationTest {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private ClientService clientService;
 
     @BeforeAll
     public static void setup() throws SQLException, LiquibaseException {
@@ -332,8 +329,8 @@ public class ApplicationIntegrationTest {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Заявка не найдена"));
 
-        assertEquals(updateApplicationDto.startTime(), updatedApplication.startTime());
-        assertEquals(updateApplicationDto.endTime(), updatedApplication.endTime());
+        assertThat(updateApplicationDto.startTime().isEqual(updatedApplication.startTime()));
+        assertThat(updateApplicationDto.endTime().isEqual(updatedApplication.endTime()));
     }
 
     @Test

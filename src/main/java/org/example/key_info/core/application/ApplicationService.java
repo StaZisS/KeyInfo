@@ -103,7 +103,7 @@ public class ApplicationService {
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
 
-        if(dto.clientId() != application.applicationCreatorId()) {
+        if(!dto.clientId().equals(application.applicationCreatorId())) {
             throw new ExceptionInApplication("Вы не можете изменить чужую заявку", ExceptionType.INVALID);
         }
 
@@ -123,6 +123,10 @@ public class ApplicationService {
                 dto.isDuplicate(),
                 dto.endTimeToDuplicate()
         );
+
+        var timeslot = new TimeSlotEntity(dto.startTime(), dto.endTime());
+        timeSlotService.createTimeslot(timeslot);
+
         applicationRepository.updateApplication(updatedApplication);
     }
 

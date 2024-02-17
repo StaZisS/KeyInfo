@@ -18,10 +18,7 @@ import org.springframework.context.annotation.Configuration;
         ApplicationRepositoryImpl.class,
         ClientRepositoryImpl.class,
         TimeSlotService.class,
-        TimeSlotRepositoryImpl.class,
-        ClientService.class,
-        ClientRepositoryImpl.class,
-        ClientValidationService.class
+        TimeSlotRepositoryImpl.class
 })
 public class ApplicationIntegrationTestConfiguration {
 }
