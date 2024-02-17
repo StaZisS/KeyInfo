@@ -5,6 +5,14 @@ plugins {
 
 android {
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\sani_\\upload-keystore.jks")
+            keyAlias = "upload"
+            keyPassword = "qwerty"
+            storePassword = "qwerty"
+        }
+    }
     namespace = "com.example.keyinfo"
     compileSdk = 34
 
@@ -19,6 +27,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        signingConfig = signingConfigs.getByName("release")
     }
 
     buildTypes {

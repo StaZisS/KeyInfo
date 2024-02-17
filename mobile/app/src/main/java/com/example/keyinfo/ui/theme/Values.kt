@@ -3,6 +3,8 @@ package com.example.keyinfo.ui.theme
 import androidx.compose.ui.unit.dp
 
 object Values {
+    val ButtonHeight = 42.dp
+
     val BigPadding = 32.dp
     val SpaceBetweenObjects = 15.dp
     val MoreSpaceBetweenObjects = 20.dp

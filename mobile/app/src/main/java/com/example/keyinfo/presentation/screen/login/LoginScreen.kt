@@ -2,7 +2,6 @@ package com.example.keyinfo.presentation.screen.login
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +22,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.AdviceText
 import com.example.keyinfo.presentation.screen.components.AppBar
@@ -33,12 +31,13 @@ import com.example.keyinfo.presentation.screen.components.PasswordTextField
 import com.example.keyinfo.ui.theme.BaseButtonColor
 import com.example.keyinfo.ui.theme.Values.BasePadding
 import com.example.keyinfo.ui.theme.Values.BigRound
+import com.example.keyinfo.ui.theme.Values.ButtonHeight
 import com.example.keyinfo.ui.theme.Values.MoreSpaceBetweenObjects
 import com.example.keyinfo.ui.theme.Values.SpaceBetweenObjects
 
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel) {
     val loginState by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
 
@@ -81,7 +80,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             errorText = loginState.isErrorText,
             modifier = Modifier.padding(top = SpaceBetweenObjects)
         )
-
+        Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))
         Button(
             onClick = {
                 viewModel.processIntent(LoginIntent.Login)
@@ -89,8 +88,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             shape = RoundedCornerShape(BigRound),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(top = MoreSpaceBetweenObjects),
+                .height(ButtonHeight),
             enabled = !loginState.isLoading && viewModel.isLoginButtonAvailable(),
             colors = BaseButtonColor
         ) {

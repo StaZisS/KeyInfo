@@ -2,10 +2,9 @@ package com.example.keyinfo.presentation.screen.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.BaseButtonColor
 import com.example.keyinfo.ui.theme.SecondButtonColor
+import com.example.keyinfo.ui.theme.Values
 import com.example.keyinfo.ui.theme.Values.BigRound
 import com.example.keyinfo.ui.theme.Values.SpaceBetweenObjects
 
@@ -45,7 +45,7 @@ fun PairButtons(
                 shape = RoundedCornerShape(BigRound),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
+                    .height(Values.ButtonHeight),
                 enabled = firstEnabled,
                 colors = BaseButtonColor
             ) {
@@ -57,6 +57,7 @@ fun PairButtons(
                     )
                 )
             }
+            Spacer(modifier = Modifier.height(SpaceBetweenObjects))
 
             Button(
                 onClick = { secondClick() },
@@ -67,8 +68,7 @@ fun PairButtons(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(top = SpaceBetweenObjects)
+                    .height(Values.ButtonHeight)
             ) {
                 Text(
                     text = secondLabel,

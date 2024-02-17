@@ -3,6 +3,7 @@ package com.example.keyinfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,9 +18,13 @@ import com.example.keyinfo.presentation.navigation.Screen
 import com.example.keyinfo.presentation.navigation.bottombar.BottomBar
 import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
+import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModelFactory
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
+import com.example.keyinfo.presentation.screen.login.LoginViewModelFactory
 import com.example.keyinfo.presentation.screen.profile.ProfileViewModel
+import com.example.keyinfo.presentation.screen.profile.ProfileViewModelFactory
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
+import com.example.keyinfo.presentation.screen.registration.RegistrationViewModelFactory
 import com.example.keyinfo.ui.theme.KeyInfoTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,16 +34,34 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Welcome.route
-            val registrationViewModel = RegistrationViewModel(
-                context = LocalContext.current,
-                router = AppRouter(navController)
+            val ctx = LocalContext.current
+            val registrationViewModel: RegistrationViewModel by viewModels(
+                factoryProducer = {
+                    RegistrationViewModelFactory(
+                        context = ctx,
+                        router = AppRouter(navController)
+                    )
+                }
             )
-            val loginViewModel = LoginViewModel(
-                context = LocalContext.current,
-                router = AppRouter(navController)
+            val loginViewModel: LoginViewModel by viewModels(
+                factoryProducer = {
+                    LoginViewModelFactory(
+                        context = ctx,
+                        router = AppRouter(navController)
+                    )
+                }
             )
-            val keyViewModel = KeyTransferViewModel()
-            val profileViewModel = ProfileViewModel(LocalContext.current)
+            val keyViewModel: KeyTransferViewModel by viewModels(
+                factoryProducer = {
+                    KeyTransferViewModelFactory(
+                        context = ctx
+                    )
+                })
+            val profileViewModel: ProfileViewModel by viewModels {
+                ProfileViewModelFactory(
+                    context = ctx
+                )
+            }
 
             KeyInfoTheme(darkTheme = false) {
                 Scaffold(

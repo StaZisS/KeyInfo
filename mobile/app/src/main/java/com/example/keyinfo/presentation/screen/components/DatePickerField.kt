@@ -19,6 +19,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +32,7 @@ import com.example.keyinfo.domain.state.RegistrationState
 import com.example.keyinfo.presentation.screen.registration.RegistrationIntent
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.ui.theme.Values.BigRound
+import com.example.keyinfo.ui.theme.Values.DialogRound
 import com.example.keyinfo.ui.theme.Values.MiddlePadding
 import com.example.keyinfo.ui.theme.Values.SpaceBetweenObjects
 import java.util.Date
@@ -72,7 +74,7 @@ fun DatePickerField(
                             viewModel.processIntent(RegistrationIntent.UpdateDatePickerVisibility)
                         }
                     ) {
-                        Icon (
+                        Icon(
                             imageVector = Icons.Default.CalendarMonth,
                             contentDescription = null,
                             modifier = Modifier.size(25.dp)
@@ -81,50 +83,54 @@ fun DatePickerField(
                 },
                 textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400)
             )
+        }
 
-            if (viewModel.isDatePickerOpen()) {
-                val datePickerState = rememberDatePickerState()
-
-                DatePickerDialog(
-                    onDismissRequest = {
-                        viewModel.processIntent(RegistrationIntent.UpdateDatePickerVisibility)
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                val date = datePickerState.selectedDateMillis?.let { Date(it) }
-                                viewModel.processIntent(RegistrationIntent.UpdateBirthday(
+        if (viewModel.isDatePickerOpen()) {
+            val datePickerState = rememberDatePickerState()
+            DatePickerDialog(
+                modifier = Modifier.scale(0.95f),
+                shape = RoundedCornerShape(DialogRound),
+                tonalElevation = 0.dp,
+                onDismissRequest = {
+                    viewModel.processIntent(RegistrationIntent.UpdateDatePickerVisibility)
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val date = datePickerState.selectedDateMillis?.let { Date(it) }
+                            viewModel.processIntent(
+                                RegistrationIntent.UpdateBirthday(
                                     formatDateToISO8601(date),
                                     formatDate(date)
-                                ))
-                                viewModel.processIntent(
-                                    RegistrationIntent.UpdateDatePickerVisibility
                                 )
-                            }
-                        ) {
-                            Text(
-                                text = stringResource(R.string.ok),
+                            )
+                            viewModel.processIntent(
+                                RegistrationIntent.UpdateDatePickerVisibility
                             )
                         }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                viewModel.processIntent(
-                                    RegistrationIntent.UpdateDatePickerVisibility
-                                )
-                            }
-                        ) {
-                            Text(
-                                text = stringResource(R.string.cancel),
-                            )
-                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.ok),
+                        )
                     }
-                ) {
-                    DatePicker(
-                        state = datePickerState
-                    )
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.processIntent(
+                                RegistrationIntent.UpdateDatePickerVisibility
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                        )
+                    }
                 }
+            ) {
+                DatePicker(
+                    state = datePickerState
+                )
             }
         }
     }

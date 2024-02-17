@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
@@ -46,12 +47,12 @@ fun ScheduleScreen(navController: NavController) {
         ClassTime("6 пара", "18:15-19:50"),
         ClassTime("7 пара", "20:00-21:35")
     )
-    val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(1) }
-    val endMonth = remember { currentMonth.plusMonths(1) }
+    val currentMonth = YearMonth.now()
+    val startMonth = currentMonth.minusMonths(50)
+    val endMonth = currentMonth.plusMonths(50)
 
-    val daysOfWeek = remember { daysOfWeek() }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    val daysOfWeek = daysOfWeek()
+    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
     val state = rememberCalendarState(
         startMonth = startMonth,
         endMonth = endMonth,
@@ -60,7 +61,7 @@ fun ScheduleScreen(navController: NavController) {
     )
     val searchText = remember { mutableStateOf("") }
     val dialogVisible = remember { mutableStateOf(false) }
-    val selectedBuildingIndex = remember { mutableIntStateOf(0) }
+//    val selectedBuildingIndex = remember { mutableIntStateOf(0) }
     val selectedTimeIndex = remember { mutableIntStateOf(3) }
     if (dialogVisible.value) {
         TimePickerDialog(dialogVisible, selectedTimeIndex, items)
@@ -84,6 +85,8 @@ fun ScheduleScreen(navController: NavController) {
                 ),
                 modifier = Modifier.padding(start = 14.dp))
             Spacer(modifier = Modifier.height(28.dp))
+        }
+        item {
             HorizontalCalendar(
                 contentPadding = PaddingValues(0.dp),
                 state = state,

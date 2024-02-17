@@ -1,24 +1,30 @@
 package com.example.keyinfo.presentation.screen.selectauth
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.navigation.Screen
 import com.example.keyinfo.presentation.screen.components.PairButtons
@@ -32,7 +38,8 @@ fun SelectAuthScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(BasePadding),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Image(
@@ -40,8 +47,8 @@ fun SelectAuthScreen(navController: NavController) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 80.dp)
-                .rotate(30f)
+                .scale(1.3f)
+                .rotate(25f)
         )
 
         Box(
@@ -58,7 +65,7 @@ fun SelectAuthScreen(navController: NavController) {
                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.W700),
                     textAlign = TextAlign.Center
                 )
-
+                Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))
                 Text(
                     text = stringResource(R.string.auth_description_second),
                     style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400),
@@ -73,7 +80,14 @@ fun SelectAuthScreen(navController: NavController) {
             firstClick = { navController.navigate(Screen.Registration.route) },
             secondLabel = stringResource(R.string.login_button),
             secondClick = { navController.navigate(Screen.Login.route) },
-            modifier = Modifier.padding(top = MoreSpaceBetweenObjects, bottom = BasePadding)
+            modifier = Modifier
+                .padding(top = 50.dp, bottom = BasePadding)
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewWelcome() {
+    SelectAuthScreen(navController = rememberNavController())
 }

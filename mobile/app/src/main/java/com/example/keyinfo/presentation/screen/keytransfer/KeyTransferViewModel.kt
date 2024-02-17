@@ -1,11 +1,12 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.keyinfo.domain.state.KeysState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class KeyTransferViewModel : ViewModel() {
+class KeyTransferViewModel(context: Context) : ViewModel() {
 
     private val _state = MutableStateFlow(KeysState())
     val state: StateFlow<KeysState> get() = _state
@@ -15,17 +16,23 @@ class KeyTransferViewModel : ViewModel() {
             KeyTransferIntent.AcceptTransfer -> {
 
             }
+
             KeyTransferIntent.ConfirmReserve -> {
 
             }
+
             KeyTransferIntent.RejectTransfer -> {
 
             }
+
             KeyTransferIntent.UpdateConfirmDialogState -> {
-                _state.value = state.value.copy(isConfirmDialogOpen = !state.value.isConfirmDialogOpen)
+                _state.value =
+                    state.value.copy(isConfirmDialogOpen = !state.value.isConfirmDialogOpen)
             }
+
             KeyTransferIntent.UpdateTransferDialogState -> {
-                _state.value = state.value.copy(isTransferDialogOpen = !state.value.isTransferDialogOpen)
+                _state.value =
+                    state.value.copy(isTransferDialogOpen = !state.value.isTransferDialogOpen)
             }
 
             is KeyTransferIntent.ClickOnCard -> {

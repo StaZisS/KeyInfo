@@ -32,7 +32,7 @@ fun AppNavigation(
     // TODO: replace to splash screen
     NavHost(
         navController,
-        startDestination = Screen.Main.route,
+        startDestination = Screen.Welcome.route,
     ) {
 
         composable(Screen.Splash.route) {
@@ -41,7 +41,7 @@ fun AppNavigation(
             SelectAuthScreen(navController = navController)
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController = navController, viewModel = loginViewModel)
+            LoginScreen(viewModel = loginViewModel)
         }
         composable(Screen.Registration.route) {
             RegistrationFirstScreen(
