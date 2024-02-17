@@ -5,6 +5,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
 
@@ -34,5 +35,14 @@ public class AccommodationRepositoryImpl implements AccommodationRepository {
         return create.selectFrom(STUDYROOM)
                 .fetch()
                 .map(record -> new AccommodationEntity(record.get(STUDYROOM.BUILD), record.get(STUDYROOM.ROOM)));
+    }
+
+    @Override
+    public Optional<AccommodationEntity> getAccommodation(int buildId, int roomId) {
+        var record = create.selectFrom(STUDYROOM)
+                .where(STUDYROOM.BUILD.eq(buildId))
+                .and(STUDYROOM.ROOM.eq(roomId))
+                .fetchOptional();
+        return record.map(r -> new AccommodationEntity(r.get(STUDYROOM.BUILD), r.get(STUDYROOM.ROOM)));
     }
 }
