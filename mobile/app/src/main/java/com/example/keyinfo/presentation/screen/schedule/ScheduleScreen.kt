@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.schedule
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,8 +47,8 @@ fun ScheduleScreen(navController: NavController) {
         ClassTime("7 пара", "20:00-21:35")
     )
     val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(100) }
-    val endMonth = remember { currentMonth.plusMonths(100) }
+    val startMonth = remember { currentMonth.minusMonths(1) }
+    val endMonth = remember { currentMonth.plusMonths(1) }
 
     val daysOfWeek = remember { daysOfWeek() }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -59,6 +60,7 @@ fun ScheduleScreen(navController: NavController) {
     )
     val searchText = remember { mutableStateOf("") }
     val dialogVisible = remember { mutableStateOf(false) }
+    val selectedBuildingIndex = remember { mutableIntStateOf(0) }
     val selectedTimeIndex = remember { mutableIntStateOf(3) }
     if (dialogVisible.value) {
         TimePickerDialog(dialogVisible, selectedTimeIndex, items)
@@ -94,22 +96,31 @@ fun ScheduleScreen(navController: NavController) {
                 monthHeader = {
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek)
                 },
+                userScrollEnabled = false
             )
             Spacer(modifier = Modifier.height(10.dp))
         }
         item {
-            BuildingsRow()
-            Spacer(Modifier.height(15.dp))
+            AnimatedVisibility(visible = selectedDate != null) {
+                BuildingsRow()
+                Spacer(Modifier.height(20.dp))
+            }
         }
         item {
-            TimeRow(dialogVisible, items[selectedTimeIndex.intValue])
-            Spacer(Modifier.height(15.dp))
+            AnimatedVisibility(visible = selectedDate != null) {
+                TimeRow(dialogVisible, items[selectedTimeIndex.intValue])
+                Spacer(Modifier.height(20.dp))
+            }
         }
         item {
-            SearchRow(searchText)
+            AnimatedVisibility(visible = selectedDate != null) {
+                SearchRow(searchText)
+            }
         }
-        items(10) {
-            KeyCard()
+        items(5) {
+            AnimatedVisibility(visible = selectedDate != null) {
+                KeyCard()
+            }
         }
     }
 }
