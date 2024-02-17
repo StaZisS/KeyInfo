@@ -3,6 +3,11 @@ import KeyService from "../services/KeyService";
 
 class KeysStore {
     keys = []
+    keysFilter = {
+        key_status: undefined,
+        build : undefined,
+        room : undefined
+    }
 
     constructor() {
         makeAutoObservable(this)
@@ -12,12 +17,16 @@ class KeysStore {
         this.keys = keys
     }
 
-    async getKeys(keyStatus, build, room) {
+    setKeysFilter(filterParams) {
+        this.keysFilter = filterParams
+    }
+
+    async getKeys() {
         try {
-            const response = await KeyService.getKeys(keyStatus, build, room)
+            const response = await KeyService.getKeys(this.keysFilter.key_status, this.keysFilter.build, this.keysFilter.room)
             this.setKeys(response.data)
         } catch (e) {
-            console.log(e.response.data)
+            console.log(e)
         }
     }
 }

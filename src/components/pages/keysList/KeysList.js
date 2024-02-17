@@ -1,6 +1,8 @@
 import {KeysItem} from "./key/keyItem";
 import {KeyFilter} from "../../snippets/KeyFilter";
 import {Card, CardBody, CardHeader, CardTitle, Container} from "react-bootstrap";
+import {useQuery} from "react-query";
+import KeysStore from "../../../store/keysStore";
 
 
 // нужен запрос
@@ -12,6 +14,11 @@ const keysData = [
 ];
 
 export const KeysList = () => {
+
+    const {data, isLoading, error} = useQuery('getKeys', async () => {
+        await KeysStore.getKeys()
+    })
+
     return (
         <>
             <KeyFilter/>

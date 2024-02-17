@@ -15,8 +15,10 @@ const $api = axios.create({
 // })
 
 $api.interceptors.response.use((config) => {
+    console.log('Интерцептор не использован')
     return config
 }, async (error) => {
+    console.log('Интерцептор использован')
     const originalRequest = error.config
     if ((error.response.status === 401 || error.response.status === 403) && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true

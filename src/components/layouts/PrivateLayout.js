@@ -8,9 +8,12 @@ export const PrivateLayout = ({children}) => {
 
     const navigate = useNavigate()
 
+    //Необходимо для тех, кто переходит по ссылке
     useEffect(() => {
         const checkAuth = async () => {
+            console.log('Проверка пользователя началась')
             await Store.checkAuth()
+            console.log('Проверка пользователя окончилась = ' + Store.isAuth)
             if (Store.isAuth === false){
                 navigate('/login')
             }

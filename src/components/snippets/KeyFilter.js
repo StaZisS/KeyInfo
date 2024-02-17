@@ -12,81 +12,103 @@ import {
 } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/FormCheckLabel";
 import {useState} from "react";
+import KeysStore from "../../store/keysStore";
+import FormCheckInput from "react-bootstrap/FormCheckInput";
 
 export const KeyFilter = () => {
 
     const [isOpen, setOpen] = useState(true)
 
+    const [inAll, setInAll] = useState(true)
+    const [inDeanery, setInDeanery] = useState(false)
+    const [inHand, setInHand] = useState(false)
+    const [build, setBuild] = useState(undefined)
+    const [room, setRoom] = useState(undefined)
+
+    const handleFind = () => {
+        const keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
+        KeysStore.setKeysFilter({keyStatus, build, room})
+    }
+
+
+    const handleSwitchInAll = (e) => {
+        if (e.target.value === 'on') {
+            setInAll(!inAll)
+            if (inAll) {
+                setInHand(false)
+                setInDeanery(true)
+            }
+        }
+    }
+    const handleSwitchInHand = (e) => {
+        if (e.target.value === 'on') {
+            setInHand(true)
+            setInDeanery(false)
+        } else {
+            setInHand(false)
+            setInDeanery(true)
+        }
+    }
+
+    const handleSwitchInDeanery = (e) => {
+        if (e.target.value === 'on') {
+            setInDeanery(true)
+            setInHand(false)
+        } else {
+            setInDeanery(false)
+            setInHand(true)
+        }
+    }
+
     return (
         <Container
             className='mt-5'>
-            <Button
-                className='w-100 d-md-none mb-3'
-                aria-expanded={isOpen}
-                onClick={() => {
-                    setOpen(!isOpen)
-                }}>
+            <Button className='w-100 d-md-none mb-3' aria-expanded={isOpen} onClick={() => {
+                setOpen(!isOpen)
+            }}>
                 Фильтры
             </Button>
-            <Collapse
-                in={isOpen}
-            >
+            <Collapse in={isOpen}>
                 <div>
                     <Card className='rounded-0 rounded-top-3'>
                         <CardHeader>
                             <CardTitle>Фильтр ключей</CardTitle>
                         </CardHeader>
                         <CardBody>
-                            <Form
-                                className='container-fluid'
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    console.log('Фильтрация ключей')
-                                }}>
-                                <Row>
-                                    <Col
-                                        lg={3}
-                                        sm={6}>
-                                        <FormControl
-                                            placeholder={'Номер здания'}
-                                            type='number'/>
+                            <Form className='container-fluid' onSubmit={(e) => {
+                                e.preventDefault();
+                                console.log('Фильтрация ключей')
+                            }}>
+                                <Row className='d-flex align-content-between'>
+                                    <Col lg={inAll ? 3 : 2} xs={6}>
+                                        <FormControl min={0} onChange={(e) => {
+                                            setBuild(e)
+                                        }} placeholder={'Номер здания'} type='number'/>
                                     </Col>
-                                    <Col
-                                        lg={3}
-                                        sm={6}>
-                                        <FormControl
-                                            className='mt-2 mt-sm-0'
-                                            placeholder={'Номер аудитории'}
-                                            type='number'/>
+                                    <Col lg={inAll ? 3 : 2} xs={6}>
+                                        <FormControl min={0} onChange={(e) => {
+                                            setRoom(e)
+                                        }} placeholder={'Номер аудитории'} type='number'/>
                                     </Col>
-                                    <Col
-                                        lg={2}
-                                        sm={4}
-                                        xs={6}
-                                    >
-                                        <FormCheck
-                                            className='mt-2 mt-lg-0'
-                                            type={'switch'}
-                                            id={'inDaenery'}
-                                            label={'В деканате'}/>
+                                    <Col lg={inAll ? 3 : 2} md={12} xs={12}>
+                                        <FormCheck checked={inAll} onChange={(e) => {
+                                            handleSwitchInAll(e)
+                                        }} className='mt-2 mt-lg-0' type={'switch'} label={'Выбрать все'}/>
                                     </Col>
-                                    <Col
-                                        lg={2}
-                                        sm={4}
-                                        xs={6}
-                                    >
-                                        <FormCheck
-                                            className='mt-2 mt-lg-0'
-                                            type={'switch'}
-                                            id={'inHands'}
-                                            label={'На руках'}/>
-                                    </Col>
-                                    <Col
-                                        lg={2}
-                                        sm={4}>
-                                        <Button
-                                            className='mt-2 mt-lg-0 w-100'
-                                            type='submit'>
+                                    {inAll === false && <>
+                                        <Col lg={2}  sm={4} xs={6}>
+                                            <FormCheck checked={inDeanery} onChange={(e) => {
+                                                handleSwitchInDeanery(e)
+                                            }} className='mt-2 mt-lg-0' type={'radio'} label={'В деканате'}/>
+                                        </Col>
+                                        <Col lg={2} sm={4} xs={6}>
+                                            <FormCheck checked={inHand} onChange={(e) => {
+                                                handleSwitchInHand(e)
+                                            }} className='mt-2 mt-lg-0' type={'radio'} label={'На руках'}/>
+                                        </Col>
+                                    </>}
+                                    <Col lg={inAll ? 2 : 2} md={4} sm={12} xs={12}>
+                                        <Button className='mt-2 mt-lg-0 w-100 ms-auto' type='submit'>
                                             Найти
                                         </Button>
                                     </Col>
