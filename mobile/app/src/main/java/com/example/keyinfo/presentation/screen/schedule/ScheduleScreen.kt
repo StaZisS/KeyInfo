@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
+import com.example.keyinfo.presentation.screen.keytransfer.dialog.ConfirmDialog
 import com.example.keyinfo.presentation.screen.main.KeyCard
 import com.example.keyinfo.presentation.screen.schedule.components.BuildingsRow
 import com.example.keyinfo.presentation.screen.schedule.components.Day
@@ -35,6 +36,7 @@ import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.daysOfWeek
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -53,6 +55,18 @@ fun ScheduleScreen() {
         ClassTime("6 пара", "18:25 - 20:00"),
         ClassTime("7 пара", "20:15 - 21:50"),
     )
+    val audiences = listOf(
+        AudienceCard(101, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(102, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(103, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(104, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(105, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(106, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(107, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(108, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(109, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+        AudienceCard(110, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
+    )
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(50)
     val endMonth = currentMonth.plusMonths(50)
@@ -64,7 +78,8 @@ fun ScheduleScreen() {
         firstVisibleMonth = currentMonth,
         firstDayOfWeek = daysOfWeek.first()
     )
-
+    val confirmDialogOpened = remember { mutableStateOf(false) }
+    val currentAudience = remember { mutableStateOf<AudienceCard?>(null) }
     val searchText = remember { mutableStateOf("") }
     val dialogVisible = remember { mutableStateOf(false) }
     val selectedBuildingIndex: MutableState<Int?> = remember { mutableStateOf(null) }
@@ -73,6 +88,12 @@ fun ScheduleScreen() {
         selectedBuildingIndex.value != null && selectedDate != null && selectedTimeIndex.value != null
     if (dialogVisible.value) {
         TimePickerDialog(dialogVisible, selectedTimeIndex, items)
+    }
+    if (confirmDialogOpened.value) {
+        ConfirmDialog(
+            onSaveClick = { confirmDialogOpened.value = false },
+            onCancelClick = { confirmDialogOpened.value = false },
+            audienceInfo = currentAudience.value!!)
     }
     LazyColumn(
         modifier = Modifier
@@ -135,9 +156,18 @@ fun ScheduleScreen() {
                 SearchRow(searchText)
             }
         }
-        items(5) {
+        items(audiences.size) {
+            val audience = audiences[it]
             AnimatedVisibility(visible = allParamsSelected) {
-                KeyCard()
+                KeyCard(
+                    audience.audience,
+                    audience.building,
+                    audience.startTime,
+                    audience.endTime,
+                    onClick = {
+                        currentAudience.value = audience
+                        confirmDialogOpened.value = true }
+                )
             }
         }
     }
@@ -146,6 +176,10 @@ fun ScheduleScreen() {
 
 data class ClassTime(
     var name: String, var time: String
+)
+
+data class AudienceCard(
+    var audience: Int, var building: Int, var startTime: OffsetDateTime, var endTime: OffsetDateTime
 )
 
 @Preview(backgroundColor = 0xFFFFFFFF)

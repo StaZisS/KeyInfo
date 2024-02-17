@@ -24,14 +24,17 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.schedule.AudienceCard
 import com.example.keyinfo.ui.theme.Values.BasePadding
 import com.example.keyinfo.ui.theme.Values.CenterPadding
-import com.example.keyinfo.ui.theme.Values.LittleRound
+import com.example.keyinfo.ui.theme.Values.DialogRound
+import java.time.OffsetDateTime
 
 @Composable
 fun ConfirmDialog(
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit,
+    audienceInfo: AudienceCard
 ) {
     Dialog(
         onDismissRequest = {
@@ -40,12 +43,12 @@ fun ConfirmDialog(
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
-    ){
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(BasePadding),
-            shape = RoundedCornerShape(LittleRound),
+            shape = RoundedCornerShape(DialogRound),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(
@@ -65,7 +68,12 @@ fun ConfirmDialog(
                     ),
                 )
 
-                KeyCard()
+                KeyCard(
+                    audience = audienceInfo.audience,
+                    building = audienceInfo.building,
+                    startDate = audienceInfo.startTime,
+                    endDate = audienceInfo.endTime,
+                )
 
                 PairButtons(
                     firstLabel = stringResource(R.string.confirm),
@@ -81,9 +89,15 @@ fun ConfirmDialog(
 
 @Preview
 @Composable
-fun ConfirmDialogPreview(){
+fun ConfirmDialogPreview() {
     ConfirmDialog(
-        onSaveClick = {  },
-        onCancelClick = { }
+        onSaveClick = { },
+        onCancelClick = { },
+        audienceInfo = AudienceCard(
+            audience = 101,
+            building = 2,
+            startTime = OffsetDateTime.now(),
+            endTime = OffsetDateTime.now()
+        )
     )
 }
