@@ -41,11 +41,13 @@ export const Header = observer(() => {
                     <NavbarCollapse id='basic-navbar-nav'>
                         <Nav className='w-100'>
                             {Store.isAuth === false
-                                ? <></>
+                                ?
+                                <></>
                                 :
                                 <>
                                     <Link to={'/key'} className='nav-link link-hover p-lg-4'>Ключи</Link>
                                     <Link to={'/application'} className='nav-link link-hover p-lg-4'>Заявки</Link>
+                                    <Link to={'/people'} className='nav-link link-hover p-lg-4'>Пользователи</Link>
                                 </>
                             }
 
