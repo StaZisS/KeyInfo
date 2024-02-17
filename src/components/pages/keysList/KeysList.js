@@ -17,9 +17,6 @@ export const KeysList = () => {
             <KeyFilter/>
             <Container className="mt-3 border-0">
                 <Card className='rounded-0'>
-                    <CardHeader>
-                        <CardTitle>Список ключей</CardTitle>
-                    </CardHeader>
                     <CardBody>
                         {keysData.map((keyData, index) => (
                             <KeysItem
