@@ -9,5 +9,5 @@ public interface AccommodationRepository {
     List<AccommodationEntity> getAllAccommodations();
     Optional<AccommodationEntity> getAccommodation(int buildId, int roomId);
     List<Integer> getBuildings();
-    List<Integer> getRooms();
+    List<Integer> getRooms(int buildId);
 }

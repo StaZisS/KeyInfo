@@ -50,12 +50,15 @@ public class AccommodationRepositoryImpl implements AccommodationRepository {
     @Override
     public List<Integer> getBuildings() {
         return create.selectDistinct(STUDYROOM.BUILD)
+                .from(STUDYROOM)
                 .fetch(Record1::value1);
     }
 
     @Override
-    public List<Integer> getRooms() {
-        return create.selectDistinct(STUDYROOM.ROOM)
+    public List<Integer> getRooms(int buildId) {
+        return create.select(STUDYROOM.ROOM)
+                .from(STUDYROOM)
+                .where(STUDYROOM.BUILD.eq(buildId))
                 .fetch(Record1::value1);
     }
 }

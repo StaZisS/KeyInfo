@@ -51,8 +51,8 @@ public class AccommodationService {
         return accommodationRepository.getBuildings();
     }
 
-    public List<Integer> getRooms() {
-        return accommodationRepository.getRooms();
+    public List<Integer> getRooms(int buildId) {
+        return accommodationRepository.getRooms(buildId);
     }
 
     private void validateClientRoles(Set<ClientRole> roles) {

@@ -13,6 +13,10 @@ import java.util.List;
 
 import static com.example.shop.public_.Tables.TIMESLOT;
 import static com.example.shop.public_.tables.Request.REQUEST;
+import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
+import static org.jooq.impl.DSL.notExists;
+import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.selectOne;
 
 @Repository
 @RequiredArgsConstructor
@@ -47,21 +51,32 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         Condition condition = DSL.trueCondition();
 
         if (dto.buildId() != null) {
-            condition = condition.and(REQUEST.BUILD.eq(dto.buildId()));
+            condition = condition.and(STUDYROOM.BUILD.eq(dto.buildId()));
         }
 
         if (dto.roomId() != null) {
-            condition = condition.and(REQUEST.ROOM.eq(dto.roomId()));
+            condition = condition.and(STUDYROOM.ROOM.eq(dto.roomId()));
         }
 
-        return create.selectFrom(REQUEST)
-                .where(REQUEST.STATUS.notEqual(ApplicationStatus.ACCEPTED.name()))
-                .and(condition)
+        var temp = create.selectFrom(REQUEST)
+                .where(REQUEST.START_TIME.eq(dto.startTime()))
+                .and(REQUEST.END_TIME.eq(dto.endTime()))
+                .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
+                .fetch();
+
+        return create.selectFrom(STUDYROOM)
+                .where(DSL.row(STUDYROOM.BUILD, STUDYROOM.ROOM).notIn(
+                        select(REQUEST.BUILD, REQUEST.ROOM)
+                                .from(REQUEST)
+                                .where(REQUEST.START_TIME.eq(dto.startTime()))
+                                .and(REQUEST.END_TIME.eq(dto.endTime()))
+                                .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
+                )).and(condition)
                 .fetch(r -> new AudienceEntity(
                                 r.getBuild(),
                                 r.getRoom(),
-                                r.getStartTime(),
-                                r.getEndTime()
+                                dto.startTime(),
+                                dto.endTime()
                         )
                 );
     }

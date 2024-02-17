@@ -1,6 +1,8 @@
 -- liquibase formatted sql
 
 -- changeset gordey_dovydenko:1
+SET TIME ZONE 'UTC';
+
 CREATE
     EXTENSION IF NOT EXISTS "uuid-ossp";
 
