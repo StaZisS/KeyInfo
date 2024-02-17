@@ -1,12 +1,15 @@
 package org.example.key_info.rest.controller.key;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.key.service.KeyService;
 import org.example.key_info.public_interface.key.KeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +27,10 @@ public class RestKeyController {
 
     @Operation(summary = "Получить все ключи пользователя (на руках)")
     @GetMapping()
-    public ResponseEntity<List<ResponseKeyDto>> getMyKeys(@RequestHeader("Authorization") String accessToken) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<ResponseKeyDto>> getMyKeys() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var body = keyService.getMyKeys(infoAboutClient.clientId())
                 .parallelStream()

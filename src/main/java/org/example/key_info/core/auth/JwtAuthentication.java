@@ -7,26 +7,32 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class JwtAuthentication implements Authentication {
     private boolean authenticated;
-    private String username;
-    private String firstName;
     private Set<Role> roles;
+    private UUID userId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return roles; }
 
     @Override
-    public Object getCredentials() { return null; }
+    public Object getCredentials() {
+        return null;
+    }
 
     @Override
-    public Object getDetails() { return null; }
+    public Object getDetails() {
+        return null;
+    }
 
     @Override
-    public Object getPrincipal() { return username; }
+    public Object getPrincipal() {
+        return null;
+    }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -36,6 +42,9 @@ public class JwtAuthentication implements Authentication {
         this.authenticated = isAuthenticated;
     }
 
+
     @Override
-    public String getName() { return firstName; }
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
 }

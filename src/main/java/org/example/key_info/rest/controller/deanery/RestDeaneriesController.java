@@ -1,6 +1,7 @@
 package org.example.key_info.rest.controller.deanery;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.accommodation.AccommodationService;
@@ -24,6 +25,8 @@ import org.example.key_info.rest.controller.application.ApplicationResponseDto;
 import org.example.key_info.rest.controller.key.ResponseKeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -42,10 +45,11 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Деканат добавляет новую аудиторию в здание")
     @PostMapping("/accommodations/{build_id}/{room_id}")
-    public ResponseEntity<Void> createAccommodation(@RequestHeader("Authorization") String accessToken,
-                                                    @PathVariable(name = "build_id") int buildId,
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> createAccommodation(@PathVariable(name = "build_id") int buildId,
                                                     @PathVariable(name = "room_id") int roomId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var accommodationCreateDto = new AccommodationCreateDto(
                 infoAboutClient.clientId(),
@@ -60,10 +64,11 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Деканат удаляет аудиторию из здания")
     @DeleteMapping("/accommodations/{build_id}/{room_id}")
-    public ResponseEntity<Void> deleteAccommodation(@RequestHeader("Authorization") String accessToken,
-                                                    @PathVariable(name = "build_id") int buildId,
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deleteAccommodation(@PathVariable(name = "build_id") int buildId,
                                                     @PathVariable(name = "room_id") int roomId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var accommodationDeleteDto = new AccommodationDeleteDto(
                 infoAboutClient.clientId(),
@@ -78,13 +83,14 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Получить доступные заявки для рассмотрения")
     @GetMapping("/applications")
-    public ResponseEntity<List<ApplicationResponseDto>> getPossibleApplications(@RequestHeader("Authorization") String accessToken,
-                                                                                @RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<ApplicationResponseDto>> getPossibleApplications(@RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
                                                                                 @RequestParam(required = false) OffsetDateTime start,
                                                                                 @RequestParam(required = false) OffsetDateTime end,
                                                                                 @RequestParam(required = false, name = "build_id") Integer buildId,
                                                                                 @RequestParam(required = false, name = "room_id") Integer roomId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var filterDto = new ApplicationFilterDto(
                 ApplicationStatus.getApplicationStatusByName(status),
@@ -108,9 +114,10 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Принять заявку")
     @PostMapping("/application/{id}/accept")
-    public ResponseEntity<Void> acceptApplication(@RequestHeader("Authorization") String accessToken,
-                                                  @PathVariable(name = "id") UUID applicationId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> acceptApplication(@PathVariable(name = "id") UUID applicationId) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var acceptApplicationDto = new AcceptApplicationDto(
                 infoAboutClient.clientId(),
@@ -124,9 +131,10 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Отклонить заявку")
     @PostMapping("/application/{id}/decline")
-    public ResponseEntity<Void> declineApplication(@RequestHeader("Authorization") String accessToken,
-                                                  @PathVariable(name = "id") UUID applicationId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> declineApplication(@PathVariable(name = "id") UUID applicationId) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var declineApplicationDto = new DeclineApplicationDto(
                 infoAboutClient.clientId(),
@@ -140,11 +148,12 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Получить все ключи (см. параметры)")
     @GetMapping("/keys")
-    public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestHeader("Authorization") String accessToken,
-                                                           @RequestParam(required = false, name = "key_status") String keyStatus,
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestParam(required = false, name = "key_status") String keyStatus,
                                                            @RequestParam(required = false) Integer build,
                                                            @RequestParam(required = false) Integer room) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
         var getKeysDto = new GetKeysDto(
                 infoAboutClient.clientId(),
                 infoAboutClient.clientRoles(),
@@ -163,9 +172,10 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Добавить новый ключ")
     @PostMapping("/keys")
-    public ResponseEntity<UUID> addKey(@RequestHeader("Authorization") String accessToken,
-                                                 @RequestBody AddKeyDto dto) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UUID> addKey(@RequestBody AddKeyDto dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var keyCreateDto = new KeyCreateDto(
                 infoAboutClient.clientId(),
@@ -181,9 +191,10 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Удалить ключ")
     @DeleteMapping("/keys/{id}")
-    public ResponseEntity<Void> deleteKey(@RequestHeader("Authorization") String accessToken,
-                                          @PathVariable(name = "id") UUID keyId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deleteKey(@PathVariable(name = "id") UUID keyId) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var keyDeleteDto = new KeyDeleteDto(
                 infoAboutClient.clientId(),
@@ -198,10 +209,11 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Передать ключ пользователю")
     @PatchMapping("/keys/giving/{id}")
-    public ResponseEntity<Void> giveKey(@RequestHeader("Authorization") String accessToken,
-                                                  @PathVariable(name = "id") UUID keyId,
-                                                  @RequestParam(required = false) UUID keyHolderId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> giveKey(@PathVariable(name = "id") UUID keyId,
+                                        @RequestParam(required = false) UUID keyHolderId) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var giveKeyDeaneriesDto = new GiveKeyDeaneriesDto(
                 infoAboutClient.clientId(),
@@ -216,10 +228,11 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Принять ключ от пользователя")
     @PatchMapping("/keys/acceptance/{id}")
-    public ResponseEntity<Void> acceptKey(@RequestHeader("Authorization") String accessToken,
-                                                    @PathVariable(name = "id") UUID keyId,
-                                                    @RequestParam(required = false) UUID keyHolderId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> acceptKey(@PathVariable(name = "id") UUID keyId,
+                                          @RequestParam(required = false) UUID keyHolderId) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var acceptKeyDeaneriesDto = new AcceptKeyDeaneriesDto(
                 infoAboutClient.clientId(),
@@ -240,6 +253,7 @@ public class RestDeaneriesController {
                 dto.lastAccess()
         );
     }
+
     private ApplicationResponseDto mapToResponseDto(ApplicationDto dto) {
         return new ApplicationResponseDto(
                 dto.applicationId(),

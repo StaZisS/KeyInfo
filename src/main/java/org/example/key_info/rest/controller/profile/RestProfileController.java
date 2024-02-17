@@ -1,6 +1,7 @@
 package org.example.key_info.rest.controller.profile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.client.service.ClientService;
@@ -10,6 +11,8 @@ import org.example.key_info.public_interface.client.ClientProfileDto;
 import org.example.key_info.public_interface.profile.ProfileDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,8 +26,10 @@ public class RestProfileController {
 
     @Operation(summary = "Получить свой профиль")
     @GetMapping()
-    public ResponseEntity<ClientProfileDto> getMyProfile(@RequestHeader("Authorization") String accessToken) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<ClientProfileDto> getMyProfile() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var profileDto = clientService.getProfile(infoAboutClient.clientId());
 
@@ -33,9 +38,10 @@ public class RestProfileController {
 
     @Operation(summary = "Обновить свой профиль")
     @PutMapping()
-    public ResponseEntity<ProfileDto> updateMyProfile(@RequestHeader("Authorization") String accessToken,
-                                                      @RequestBody ProfileDto dto) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<ProfileDto> updateMyProfile(@RequestBody ProfileDto dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var updateProfileDto = new UpdateProfileDto(
                 infoAboutClient.clientId(),

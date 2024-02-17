@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class JwtFilter extends GenericFilterBean {
         final Claims claims = jwtProvider.getAccessClaims(token);
         final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
         jwtInfoToken.setAuthenticated(true);
+        jwtInfoToken.setUserId(UUID.fromString(claims.getSubject()));
         SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
 
         fc.doFilter(request, response);

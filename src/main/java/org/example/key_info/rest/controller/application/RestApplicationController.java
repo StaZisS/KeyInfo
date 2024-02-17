@@ -1,6 +1,7 @@
 package org.example.key_info.rest.controller.application;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.application.ApplicationFilterDto;
@@ -13,6 +14,8 @@ import org.example.key_info.public_interface.application.GetMyApplicationDto;
 import org.example.key_info.public_interface.application.UpdateApplicationDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -29,13 +32,14 @@ public class RestApplicationController {
 
     @Operation(summary = "Получить свои заявки-запросы")
     @GetMapping()
-    public ResponseEntity<List<ApplicationResponseDto>> getMyApplications(@RequestHeader("Authorization") String accessToken,
-                                                                          @RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<ApplicationResponseDto>> getMyApplications(@RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
                                                                           @RequestParam(required = false) OffsetDateTime start,
                                                                           @RequestParam(required = false) OffsetDateTime end,
                                                                           @RequestParam(required = false, name = "build_id") Integer buildId,
                                                                           @RequestParam(required = false, name = "room_id") Integer roomId) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var filterDto = new ApplicationFilterDto(
                 ApplicationStatus.getApplicationStatusByName(status),
@@ -58,9 +62,10 @@ public class RestApplicationController {
 
     @Operation(summary = "Создать заявку-запрос")
     @PostMapping()
-    public ResponseEntity<UUID> createApplication(@RequestHeader("Authorization") String accessToken,
-                                                  @RequestBody CreateApplicationDtoRequest dto) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UUID> createApplication(@RequestBody CreateApplicationDtoRequest dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var createApplicationDto = new CreateApplicationDto(
                 infoAboutClient.clientId(),
@@ -80,9 +85,10 @@ public class RestApplicationController {
 
     @Operation(summary = "Удалить мою заявку-запрос")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMyApplication(@RequestHeader("Authorization") String accessToken,
-                                                    @PathVariable UUID id) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deleteMyApplication(@PathVariable UUID id) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var deleteApplicationDto = new DeleteApplicationDto(
                 infoAboutClient.clientId(),
@@ -95,10 +101,11 @@ public class RestApplicationController {
 
     @Operation(summary = "Обновить мою заявку-запрос")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateApplication(@RequestHeader("Authorization") String accessToken,
-                                                                    @PathVariable UUID id,
-                                                                    @RequestBody UpdateApplicationDtoRequest dto) {
-        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> updateApplication(@PathVariable UUID id,
+                                                  @RequestBody UpdateApplicationDtoRequest dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
         var updateApplicationDto = new UpdateApplicationDto(
                 infoAboutClient.clientId(),
