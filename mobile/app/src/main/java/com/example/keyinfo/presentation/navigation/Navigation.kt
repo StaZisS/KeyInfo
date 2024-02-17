@@ -13,6 +13,7 @@ import com.example.keyinfo.presentation.screen.login.LoginScreen
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
 import com.example.keyinfo.presentation.screen.main.MainScreen
 import com.example.keyinfo.presentation.screen.profile.ProfileScreen
+import com.example.keyinfo.presentation.screen.profile.ProfileViewModel
 import com.example.keyinfo.presentation.screen.registration.RegistrationFirstScreen
 import com.example.keyinfo.presentation.screen.registration.RegistrationSecondScreen
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
@@ -23,17 +24,11 @@ import com.example.keyinfo.presentation.screen.selectauth.SelectAuthScreen
 @Composable
 fun AppNavigation(
     navController: NavHostController,
+    registrationViewModel: RegistrationViewModel,
+    loginViewModel: LoginViewModel,
+    keyViewModel: KeyTransferViewModel,
+    profileViewModel: ProfileViewModel
 ) {
-    val registrationViewModel = RegistrationViewModel(
-        context = LocalContext.current,
-        router = AppRouter(navController)
-    )
-    val loginViewModel = LoginViewModel(
-        context = LocalContext.current,
-        router = AppRouter(navController)
-    )
-    val keyViewModel = KeyTransferViewModel()
-
     // TODO: replace to splash screen
     NavHost(
         navController,
@@ -65,7 +60,7 @@ fun AppNavigation(
             MainScreen(navController = navController)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen { BottomBarRouter(navController).toAuth() }
+            ProfileScreen(profileViewModel) { BottomBarRouter(navController).toAuth() }
         }
         composable(Screen.Key.route){
             KeyTransferScreen(

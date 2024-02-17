@@ -12,6 +12,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,9 +33,14 @@ import com.example.keyinfo.ui.theme.TextButtonColor
 
 @Composable
 fun ProfileScreen(
+    viewModel: ProfileViewModel,
     clickOnLeave: () -> Unit
 ) {
-    val name = "John Doe"
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit){
+        viewModel.getProfile()
+    }
 
     Column(
         Modifier.fillMaxSize(),
@@ -46,7 +54,7 @@ fun ProfileScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = name,
+            text = state.name,
             style = TextStyle(
                 fontSize = 24.sp,
                 lineHeight = 29.sp,
@@ -55,7 +63,7 @@ fun ProfileScreen(
             )
         )
         Text(
-            text = "Software Developer",
+            text = state.role,
             style = TextStyle(
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -82,10 +90,4 @@ fun ProfileScreen(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun ProfilePreview() {
-    ProfileScreen {}
 }

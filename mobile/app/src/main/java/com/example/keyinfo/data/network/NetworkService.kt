@@ -1,6 +1,7 @@
 package com.example.keyinfo.data.network
 
 import com.example.keyinfo.data.network.api.AuthenticationApiService
+import com.example.keyinfo.data.network.api.ProfileApiService
 import com.example.keyinfo.data.network.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -32,4 +33,7 @@ object NetworkService {
 
     val authenticationApiService: AuthenticationApiService =
         retrofit.create(AuthenticationApiService::class.java)
+
+    val profileApiService: ProfileApiService =
+        retrofit.create(ProfileApiService::class.java)
 }
