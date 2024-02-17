@@ -34,9 +34,10 @@ fun AppNavigation(
     )
     val keyViewModel = KeyTransferViewModel()
 
+    // TODO: replace to splash screen
     NavHost(
         navController,
-        startDestination = Screen.Welcome.route,
+        startDestination = Screen.Main.route,
     ) {
 
         composable(Screen.Splash.route) {
@@ -71,8 +72,7 @@ fun AppNavigation(
         }
         composable(Screen.Key.route){
             KeyTransferScreen(
-                viewModel = keyViewModel,
-                clickOnBar = { BottomBarRouter(navController).toProfile() }
+                viewModel = keyViewModel
             )
         }
     }

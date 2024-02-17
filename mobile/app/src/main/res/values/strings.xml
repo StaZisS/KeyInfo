@@ -92,6 +92,7 @@
     <string name="schedule_search">Поиск аудитории</string>
 
     <string name="key_tranfser">Передача ключа</string>
+    <string name="key_tranfser_dialog">Передать ключ</string>
     <string name="confirm">Подтвердить</string>
     <string name="reserve">Заявка на бронирование</string>
     <string name="accept">Принять</string>

@@ -25,16 +25,11 @@ class MainActivity : ComponentActivity() {
             val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Welcome.route
 
             KeyInfoTheme(darkTheme = false) {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    AppNavigation(navController = navController)
-//                }
                 Scaffold(
                     bottomBar = {
                         when (currentRoute) {
-                            Screen.Main.route, Screen.Schedule.route, Screen.Profile.route -> {
+                            Screen.Main.route, Screen.Schedule.route, Screen.Profile.route,
+                            Screen.Key.route -> {
                                 BottomBar(navController = navController)
                             }
 

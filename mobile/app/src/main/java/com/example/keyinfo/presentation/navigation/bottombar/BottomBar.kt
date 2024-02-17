@@ -20,6 +20,7 @@ fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Main,
         Screen.Schedule,
+        Screen.Key,
         Screen.Profile,
     )
 

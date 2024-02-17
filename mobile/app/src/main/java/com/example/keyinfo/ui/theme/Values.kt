@@ -12,6 +12,7 @@ object Values {
     val LittlePadding = 4.dp
     val MicroPadding = 2.dp
 
+    val DialogRound = 16.dp
     val BigRound = 10.dp
     val MiddleRound = 8.dp
     val LittleRound = 5.dp

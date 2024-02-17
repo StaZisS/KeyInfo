@@ -6,8 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -62,12 +65,14 @@ fun AddItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = if (selected) painterResource(id = screen.imageResource!!) else painterResource(
+                painter = if (selected) painterResource(id = screen.imageResourceFilled!!) else painterResource(
                     id = screen.imageResource!!
                 ),
                 contentDescription = "icon",
-                tint = contentColor
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
             AnimatedVisibility(visible = selected) {
                 Text(
                     text = screen.title,
