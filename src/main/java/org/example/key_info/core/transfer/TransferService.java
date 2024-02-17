@@ -9,6 +9,7 @@ import org.example.key_info.public_interface.transfer.AcceptTransferDto;
 import org.example.key_info.public_interface.transfer.CreateTransferDto;
 import org.example.key_info.public_interface.transfer.DeclineTransferDto;
 import org.example.key_info.public_interface.transfer.DeleteTransferDto;
+import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.example.key_info.public_interface.transfer.TransferDto;
 import org.springframework.stereotype.Service;
@@ -42,12 +43,20 @@ public class TransferService {
         return transferRepository.createTransfer(transferEntity);
     }
 
-    //TODO: мб добавить логику просмотра чужих заявок а не только своих
     public List<TransferDto> getMyTransfers(GetMyTransfersDto dto) {
         var status = TransferStatus.getTransferStatusByName(dto.status());
         var transfers = transferRepository.getMyTransfers(dto.clientId(), status);
 
-        return transfers.parallelStream()
+        return transfers.stream()
+                .map(this::mapEntityToDto)
+                .toList();
+    }
+
+    public List<TransferDto> getForeignTransfer(GetForeignTransfersDto dto) {
+        var status = TransferStatus.getTransferStatusByName(dto.status());
+        var transfers = transferRepository.getForeignTransfers(dto.clientId(), status);
+
+        return transfers.stream()
                 .map(this::mapEntityToDto)
                 .toList();
     }
@@ -56,7 +65,7 @@ public class TransferService {
         var transfer = transferRepository.getTransferById(dto.transferId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка на передачу не найдена", ExceptionType.NOT_FOUND));
 
-        if (transfer.ownerId() != dto.clientId()) {
+        if (!transfer.ownerId().equals(dto.clientId())) {
             throw new ExceptionInApplication("Вы не можете удалить чужую заяку", ExceptionType.INVALID);
         }
 
@@ -71,7 +80,7 @@ public class TransferService {
         var transfer = transferRepository.getTransferById(dto.transferId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка на передачу не найдена", ExceptionType.NOT_FOUND));
 
-        if (transfer.receiverId() != dto.clientId()) {
+        if (!transfer.receiverId().equals(dto.clientId())) {
             throw new ExceptionInApplication("Вы не можете принять чужую заяку", ExceptionType.INVALID);
         }
 
@@ -96,7 +105,7 @@ public class TransferService {
         var transfer = transferRepository.getTransferById(dto.transferId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка на передачу не найдена", ExceptionType.NOT_FOUND));
 
-        if (transfer.receiverId() != dto.clientId()) {
+        if (!transfer.receiverId().equals(dto.clientId())) {
             throw new ExceptionInApplication("Вы не можете отклонить чужую заяку", ExceptionType.INVALID);
         }
 

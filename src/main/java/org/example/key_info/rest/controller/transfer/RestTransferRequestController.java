@@ -8,6 +8,7 @@ import org.example.key_info.public_interface.transfer.AcceptTransferDto;
 import org.example.key_info.public_interface.transfer.CreateTransferDto;
 import org.example.key_info.public_interface.transfer.DeclineTransferDto;
 import org.example.key_info.public_interface.transfer.DeleteTransferDto;
+import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.example.key_info.public_interface.transfer.TransferDto;
 import org.example.key_info.rest.util.JwtTools;
@@ -42,14 +43,29 @@ public class RestTransferRequestController {
         return ResponseEntity.ok(transferId);
     }
 
-    @Operation(summary = "Получить запросы от пользователей, которые хотят передать мне ключ")
-    @GetMapping()
+    @Operation(summary = "Получить запросы, отправленные другим пользователям")
+    @GetMapping("/my")
     public ResponseEntity<List<TransferResponseDto>> getMyRequests(@RequestHeader("Authorization") String accessToken,
-                                                                   @RequestParam(required = false, name = "status_transfer_request") String status) {
+                                                                   @RequestParam(required = false, name = "status_transfer_request", defaultValue = "IN_PROCESS") String status) {
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
 
         var getMyTransfers = new GetMyTransfersDto(infoAboutClient.clientId(), status);
         var transfers = transferService.getMyTransfers(getMyTransfers);
+
+        var body = transfers.parallelStream()
+                .map(this::mapDtoToResponse)
+                .toList();
+        return ResponseEntity.ok(body);
+    }
+
+    @Operation(summary = "Получить запросы от пользователей, которые хотят передать мне ключ")
+    @GetMapping("/foreign")
+    public ResponseEntity<List<TransferResponseDto>> getForeignRequests(@RequestHeader("Authorization") String accessToken,
+                                                                   @RequestParam(required = false, name = "status_transfer_request", defaultValue = "IN_PROCESS") String status) {
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(accessToken);
+
+        var getForeignTransfers = new GetForeignTransfersDto(infoAboutClient.clientId(), status);
+        var transfers = transferService.getForeignTransfer(getForeignTransfers);
 
         var body = transfers.parallelStream()
                 .map(this::mapDtoToResponse)

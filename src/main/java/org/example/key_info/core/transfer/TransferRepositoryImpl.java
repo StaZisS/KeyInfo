@@ -81,4 +81,12 @@ public class TransferRepositoryImpl implements TransferRepository {
                 .fetch(transferEntityMapper)
                 .isEmpty();
     }
+
+    @Override
+    public List<TransferEntity> getForeignTransfers(UUID clientId, TransferStatus status) {
+        return create.selectFrom(TRANSFERREQUEST)
+                .where(TRANSFERREQUEST.RECEIVER_ID.eq(clientId))
+                .and(TRANSFERREQUEST.STATUS.eq(status.name()))
+                .fetch(transferEntityMapper);
+    }
 }

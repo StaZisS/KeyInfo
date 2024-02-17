@@ -4,8 +4,6 @@ import jakarta.annotation.PostConstruct;
 import org.example.key_info.core.application.ApplicationRepositoryImpl;
 import org.example.key_info.core.application.ApplicationService;
 import org.example.key_info.core.client.repository.ClientRepositoryImpl;
-import org.example.key_info.core.client.service.ClientService;
-import org.example.key_info.core.client.validation.ClientValidationService;
 import org.example.key_info.core.timeslot.TimeSlotRepositoryImpl;
 import org.example.key_info.core.timeslot.TimeSlotService;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
