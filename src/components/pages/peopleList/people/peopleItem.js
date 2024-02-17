@@ -1,7 +1,7 @@
 import { ButtonStudent } from './studentRoleButton'
 import { ButtonTeacher } from './teacherRoleButton'
 
-import('../../styles/peopleItem.css')
+import('../../../../styles/peopleItem.css')
 
 export const PeopleItem = ({name}) => {
     return (

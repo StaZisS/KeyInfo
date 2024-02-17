@@ -1,3 +1,4 @@
+import { Application } from "../components/pages/applicationList/applicationList";
 import { Keys } from "../components/pages/keysList/keysList";
 import { Login } from "../components/pages/login/Login";
 import { People } from "../components/pages/peopleList/peopleList";
@@ -16,10 +17,14 @@ export const router = createBrowserRouter([
     },
     {
         path: '/key',
-        element: <><Header/><Keys/></>
+        element: <><Header/><Application/></>
     },
     {
-        path: '/application',
+        path: '/key/application',
+        element: <><Header/></>
+    },
+    {
+        path: '/users',
         element: <><Header/><People/></>
     }
 ])

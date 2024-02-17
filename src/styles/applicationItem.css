@@ -1,0 +1,33 @@
+.button, .approved{
+    margin-right: 8px;
+    border-radius: 15px;
+    padding-inline: 15px;
+    color: white;
+    height: 70%;
+    display: flex;
+}
+.disapprove{
+    background-color: #DF7575;
+}
+.disapprove:hover{
+    background-color: #ac6767;
+}
+.approve{
+    background-color: #6DC376;
+}
+.approve:hover{
+    background-color: #5ba062;
+}
+.approved{
+    color: #A09D9D;
+}
+.item{
+    position: relative;
+}
+.buttons{
+    position: absolute;
+    right: 0;
+}
+/* .repeat {
+    position: absolute;
+} */

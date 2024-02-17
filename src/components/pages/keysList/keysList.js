@@ -1,4 +1,5 @@
-import { KeysItem } from "../../key/keyItem"
+import { KeysItem } from "./key/keyItem";
+
 
     // нужен запрос
     const keysData = [
@@ -13,7 +14,7 @@ export const Keys = () => {
         <div className="col-10 col-md-8 mx-auto mt-3 bg-white p-4 shadow border-0">
             <h3>Список ключей:</h3>
             {keysData.map((keyData, index) => (
-                <KeysItem 
+                <KeysItem
                     key={index} 
                     keyNumber={keyData.keyNumber} 
                     hasRequests={keyData.hasRequests} 

@@ -1,4 +1,4 @@
-import('../../styles/keysItem.css')
+import('../../../../styles/keysItem.css')
 
 export const ButtonGet = () => {
     return(

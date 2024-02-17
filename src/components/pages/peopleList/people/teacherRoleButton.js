@@ -1,4 +1,4 @@
-import('../../styles/peopleItem.css')
+import('../../../../styles/peopleItem.css')
 
 export const ButtonTeacher = () => {
     return(
