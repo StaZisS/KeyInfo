@@ -25,9 +25,13 @@ export const KeyFilter = () => {
     const [build, setBuild] = useState(undefined)
     const [room, setRoom] = useState(undefined)
 
-    const handleFind = () => {
-        const keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
-        KeysStore.setKeysFilter({keyStatus, build, room})
+    const handleFind = (e) => {
+        e.preventDefault()
+        let keyStatus
+        if (!inAll){
+             keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
+        }
+        KeysStore.setKeysFilter({keysStatus:keyStatus,build:build,room:room})
     }
 
 
@@ -60,6 +64,7 @@ export const KeyFilter = () => {
         }
     }
 
+
     return (
         <Container
             className='mt-5'>
@@ -75,19 +80,16 @@ export const KeyFilter = () => {
                             <CardTitle>Фильтр ключей</CardTitle>
                         </CardHeader>
                         <CardBody>
-                            <Form className='container-fluid' onSubmit={(e) => {
-                                e.preventDefault();
-                                console.log('Фильтрация ключей')
-                            }}>
+                            <Form className='container-fluid' onSubmit={handleFind}>
                                 <Row className='d-flex align-content-between'>
                                     <Col lg={inAll ? 3 : 2} xs={6}>
                                         <FormControl min={0} onChange={(e) => {
-                                            setBuild(e)
+                                            setBuild(e.target.value)
                                         }} placeholder={'Номер здания'} type='number'/>
                                     </Col>
                                     <Col lg={inAll ? 3 : 2} xs={6}>
                                         <FormControl min={0} onChange={(e) => {
-                                            setRoom(e)
+                                            setRoom(e.target.value)
                                         }} placeholder={'Номер аудитории'} type='number'/>
                                     </Col>
                                     <Col lg={inAll ? 3 : 2} md={12} xs={12}>

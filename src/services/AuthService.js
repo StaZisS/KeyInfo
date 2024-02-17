@@ -11,6 +11,6 @@ export default class AuthService {
     }
 
     static async refreshAccessToken(refreshToken) {
-        return $api.post('/auth/refresh', {refresh_token: refreshToken}, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
+        return $api.post('/auth/refresh', {refresh_token: refreshToken})
     }
 }

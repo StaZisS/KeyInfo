@@ -15,7 +15,6 @@ const $api = axios.create({
 // })
 
 $api.interceptors.response.use((config) => {
-    console.log('Интерцептор не использован')
     return config
 }, async (error) => {
     console.log('Интерцептор использован')
@@ -23,7 +22,7 @@ $api.interceptors.response.use((config) => {
     if ((error.response.status === 401 || error.response.status === 403) && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
-            const response = await axios.post(`${API_URL}/auth/token`, {refresh_token: localStorage.getItem('refreshToken')})
+            const response = await axios.post(`${API_URL}/auth/refresh`, {refresh_token: localStorage.getItem('refreshToken')})
             localStorage.setItem('token', response.data.accessToken)
             localStorage.setItem('refreshToken', response.data.refreshToken)
             return $api.request(originalRequest)
