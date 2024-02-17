@@ -10,6 +10,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import org.example.key_info.core.client.repository.ClientEntity;
 import org.example.key_info.core.client.repository.ClientRole;
 import org.example.key_info.core.key.repository.KeyEntity;
+import org.example.key_info.core.key.repository.KeyRepository;
 import org.example.key_info.core.key.repository.KeyStatus;
 import org.example.key_info.core.transfer.TransferService;
 import org.example.key_info.core.transfer.TransferStatus;
@@ -18,6 +19,7 @@ import org.example.key_info.public_interface.transfer.AcceptTransferDto;
 import org.example.key_info.public_interface.transfer.CreateTransferDto;
 import org.example.key_info.public_interface.transfer.DeclineTransferDto;
 import org.example.key_info.public_interface.transfer.DeleteTransferDto;
+import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -75,6 +77,7 @@ public class TransferIntegrationTest {
     private static DSLContext dslContext;
 
     @Autowired private TransferService transferService;
+    @Autowired private KeyRepository keyRepository;
 
     @BeforeAll
     public static void setup() throws SQLException, LiquibaseException {
@@ -104,10 +107,10 @@ public class TransferIntegrationTest {
         var transferId = transferService.createTransfer(createTransferDto);
 
         var getMyTransfersDtoFirstStudent = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.IN_PROCESS.name());
-        var getMyTransfersDtoSecondStudent = new GetMyTransfersDto(SECOND_STUDENT.clientId(), TransferStatus.IN_PROCESS.name());
+        var getForeignTransfersDtoSecondStudent = new GetForeignTransfersDto(SECOND_STUDENT.clientId(), TransferStatus.IN_PROCESS.name());
 
         var transfersFirstStudent = transferService.getMyTransfers(getMyTransfersDtoFirstStudent);
-        var transfersSecondStudent = transferService.getMyTransfers(getMyTransfersDtoSecondStudent);
+        var transfersSecondStudent = transferService.getForeignTransfer(getForeignTransfersDtoSecondStudent);
 
         var transferFirstStudent = transfersFirstStudent.stream()
                 .filter(t -> t.transferId().equals(transferId))
@@ -208,7 +211,7 @@ public class TransferIntegrationTest {
         var acceptTransferDto = new AcceptTransferDto(SECOND_STUDENT.clientId(), transferId);
         transferService.acceptTransfer(acceptTransferDto);
 
-        var getMyTransfersDtoFirstStudent = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.IN_PROCESS.name());
+        var getMyTransfersDtoFirstStudent = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.ACCEPTED.name());
         var transfers = transferService.getMyTransfers(getMyTransfersDtoFirstStudent);
         var transfer = transfers.stream()
                 .filter(t -> t.transferId().equals(transferId))
@@ -235,7 +238,7 @@ public class TransferIntegrationTest {
         var declineTransferDto = new DeclineTransferDto(SECOND_STUDENT.clientId(), transferId);
         transferService.declineTransfer(declineTransferDto);
 
-        var getMyTransfersDtoFirstStudent = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.IN_PROCESS.name());
+        var getMyTransfersDtoFirstStudent = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.DECLINED.name());
         var transfers = transferService.getMyTransfers(getMyTransfersDtoFirstStudent);
         var transfer = transfers.stream()
                 .filter(t -> t.transferId().equals(transferId))
@@ -351,8 +354,8 @@ public class TransferIntegrationTest {
         var acceptTransferDto = new AcceptTransferDto(SECOND_STUDENT.clientId(), secondTransferId);
         transferService.acceptTransfer(acceptTransferDto);
 
-        var getMyTransfersDtoAccepted = new GetMyTransfersDto(SECOND_STUDENT.clientId(), TransferStatus.ACCEPTED.name());
-        var getMyTransfersDtoDeclined = new GetMyTransfersDto(SECOND_STUDENT.clientId(), TransferStatus.DECLINED.name());
+        var getMyTransfersDtoAccepted = new GetMyTransfersDto(TEACHER_ENTITY.clientId(), TransferStatus.ACCEPTED.name());
+        var getMyTransfersDtoDeclined = new GetMyTransfersDto(FIRST_STUDENT.clientId(), TransferStatus.DECLINED.name());
 
         var acceptedTransfers = transferService.getMyTransfers(getMyTransfersDtoAccepted);
         var declinedTransfers = transferService.getMyTransfers(getMyTransfersDtoDeclined);
@@ -368,6 +371,65 @@ public class TransferIntegrationTest {
 
         assertEquals(TransferStatus.ACCEPTED, acceptTransfer.status());
         assertEquals(TransferStatus.DECLINED, declineTransfer.status());
+    }
+
+    @Test
+    public void checkUpdatedKeyHolderAfterAccept() {
+        var build = 12;
+        var room = 12;
+        addAccommodationToDB(build, room);
+        var key = formatKey(KeyStatus.IN_HAND, FIRST_STUDENT.clientId(), build, room);
+        addKeyToDB(key);
+        var createTransferDto = new CreateTransferDto(
+                FIRST_STUDENT.clientId(),
+                SECOND_STUDENT.clientId(),
+                key.keyId()
+        );
+        var transferId = transferService.createTransfer(createTransferDto);
+
+        var acceptTransferDto = new AcceptTransferDto(SECOND_STUDENT.clientId(), transferId);
+        transferService.acceptTransfer(acceptTransferDto);
+
+        var secondStudentKeys = keyRepository.getMyKeys(SECOND_STUDENT.clientId());
+        var keyAfterAccept = secondStudentKeys.stream()
+                .filter(k -> k.buildId() == build && k.roomId() == room)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ключ не найден"));
+
+        assertEquals(KeyStatus.IN_HAND, keyAfterAccept.status());
+        assertEquals(SECOND_STUDENT.clientId(), keyAfterAccept.keyHolderId());
+    }
+
+    @Test
+    public void checkNotUpdateKeyHolderAfterDecline() {
+        var build = 13;
+        var room = 13;
+        addAccommodationToDB(build, room);
+        var key = formatKey(KeyStatus.IN_HAND, FIRST_STUDENT.clientId(), build, room);
+        addKeyToDB(key);
+        var createTransferDto = new CreateTransferDto(
+                FIRST_STUDENT.clientId(),
+                SECOND_STUDENT.clientId(),
+                key.keyId()
+        );
+        var transferId = transferService.createTransfer(createTransferDto);
+
+        var declineTransferDto = new DeclineTransferDto(SECOND_STUDENT.clientId(), transferId);
+        transferService.declineTransfer(declineTransferDto);
+
+        var secondStudentKeys = keyRepository.getMyKeys(SECOND_STUDENT.clientId());
+        var keyAfterDeclineSecondStudent = secondStudentKeys.stream()
+                .filter(k -> k.buildId() == build && k.roomId() == room)
+                .findFirst();
+        assertTrue(keyAfterDeclineSecondStudent.isEmpty());
+
+        var firstStudentKeys = keyRepository.getMyKeys(FIRST_STUDENT.clientId());
+        var keyAfterDeclineFirstStudent = firstStudentKeys.stream()
+                .filter(k -> k.buildId() == build && k.roomId() == room)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Ключ не найден"));
+        assertEquals(KeyStatus.IN_HAND, keyAfterDeclineFirstStudent.status());
+        assertEquals(FIRST_STUDENT.clientId(), keyAfterDeclineFirstStudent.keyHolderId());
     }
 
     private static void migrate() throws SQLException, LiquibaseException {
