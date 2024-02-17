@@ -65,10 +65,7 @@ fun AppNavigation(
             MainScreen(navController = navController)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen(
-                clickOnKey = { BottomBarRouter(navController).toKey() },
-                clickOnLeave =  { BottomBarRouter(navController).toAuth() }
-            )
+            ProfileScreen { BottomBarRouter(navController).toAuth() }
         }
         composable(Screen.Key.route){
             KeyTransferScreen(
