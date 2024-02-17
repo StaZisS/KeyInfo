@@ -21,7 +21,7 @@ export const KeyFilter = () => {
         <Container
             className='mt-5'>
             <Button
-                className='w-100 d-md-none mb-2'
+                className='w-100 d-md-none mb-3'
                 aria-expanded={isOpen}
                 onClick={() => {
                     setOpen(!isOpen)
@@ -32,7 +32,7 @@ export const KeyFilter = () => {
                 in={isOpen}
             >
                 <div>
-                    <Card>
+                    <Card className='rounded-0 rounded-top-3'>
                         <CardHeader>
                             <CardTitle>Фильтр ключей</CardTitle>
                         </CardHeader>
