@@ -19,7 +19,7 @@ export const KeysList = observer(() => {
         error
     } = useQuery(['keys', KeysStore.keys_status, KeysStore.build, KeysStore.room], () => KeysStore.getKeys(), {
         refetchOnWindowFocus: false,
-        //keepPreviousData: true
+        keepPreviousData: true
     })
 
     if (isLoading) {
@@ -34,18 +34,18 @@ export const KeysList = observer(() => {
         )
     }
 
-    if (!data.data.length) {
-        return (
-            <>
-                {/*<Container className='mt-5'>*/}
-                {/*    <Button onClick={() => setAddKeyModal(true)} className='btn-success'>Создать ключ</Button>*/}
-                {/*</Container>*/}
-                {/*<AddKeyModal show={addKeyModal} onHide={() => setAddKeyModal(false)}/>*/}
-                <KeyFilter/>
-                <Container className='text-center text-danger fs-1 fw-bold mt-3'>Нет ключей</Container>
-            </>
-        )
-    }
+    // if (!data.data.length) {
+    //     return (
+    //         <>
+    //             <Container className='mt-5'>
+    //                 <Button onClick={() => setAddKeyModal(true)} className='btn-success'>Создать ключ</Button>
+    //             </Container>
+    //             <AddKeyModal show={addKeyModal} onHide={() => setAddKeyModal(false)}/>
+    //             <KeyFilter/>
+    //             <Container className='text-center text-danger fs-1 fw-bold mt-3'>Нет ключей</Container>
+    //         </>
+    //     )
+    // }
     return (
         <>
             <Container className='mt-5'>
@@ -54,20 +54,30 @@ export const KeysList = observer(() => {
             <KeyFilter/>
             <AddKeyModal show={addKeyModal} onHide={() => setAddKeyModal(false)
             }/>
-            <Container className="mt-3 border-0">
-                <Card className='rounded-0'>
-                    <CardBody>
-                        {data.data.map((key) => (
-                            <KeysItem
-                                key={key.key_id}
-                                keyNumber={key.room}
-                                //hasRequests={key.hasRequests}
-                                //location={key.location}
-                            />
-                        ))}
-                    </CardBody>
-                </Card>
-            </Container>
+            {data.data.length
+                ?
+                <>
+                    <Container className="mt-3 border-0">
+                        <Card className='rounded-0'>
+                            <CardBody>
+                                {data.data.map((key) => (
+                                    <KeysItem
+                                        key={key.key_id}
+                                        keyNumber={key.room}
+                                        //hasRequests={key.hasRequests}
+                                        //location={key.location}
+                                    />
+                                ))}
+                            </CardBody>
+                        </Card>
+                    </Container>
+                </>
+                :
+                <>
+                    <Container className='text-center text-danger fs-1 fw-bold mt-3'>Нет ключей</Container>
+                </>
+            }
+
         </>
     )
 })

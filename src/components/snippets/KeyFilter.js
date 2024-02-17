@@ -19,19 +19,19 @@ export const KeyFilter = () => {
 
     const [isOpen, setOpen] = useState(true)
 
-    const [inAll, setInAll] = useState(true)
-    const [inDeanery, setInDeanery] = useState(false)
-    const [inHand, setInHand] = useState(false)
-    const [build, setBuild] = useState(undefined)
-    const [room, setRoom] = useState(undefined)
+    const [inAll, setInAll] = useState(KeysStore.keys_status === "" || KeysStore.keys_status === undefined)
+    const [inDeanery, setInDeanery] = useState(KeysStore.keys_status === 'IN_DEANERY')
+    const [inHand, setInHand] = useState(KeysStore.keys_status === 'IN_HAND')
+    const [build, setBuild] = useState(KeysStore.build === undefined ? "" : KeysStore.build)
+    const [room, setRoom] = useState(KeysStore.room === undefined ? "" : KeysStore.room)
 
-    const handleFind = (e) => {
-        e.preventDefault()
+    const handleFind = () => {
+        debugger
         let keyStatus
-        if (!inAll){
-             keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
+        if (!inAll) {
+            keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
         }
-        KeysStore.setKeysFilter({keysStatus:keyStatus,build:build,room:room})
+        KeysStore.setKeysFilter({keysStatus: keyStatus, build: build, room: room})
     }
 
 
@@ -40,7 +40,7 @@ export const KeyFilter = () => {
             setInAll(!inAll)
             if (inAll) {
                 setInHand(false)
-                setInDeanery(true)
+                setInDeanery(false)
             }
         }
     }
@@ -80,40 +80,38 @@ export const KeyFilter = () => {
                             <CardTitle>Фильтр ключей</CardTitle>
                         </CardHeader>
                         <CardBody>
-                            <Form className='container-fluid' onSubmit={handleFind}>
+                            <Form className='container-fluid'>
                                 <Row className='d-flex align-content-between'>
-                                    <Col lg={inAll ? 3 : 2} xs={6}>
-                                        <FormControl min={0} onChange={(e) => {
-                                            setBuild(e.target.value)
+                                    <Col lg={inAll ? 4 : 3} xs={6}>
+                                        <FormControl min={0} max={30} onChange={(e) => {
+                                            KeysStore.build = e.target.value
                                         }} placeholder={'Номер здания'} type='number'/>
                                     </Col>
-                                    <Col lg={inAll ? 3 : 2} xs={6}>
-                                        <FormControl min={0} onChange={(e) => {
-                                            setRoom(e.target.value)
+                                    <Col lg={inAll ? 4 : 3} xs={6}>
+                                        <FormControl min={0} max={30} onChange={(e) => {
+                                            KeysStore.room = e.target.value
                                         }} placeholder={'Номер аудитории'} type='number'/>
                                     </Col>
-                                    <Col lg={inAll ? 3 : 2} md={12} xs={12}>
+                                    <Col lg={inAll ? 3 : 2} md={6} sm={4} xs={12}>
                                         <FormCheck checked={inAll} onChange={(e) => {
                                             handleSwitchInAll(e)
+                                            KeysStore.keys_status = undefined
                                         }} className='mt-2 mt-lg-0' type={'switch'} label={'Выбрать все'}/>
                                     </Col>
                                     {inAll === false && <>
-                                        <Col lg={2}  sm={4} xs={6}>
+                                        <Col lg={2} md={3} sm={4} xs={6}>
                                             <FormCheck checked={inDeanery} onChange={(e) => {
                                                 handleSwitchInDeanery(e)
+                                                KeysStore.keys_status = 'IN_DEANERY'
                                             }} className='mt-2 mt-lg-0' type={'radio'} label={'В деканате'}/>
                                         </Col>
-                                        <Col lg={2} sm={4} xs={6}>
+                                        <Col lg={2} md={3} sm={4} xs={6}>
                                             <FormCheck checked={inHand} onChange={(e) => {
                                                 handleSwitchInHand(e)
+                                                KeysStore.keys_status = 'IN_HAND'
                                             }} className='mt-2 mt-lg-0' type={'radio'} label={'На руках'}/>
                                         </Col>
                                     </>}
-                                    <Col lg={inAll ? 2 : 2} md={4} sm={12} xs={12}>
-                                        <Button className='mt-2 mt-lg-0 w-100 ms-auto' type='submit'>
-                                            Найти
-                                        </Button>
-                                    </Col>
                                 </Row>
                             </Form>
                         </CardBody>
