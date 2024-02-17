@@ -2,6 +2,7 @@ import {useState} from "react";
 import {Button, Card, CardBody, CardTitle, Col, Container, Form} from "react-bootstrap"
 import Store from "../../../store/store";
 import {useNavigate} from "react-router-dom";
+import {useQuery} from "react-query";
 
 export const Login = () => {
     const [email, setEmail] = useState('');

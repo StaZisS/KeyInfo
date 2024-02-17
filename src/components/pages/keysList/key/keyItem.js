@@ -18,7 +18,7 @@ export const KeysItem = ({ keyNumber, hasRequests, location }) => {
         
             <div className={`d-flex flex-grow-1 h-100 align-items-center  ${hasRequests ? 'has-requests' : ''}`} >     {/*onClick={handleClick}*/}
                 <div className='ps-3 d-flex align-items-center flex-grow-1 number'>
-                    <span className='key-number'>{keyNumber}</span>
+                    <span className='key-number'>Аудитория {keyNumber}</span>
                     {hasRequests && <Mark />}
                 </div>
                 <div className='flex-grow-1'>

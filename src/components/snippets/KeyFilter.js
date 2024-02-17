@@ -67,7 +67,7 @@ export const KeyFilter = () => {
 
     return (
         <Container
-            className='mt-5'>
+            className='mt-3'>
             <Button className='w-100 d-md-none mb-3' aria-expanded={isOpen} onClick={() => {
                 setOpen(!isOpen)
             }}>
