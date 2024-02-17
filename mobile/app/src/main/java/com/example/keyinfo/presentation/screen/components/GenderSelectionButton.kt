@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +25,6 @@ import com.example.keyinfo.R
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.ChipColor
 import com.example.keyinfo.ui.theme.LightGrayColor
-import com.example.keyinfo.ui.theme.SecondButtonColor
-import com.example.keyinfo.ui.theme.SuperDarkGrayColor
 import com.example.keyinfo.ui.theme.Values.MicroPadding
 import com.example.keyinfo.ui.theme.Values.MiddlePadding
 import com.example.keyinfo.ui.theme.Values.MiddleRound
