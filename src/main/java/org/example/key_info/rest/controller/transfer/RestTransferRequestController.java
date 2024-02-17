@@ -31,7 +31,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Создать запрос на передачу ключа другому пользователю")
     @PostMapping("/{receiver_id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UUID> create(@PathVariable(name = "receiver_id") UUID receiverId,
                                        @RequestBody CreateTransferRequest createTransferRequest) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,7 +49,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Получить запросы, отправленные другим пользователям")
     @GetMapping("/my")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<TransferResponseDto>> getMyRequests(@RequestParam(required = false, name = "status_transfer_request", defaultValue = "IN_PROCESS") String status) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -65,7 +65,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Получить запросы от пользователей, которые хотят передать мне ключ")
     @GetMapping("/foreign")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<TransferResponseDto>> getForeignRequests(@RequestParam(required = false, name = "status_transfer_request", defaultValue = "IN_PROCESS") String status) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -81,7 +81,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Удалить мой запрос на передачу ключа")
     @DeleteMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteMyRequest(@RequestParam(name = "transfer_request_id") UUID transferRequestId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -94,7 +94,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Принять запрос на передачу мне ключа")
     @PatchMapping("/{transfer_request_id}/accept")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> acceptTransferRequest(@PathVariable(name = "transfer_request_id") UUID transferRequestId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -107,7 +107,7 @@ public class RestTransferRequestController {
 
     @Operation(summary = "Отклонить запрос на передачу мне ключа")
     @PatchMapping("/{transfer_request_id}/decline")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> declineTransferRequest(@PathVariable(name = "transfer_request_id") UUID transferRequestId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);

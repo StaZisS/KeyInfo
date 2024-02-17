@@ -32,7 +32,7 @@ public class RestApplicationController {
 
     @Operation(summary = "Получить свои заявки-запросы")
     @GetMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ApplicationResponseDto>> getMyApplications(@RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
                                                                           @RequestParam(required = false) OffsetDateTime start,
                                                                           @RequestParam(required = false) OffsetDateTime end,
@@ -62,7 +62,7 @@ public class RestApplicationController {
 
     @Operation(summary = "Создать заявку-запрос")
     @PostMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UUID> createApplication(@RequestBody CreateApplicationDtoRequest dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -85,7 +85,7 @@ public class RestApplicationController {
 
     @Operation(summary = "Удалить мою заявку-запрос")
     @DeleteMapping("/{id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteMyApplication(@PathVariable UUID id) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -101,7 +101,7 @@ public class RestApplicationController {
 
     @Operation(summary = "Обновить мою заявку-запрос")
     @PutMapping("/{id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> updateApplication(@PathVariable UUID id,
                                                   @RequestBody UpdateApplicationDtoRequest dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();

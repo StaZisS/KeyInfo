@@ -26,7 +26,7 @@ public class RestProfileController {
 
     @Operation(summary = "Получить свой профиль")
     @GetMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ClientProfileDto> getMyProfile() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -38,7 +38,7 @@ public class RestProfileController {
 
     @Operation(summary = "Обновить свой профиль")
     @PutMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ProfileDto> updateMyProfile(@RequestBody ProfileDto dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);

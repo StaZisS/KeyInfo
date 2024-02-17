@@ -45,7 +45,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Деканат добавляет новую аудиторию в здание")
     @PostMapping("/accommodations/{build_id}/{room_id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> createAccommodation(@PathVariable(name = "build_id") int buildId,
                                                     @PathVariable(name = "room_id") int roomId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +64,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Деканат удаляет аудиторию из здания")
     @DeleteMapping("/accommodations/{build_id}/{room_id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteAccommodation(@PathVariable(name = "build_id") int buildId,
                                                     @PathVariable(name = "room_id") int roomId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,7 +83,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Получить доступные заявки для рассмотрения")
     @GetMapping("/applications")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ApplicationResponseDto>> getPossibleApplications(@RequestParam(required = false, defaultValue = "IN_PROCESS") String status,
                                                                                 @RequestParam(required = false) OffsetDateTime start,
                                                                                 @RequestParam(required = false) OffsetDateTime end,
@@ -114,7 +114,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Принять заявку")
     @PostMapping("/application/{id}/accept")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> acceptApplication(@PathVariable(name = "id") UUID applicationId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -131,7 +131,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Отклонить заявку")
     @PostMapping("/application/{id}/decline")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> declineApplication(@PathVariable(name = "id") UUID applicationId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -148,7 +148,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Получить все ключи (см. параметры)")
     @GetMapping("/keys")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestParam(required = false, name = "key_status") String keyStatus,
                                                            @RequestParam(required = false) Integer build,
                                                            @RequestParam(required = false) Integer room) {
@@ -172,7 +172,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Добавить новый ключ")
     @PostMapping("/keys")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UUID> addKey(@RequestBody AddKeyDto dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -191,7 +191,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Удалить ключ")
     @DeleteMapping("/keys/{id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteKey(@PathVariable(name = "id") UUID keyId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -209,7 +209,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Передать ключ пользователю")
     @PatchMapping("/keys/giving/{id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> giveKey(@PathVariable(name = "id") UUID keyId,
                                         @RequestParam(required = false) UUID keyHolderId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -228,7 +228,7 @@ public class RestDeaneriesController {
 
     @Operation(summary = "Принять ключ от пользователя")
     @PatchMapping("/keys/acceptance/{id}")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> acceptKey(@PathVariable(name = "id") UUID keyId,
                                           @RequestParam(required = false) UUID keyHolderId) {
         var auth = SecurityContextHolder.getContext().getAuthentication();

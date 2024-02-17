@@ -29,7 +29,7 @@ public class RestRoleController {
 
     @Operation(summary = "Получить все роли пользователя (их несколько может быть)")
     @GetMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<RoleDto> getMyRoles() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -43,7 +43,7 @@ public class RestRoleController {
 
     @Operation(summary = "Администратор назначает деканату роль, деканат назначает студенту/учителю роль")
     @PatchMapping("/{user_id}/status")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> updateUserStatus(@PathVariable(name = "user_id") UUID userId,
                                                  @RequestBody UpdateClientRoles role) {
         var auth = SecurityContextHolder.getContext().getAuthentication();

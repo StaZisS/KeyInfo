@@ -27,7 +27,7 @@ public class RestKeyController {
 
     @Operation(summary = "Получить все ключи пользователя (на руках)")
     @GetMapping()
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ResponseKeyDto>> getMyKeys() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
