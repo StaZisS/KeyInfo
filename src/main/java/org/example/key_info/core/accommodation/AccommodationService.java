@@ -47,6 +47,14 @@ public class AccommodationService {
                 .toList();
     }
 
+    public List<Integer> getBuildings() {
+        return accommodationRepository.getBuildings();
+    }
+
+    public List<Integer> getRooms() {
+        return accommodationRepository.getRooms();
+    }
+
     private void validateClientRoles(Set<ClientRole> roles) {
         if (!isClientHaveRole(roles)) {
             throw new ExceptionInApplication(String.format("Пользователь с правами %s не может управлять аудиторями", roles), ExceptionType.INVALID);

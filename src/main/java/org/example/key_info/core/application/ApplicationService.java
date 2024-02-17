@@ -50,7 +50,6 @@ public class ApplicationService {
                 .toList();
     }
 
-    //TODO: если есть бронь на время от преподавателя то заявку студента должна отклоняться
     @Transactional
     public UUID createApplication(CreateApplicationDto dto) {
         var role = ClientRole.getClientRoleByName(dto.role());

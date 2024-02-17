@@ -24,4 +24,16 @@ public class AudienceController {
     public ResponseEntity<List<StudyRoomDto>> getAllAccommodations() {
         return ResponseEntity.ok(accommodationService.getAllAccommodations());
     }
+
+    @Operation(summary = "Получить все корпуса")
+    @GetMapping("/accommodations/buildings")
+    public ResponseEntity<List<StudyRoomDto>> getAllBuildings() {
+        return ResponseEntity.ok(accommodationService.getAllAccommodations());
+    }
+
+    @Operation(summary = "Получить все комнаты в корпусе")
+    @GetMapping("/accommodations/rooms")
+    public ResponseEntity<List<StudyRoomDto>> getAllRooms() {
+        return ResponseEntity.ok(accommodationService.getAllAccommodations());
+    }
 }
