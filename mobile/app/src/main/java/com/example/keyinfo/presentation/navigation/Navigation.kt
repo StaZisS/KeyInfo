@@ -12,6 +12,7 @@ import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
 import com.example.keyinfo.presentation.screen.login.LoginScreen
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
 import com.example.keyinfo.presentation.screen.main.MainScreen
+import com.example.keyinfo.presentation.screen.main.MainViewModel
 import com.example.keyinfo.presentation.screen.profile.ProfileScreen
 import com.example.keyinfo.presentation.screen.profile.ProfileViewModel
 import com.example.keyinfo.presentation.screen.registration.RegistrationFirstScreen
@@ -27,7 +28,8 @@ fun AppNavigation(
     registrationViewModel: RegistrationViewModel,
     loginViewModel: LoginViewModel,
     keyViewModel: KeyTransferViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    mainViewModel: MainViewModel
 ) {
     // TODO: replace to splash screen
     NavHost(
@@ -57,7 +59,7 @@ fun AppNavigation(
             ScheduleScreen(navController = navController)
         }
         composable(Screen.Main.route) {
-            MainScreen(navController = navController)
+            MainScreen(viewModel = mainViewModel)
         }
         composable(Screen.Profile.route) {
             ProfileScreen(profileViewModel) { BottomBarRouter(navController).toAuth() }

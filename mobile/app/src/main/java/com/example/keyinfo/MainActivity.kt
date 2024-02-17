@@ -21,6 +21,8 @@ import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
 import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModelFactory
 import com.example.keyinfo.presentation.screen.login.LoginViewModel
 import com.example.keyinfo.presentation.screen.login.LoginViewModelFactory
+import com.example.keyinfo.presentation.screen.main.MainViewModel
+import com.example.keyinfo.presentation.screen.main.MainViewModelFactory
 import com.example.keyinfo.presentation.screen.profile.ProfileViewModel
 import com.example.keyinfo.presentation.screen.profile.ProfileViewModelFactory
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
@@ -63,6 +65,12 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
+            val mainViewModel: MainViewModel by viewModels {
+                MainViewModelFactory(
+                    context = ctx
+                )
+            }
+
             KeyInfoTheme(darkTheme = false) {
                 Scaffold(
                     bottomBar = {
@@ -85,7 +93,8 @@ class MainActivity : ComponentActivity() {
                             registrationViewModel = registrationViewModel,
                             loginViewModel = loginViewModel,
                             keyViewModel = keyViewModel,
-                            profileViewModel = profileViewModel
+                            profileViewModel = profileViewModel,
+                            mainViewModel = mainViewModel
                         )
                     }
                 }
