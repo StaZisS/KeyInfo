@@ -2,16 +2,15 @@ import {Header} from "../snippets/Header";
 import {observer} from "mobx-react-lite";
 import Store from "../../store/store";
 import {Loading} from "../snippets/Loading";
-import {useEffect} from "react";
+import {Navigate} from "react-router";
 
 export const MainLayout = observer(({children}) => {
 
-    useEffect(() => {
-        const checkAuth = async () =>{
-            await Store.checkAuth()
-        }
-        checkAuth()
-    }, []);
+    if (Store.isAuth === true){
+        return (
+            <Navigate to={'/'}/>
+        )
+    }
 
     return (
         <>

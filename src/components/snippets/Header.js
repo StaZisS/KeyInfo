@@ -11,18 +11,18 @@ import {
 } from "react-bootstrap";
 import Store from "../../store/store";
 import {Link, useNavigate} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 
 const {Navbar} = require("react-bootstrap");
 import('../../styles/header.css')
 
 
-export const Header = () => {
+export const Header = observer(() => {
 
     const navigation = useNavigate()
     const handleLogout = async () => {
         try {
             await Store.logout()
-            console.log('Выход. isAuth = ' + Store.isAuth)
             navigation('/login')
         } catch (e) {
             console.log(e)
@@ -61,4 +61,4 @@ export const Header = () => {
             </Navbar>
         </div>
     )
-}
+})
