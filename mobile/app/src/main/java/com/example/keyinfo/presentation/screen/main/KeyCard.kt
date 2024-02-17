@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,10 +37,11 @@ import java.util.Locale
 
 @Composable
 fun KeyCard(
-    audience: String = "220",
-    building: String = "2",
+    audience: Int = 220,
+    building: Int = 2,
     startDate: OffsetDateTime = OffsetDateTime.now(),
-    endDate: OffsetDateTime = OffsetDateTime.now().plusHours(2)
+    endDate: OffsetDateTime = OffsetDateTime.now().plusHours(1).plusMinutes(35),
+    onClick: () -> Unit = {}
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -48,14 +50,16 @@ fun KeyCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
-        modifier = Modifier.softLayerShadow(
-            spread = 1.dp,
-            color = Color.Black.copy(alpha = 0.02f),
-            radius = 2.dp,
-            offset = DpOffset(0.dp, 5.dp),
-            shape = RoundedCornerShape(12.dp),
-            isAlphaContentClip = true
-        )
+        modifier = Modifier
+            .softLayerShadow(
+                spread = 1.dp,
+                color = Color.Black.copy(alpha = 0.02f),
+                radius = 2.dp,
+                offset = DpOffset(0.dp, 5.dp),
+                shape = RoundedCornerShape(12.dp),
+                isAlphaContentClip = true
+            )
+            .clickable { onClick() }
 
     ) {
         Column(
@@ -124,7 +128,6 @@ fun KeyCard(
     }
 }
 
-// TODO: Move to viewmodel
 fun formatOffsetDateTime(dateTime: OffsetDateTime): String {
     val dayOfWeek = dateTime.dayOfWeek.getDisplayName(
         java.time.format.TextStyle.SHORT,

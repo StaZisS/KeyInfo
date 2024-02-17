@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.schedule
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions

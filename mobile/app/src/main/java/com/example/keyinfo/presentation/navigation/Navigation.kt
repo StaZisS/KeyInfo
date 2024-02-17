@@ -1,11 +1,9 @@
 package com.example.keyinfo.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.keyinfo.presentation.navigation.router.AppRouter
 import com.example.keyinfo.presentation.navigation.router.BottomBarRouter
 import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferScreen
 import com.example.keyinfo.presentation.screen.keytransfer.KeyTransferViewModel
@@ -32,7 +30,7 @@ fun AppNavigation(
     // TODO: replace to splash screen
     NavHost(
         navController,
-        startDestination = Screen.Welcome.route,
+        startDestination = Screen.Schedule.route,
     ) {
 
         composable(Screen.Splash.route) {
@@ -54,7 +52,7 @@ fun AppNavigation(
             )
         }
         composable(Screen.Schedule.route) {
-            ScheduleScreen(navController = navController)
+            ScheduleScreen()
         }
         composable(Screen.Main.route) {
             MainScreen(navController = navController)

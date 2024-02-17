@@ -27,7 +27,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
-import com.example.keyinfo.presentation.screen.schedule.SearchRow
+import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
 import com.example.keyinfo.ui.theme.Values
 
 @Composable

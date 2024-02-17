@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.schedule
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,8 +8,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -21,33 +20,28 @@ import com.example.keyinfo.R
 import com.example.keyinfo.ui.theme.AccentColor
 
 @Composable
-fun BuildingsRow() {
-    val list = remember {
-        mutableStateListOf(
-            Building("Корпус 1", false),
-            Building("Корпус 2", true),
-            Building("Корпус 3", false),
-            Building("Корпус 4", false),
-            Building("Корпус 5", false),
-        )
-    }
+fun BuildingsRow(
+    selectedBuilding: MutableState<Int?>,
+    buildings: List<Int>
+) {
     LazyRow {
-        items(list.size) { index ->
-            val building = list[index]
+        items(buildings.size) { index ->
+            val building = buildings[index]
             Box(modifier = Modifier
                 .padding(10.dp)
                 .clickable {
-                    list.forEach { it.isSelected = false }
-                    list[index] = list[index].copy(isSelected = true)
+                    selectedBuilding.value = index
                 }) {
                 Text(
-                    text = building.name, style = TextStyle(
+                    text = "Корпус $building", style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins)),
-                        color = if (building.isSelected) AccentColor else AccentColor.copy(alpha = 0.2f)
+                        color = if (selectedBuilding.value == index) AccentColor else AccentColor.copy(
+                            alpha = 0.2f
+                        )
                     ), modifier = Modifier
                         .background(
-                            color = if (building.isSelected) AccentColor.copy(alpha = 0.1f) else Color.Transparent,
+                            color = if (selectedBuilding.value == index) AccentColor.copy(alpha = 0.1f) else Color.Transparent,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .padding(10.dp)
@@ -56,3 +50,4 @@ fun BuildingsRow() {
         }
     }
 }
+

@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,9 +22,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.schedule.components.BuildingsRow
+import com.example.keyinfo.presentation.screen.schedule.components.Day
+import com.example.keyinfo.presentation.screen.schedule.components.DaysOfWeekTitle
+import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
+import com.example.keyinfo.presentation.screen.schedule.components.TimePickerDialog
+import com.example.keyinfo.presentation.screen.schedule.components.TimeRow
 import com.example.keyinfo.ui.theme.CalendarDayColor
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -37,20 +42,20 @@ import java.util.Locale
 
 // todo add button for month and year selection
 @Composable
-fun ScheduleScreen(navController: NavController) {
+fun ScheduleScreen() {
+    // todo disable old dates selection (before today)
     val items = listOf(
-        ClassTime("1 пара", "8:00-9:35"),
-        ClassTime("2 пара", "9:45-11:20"),
-        ClassTime("3 пара", "11:30-13:05"),
-        ClassTime("4 пара", "14:45-16:20"),
-        ClassTime("5 пара", "16:30-18:05"),
-        ClassTime("6 пара", "18:15-19:50"),
-        ClassTime("7 пара", "20:00-21:35")
+        ClassTime("1 пара", "8:45 - 10:20"),
+        ClassTime("2 пара", "10:35 - 12:10"),
+        ClassTime("3 пара", "12:25 - 14:00"),
+        ClassTime("4 пара", "14:45 - 16:20"),
+        ClassTime("5 пара", "16:35 - 18:10"),
+        ClassTime("6 пара", "18:25 - 20:00"),
+        ClassTime("7 пара", "20:15 - 21:50"),
     )
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(50)
     val endMonth = currentMonth.plusMonths(50)
-
     val daysOfWeek = daysOfWeek()
     var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
     val state = rememberCalendarState(
@@ -59,10 +64,13 @@ fun ScheduleScreen(navController: NavController) {
         firstVisibleMonth = currentMonth,
         firstDayOfWeek = daysOfWeek.first()
     )
+
     val searchText = remember { mutableStateOf("") }
     val dialogVisible = remember { mutableStateOf(false) }
-//    val selectedBuildingIndex = remember { mutableIntStateOf(0) }
-    val selectedTimeIndex = remember { mutableIntStateOf(3) }
+    val selectedBuildingIndex: MutableState<Int?> = remember { mutableStateOf(null) }
+    val selectedTimeIndex: MutableState<Int?> = remember { mutableStateOf(null) }
+    val allParamsSelected =
+        selectedBuildingIndex.value != null && selectedDate != null && selectedTimeIndex.value != null
     if (dialogVisible.value) {
         TimePickerDialog(dialogVisible, selectedTimeIndex, items)
     }
@@ -100,37 +108,41 @@ fun ScheduleScreen(navController: NavController) {
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek)
                 },
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
         }
         item {
             AnimatedVisibility(visible = selectedDate != null) {
-                BuildingsRow()
-                Spacer(Modifier.height(20.dp))
+                BuildingsRow(
+                    selectedBuildingIndex, listOf(
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+                    )
+                )
             }
+            Spacer(Modifier.height(10.dp))
         }
         item {
-            AnimatedVisibility(visible = selectedDate != null) {
-                TimeRow(dialogVisible, items[selectedTimeIndex.intValue])
-                Spacer(Modifier.height(20.dp))
+            AnimatedVisibility(visible = selectedBuildingIndex.value != null && selectedDate != null) {
+                if (selectedTimeIndex.value == null) {
+                    TimeRow(dialogVisible, null)
+                } else {
+                    TimeRow(dialogVisible, items[selectedTimeIndex.value!!])
+                }
             }
+            Spacer(Modifier.height(10.dp))
         }
         item {
-            AnimatedVisibility(visible = selectedDate != null) {
+            AnimatedVisibility(visible = allParamsSelected) {
                 SearchRow(searchText)
             }
         }
         items(5) {
-            AnimatedVisibility(visible = selectedDate != null) {
+            AnimatedVisibility(visible = allParamsSelected) {
                 KeyCard()
             }
         }
     }
 }
 
-
-data class Building(
-    val name: String, var isSelected: Boolean
-)
 
 data class ClassTime(
     var name: String, var time: String
