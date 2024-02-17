@@ -26,6 +26,9 @@ public class TransferService {
     private final KeyRepository keyRepository;
 
     public UUID createTransfer(CreateTransferDto dto) {
+        keyRepository.getKey(dto.keyId())
+                .orElseThrow(() -> new ExceptionInApplication("Данного ключа не существует", ExceptionType.NOT_FOUND));
+
         var isDuplicate = !transferRepository.isNotDuplicate(dto.ownerId(), dto.receiverId(), dto.keyId());
         if (isDuplicate) {
             throw new ExceptionInApplication("Данная заявка уже существует", ExceptionType.INVALID);

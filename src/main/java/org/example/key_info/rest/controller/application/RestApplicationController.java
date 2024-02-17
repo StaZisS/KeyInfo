@@ -134,7 +134,9 @@ public class RestApplicationController {
                 dto.endTime(),
                 dto.status().name(),
                 dto.isDuplicate(),
-                dto.endTimeToDuplicate()
+                dto.endTimeToDuplicate(),
+                dto.buildId(),
+                dto.roomId()
         );
     }
 }
