@@ -90,11 +90,11 @@ public class ClientRepositoryImpl implements ClientRepository {
         Condition condition = DSL.trueCondition();
 
         if (info.name() != null) {
-            condition = condition.and(CLIENT.NAME.eq(info.name()));
+            condition = condition.and(CLIENT.NAME.startsWith(info.name()));
         }
 
         if (info.email() != null) {
-            condition = condition.and(CLIENT.EMAIL.eq(info.email()));
+            condition = condition.and(CLIENT.EMAIL.startsWith(info.email()));
         }
 
         return query.where(condition)

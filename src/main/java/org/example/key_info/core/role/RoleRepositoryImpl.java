@@ -5,6 +5,8 @@ import org.example.key_info.core.client.repository.ClientRole;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.example.shop.public_.Tables.ROLE;
@@ -12,6 +14,7 @@ import static com.example.shop.public_.Tables.ROLE;
 @Repository
 @RequiredArgsConstructor
 public class RoleRepositoryImpl implements RoleRepository {
+    private final RoleEntityMapper roleEntityMapper = new RoleEntityMapper();
     private final DSLContext create;
 
     @Override
@@ -28,5 +31,13 @@ public class RoleRepositoryImpl implements RoleRepository {
                 .where(ROLE.CLIENT_ID.eq(userId))
                 .and(ROLE.ROLE_.eq(role.name()))
                 .execute();
+    }
+
+    @Override
+    public List<ClientRole> getUserRoles(UUID userId) {
+        return create.selectFrom(ROLE)
+                .where(ROLE.CLIENT_ID.eq(userId))
+                .fetch(roleEntityMapper);
+
     }
 }

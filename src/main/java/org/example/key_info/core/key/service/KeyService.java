@@ -1,6 +1,7 @@
 package org.example.key_info.core.key.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.accommodation.AccommodationRepository;
 import org.example.key_info.core.client.repository.ClientRole;
 import org.example.key_info.core.key.repository.FilterKeyDto;
 import org.example.key_info.core.key.repository.KeyEntity;
@@ -25,11 +26,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KeyService {
     private static final List<ClientRole> ROLES_CONTROL_KEY_LIFECYCLE = List.of(ClientRole.DEANERY, ClientRole.ADMIN);
-
+    private final AccommodationRepository accommodationRepository;
     private final KeyRepository keyRepository;
 
     public List<KeyDto> getAllKeys(GetKeysDto dto) {
         checkClientRoles(dto.roles());
+
+        try {
+        if (dto.keyStatus() == null) {
+            return keyRepository.getAllKeys(dto.buildId(), dto.roomId())
+                    .stream()
+                    .map(this::mapEntityToDto)
+                    .toList();
+        } }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         var filterKeyDto = new FilterKeyDto(
                 KeyStatus.getKeyStatusByName(dto.keyStatus()),
@@ -38,7 +50,7 @@ public class KeyService {
         );
 
         return keyRepository.getAllKeys(filterKeyDto)
-                .parallelStream()
+                .stream()
                 .map(this::mapEntityToDto)
                 .toList();
     }
@@ -52,6 +64,8 @@ public class KeyService {
 
     public UUID createKey(KeyCreateDto dto) {
         checkClientRoles(dto.clientRoles());
+
+        checkAccommodationExists(dto);
 
         var keyEntity = new KeyEntity(
                 null,
@@ -126,5 +140,13 @@ public class KeyService {
         return clientRoles
                 .stream()
                 .anyMatch(ROLES_CONTROL_KEY_LIFECYCLE::contains);
+    }
+
+    private void checkAccommodationExists(KeyCreateDto dto) {
+        var accommodation = accommodationRepository.getAccommodation(dto.buildId(), dto.roomId());
+        if (accommodation.isEmpty()) {
+            throw new ExceptionInApplication(String.format("Аудитория %s в корпусе %s не найдена", dto.roomId(), dto.buildId()),
+                    ExceptionType.NOT_FOUND);
+        }
     }
 }
