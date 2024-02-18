@@ -126,7 +126,8 @@ public class RestTransferRequestController {
                 dto.ownerName(),
                 dto.ownerEmail(),
                 dto.receiverName(),
-                dto.receiverEmail()
+                dto.receiverEmail(),
+                dto.transferId()
         );
     }
 }

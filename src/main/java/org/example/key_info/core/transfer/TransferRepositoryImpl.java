@@ -79,6 +79,7 @@ public class TransferRepositoryImpl implements TransferRepository {
                 .where(TRANSFERREQUEST.OWNER_ID.eq(ownerId))
                 .and(TRANSFERREQUEST.RECEIVER_ID.eq(receiverId))
                 .and(TRANSFERREQUEST.KEY_ID.eq(keyId))
+                .and(TRANSFERREQUEST.STATUS.eq(TransferStatus.IN_PROCESS.name()))
                 .fetch(transferEntityMapper)
                 .isEmpty();
     }

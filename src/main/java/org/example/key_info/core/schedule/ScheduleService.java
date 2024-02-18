@@ -8,6 +8,12 @@ import org.example.key_info.core.application.ApplicationStatus;
 import org.example.key_info.core.client.repository.ClientEntity;
 import org.example.key_info.core.client.repository.ClientRepository;
 import org.example.key_info.core.client.repository.ClientRole;
+import org.example.key_info.core.timeslot.TimeSlotEnum;
+import org.example.key_info.public_interface.exception.ExceptionInApplication;
+import org.example.key_info.public_interface.exception.ExceptionType;
+import org.example.key_info.public_interface.schedule.FreeAudienceDto;
+import org.example.key_info.public_interface.schedule.GetFreeAudienceDto;
+import org.example.key_info.public_interface.schedule.GetFreeTimeSlotsDto;
 import org.example.key_info.rest.controller.schedule.DayTimeSlots;
 import org.example.key_info.rest.controller.schedule.TimeSlot;
 import org.springframework.stereotype.Service;
@@ -41,6 +47,43 @@ public class ScheduleService {
                 .collect(Collectors.groupingBy(timeSlot -> timeSlot.startTime().toLocalDate()));
 
         return mapIntoDateTimeSlots(dayTimeSlots);
+    }
+
+    public List<FreeAudienceDto> getFreeAudience(GetFreeAudienceDto dto) {
+        var timeSlotEntity = new TimeSlotEntity(dto.startTime(), dto.endTime());
+        if(!validateTimeSlot(timeSlotEntity)) {
+            throw new ExceptionInApplication("Пары с такими показателями не существует", ExceptionType.INVALID);
+        }
+
+        return scheduleRepository.getFreeAudience(dto).stream()
+                .map(this::mapEntityToDto)
+                .toList();
+    }
+
+    private FreeAudienceDto mapEntityToDto(AudienceEntity entity) {
+        return new FreeAudienceDto(
+                entity.buildId(),
+                entity.roomId(),
+                entity.startTime(),
+                entity.endTime(),
+                entity.status()
+        );
+    }
+
+    private boolean validateTimeSlot(TimeSlotEntity entity) {
+        for (TimeSlotEnum timeSlotEnum : TimeSlotEnum.values()) {
+            if (isMatchingTimeSlot(entity, timeSlotEnum)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isMatchingTimeSlot(TimeSlotEntity entity, TimeSlotEnum timeSlotEnum) {
+        return entity.startTime().getHour() == timeSlotEnum.getStartHour() &&
+                entity.startTime().getMinute() == timeSlotEnum.getStartMinute() &&
+                entity.endTime().getHour() == timeSlotEnum.getEndHour() &&
+                entity.endTime().getMinute() == timeSlotEnum.getEndMinute();
     }
 
     private List<ApplicationEntity> getAcceptedApplication(GetFreeTimeSlotsDto getFreeTimeSlotsDto) {

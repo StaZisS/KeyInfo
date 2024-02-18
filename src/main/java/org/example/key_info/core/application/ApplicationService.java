@@ -50,7 +50,6 @@ public class ApplicationService {
                 .toList();
     }
 
-    //TODO: если есть бронь на время от преподавателя то заявку студента должна отклоняться
     @Transactional
     public UUID createApplication(CreateApplicationDto dto) {
         var role = ClientRole.getClientRoleByName(dto.role());
@@ -64,13 +63,15 @@ public class ApplicationService {
         }
 
         if (dto.isDuplicate() && dto.endTimeToDuplicate() == null) {
-            throw new ExceptionInApplication("Необходимо назначить дату док которой дублировать заявку", ExceptionType.INVALID);
+            throw new ExceptionInApplication("Необходимо назначить дату до которой дублировать заявку", ExceptionType.INVALID);
         }
 
         var teacherApplications = applicationRepository.getAcceptedTeacherApplications(dto.buildId(), dto.roomId(), dto.startTime(), dto.endTime());
         if (!teacherApplications.isEmpty() && role == ClientRole.STUDENT) {
             throw new ExceptionInApplication("В это время уже занято учителем", ExceptionType.INVALID);
         }
+
+        checkDuplicateApplication(dto);
 
         var applicationEntity = new ApplicationEntity(
                 null,
@@ -141,6 +142,10 @@ public class ApplicationService {
         checkClientRoles(dto.clientRoles());
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
+
+        if(application.status() != ApplicationStatus.IN_PROCESS) {
+            throw new ExceptionInApplication("Вы не можете изменить завершенную заявку", ExceptionType.INVALID);
+        }
 
         var updatedApplication = new ApplicationEntity(
                 application.applicationId(),
@@ -218,6 +223,10 @@ public class ApplicationService {
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
 
+        if(application.status() != ApplicationStatus.IN_PROCESS) {
+            throw new ExceptionInApplication("Вы не можете изменить завершенную заявку", ExceptionType.INVALID);
+        }
+
         var updatedApplication = new ApplicationEntity(
                 application.applicationId(),
                 application.applicationCreatorId(),
@@ -235,6 +244,14 @@ public class ApplicationService {
 
     private void handleDuplicateApplication(ApplicationEntity entity) {
         //TODO: Обработать повторяющиеся заявки
+    }
+
+    private void checkDuplicateApplication(CreateApplicationDto dto) {
+        var filter = new ApplicationFilterDto(ApplicationStatus.IN_PROCESS, dto.startTime(), dto.endTime(), dto.buildId(), dto.roomId());
+        var applications = applicationRepository.getMyApplication(dto.clientId(), filter);
+        if (!applications.isEmpty()) {
+            throw new ExceptionInApplication("Нельзя создавать дублирующиеся заявки", ExceptionType.INVALID);
+        }
     }
 
     private ApplicationDto mapEntityToDto(ApplicationEntity entity) {

@@ -26,7 +26,10 @@ public class TransferService {
     private final ClientRepository clientRepository;
     private final KeyRepository keyRepository;
 
-    public CreateTransferResponseDto createTransfer(CreateTransferDto dto) {
+    public UUID createTransfer(CreateTransferDto dto) {
+        keyRepository.getKey(dto.keyId())
+                .orElseThrow(() -> new ExceptionInApplication("Данного ключа не существует", ExceptionType.NOT_FOUND));
+
         var isDuplicate = !transferRepository.isNotDuplicate(dto.ownerId(), dto.receiverId(), dto.keyId());
         if (isDuplicate) {
             throw new ExceptionInApplication("Данная заявка уже существует", ExceptionType.INVALID);
@@ -41,19 +44,7 @@ public class TransferService {
                 dto.keyId()
         );
 
-        var transferId = transferRepository.createTransfer(transferEntity);
-
-        var transfer = transferRepository.getTransferById(transferId)
-                .orElseThrow(() -> new ExceptionInApplication("Заявка на передачу не найдена", ExceptionType.NOT_FOUND));
-
-        var key = keyRepository.getKey(transfer.keyId())
-                .orElseThrow(() -> new ExceptionInApplication("Ключ не найден", ExceptionType.NOT_FOUND));
-
-        return new CreateTransferResponseDto(
-                transferId,
-                key.buildId(),
-                key.roomId()
-        );
+        return transferRepository.createTransfer(transferEntity);
     }
 
     public List<TransferDto> getMyTransfers(GetMyTransfersDto dto) {

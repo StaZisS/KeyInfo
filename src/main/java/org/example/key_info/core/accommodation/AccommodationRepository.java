@@ -8,4 +8,6 @@ public interface AccommodationRepository {
     void deleteAccommodation(int buildId, int roomId);
     List<AccommodationEntity> getAllAccommodations();
     Optional<AccommodationEntity> getAccommodation(int buildId, int roomId);
+    List<Integer> getBuildings();
+    List<Integer> getRooms(int buildId);
 }

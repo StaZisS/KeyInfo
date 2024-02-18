@@ -1,4 +1,4 @@
-package org.example.key_info.core.schedule;
+package org.example.key_info.public_interface.schedule;
 
 import java.time.OffsetDateTime;
 

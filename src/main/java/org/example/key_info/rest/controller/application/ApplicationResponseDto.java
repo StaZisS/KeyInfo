@@ -31,6 +31,12 @@ public record ApplicationResponseDto(
         boolean isDuplicate,
 
         @JsonProperty("end_time_duplicate")
-        OffsetDateTime endTimeToDuplicate
+        OffsetDateTime endTimeToDuplicate,
+
+        @JsonProperty("build_id")
+        int buildId,
+
+        @JsonProperty("room_id")
+        int roomId
 ) {
 }

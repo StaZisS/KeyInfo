@@ -107,13 +107,13 @@ public class JwtProvider {
                     .build()
                     .parse(token);
         } catch (ExpiredJwtException expEx) {
-            throw new ExceptionInApplication("Token expired", ExceptionType.INVALID);
+            throw new ExceptionInApplication("Token expired", ExceptionType.UNAUTHORIZED);
         } catch (UnsupportedJwtException unsEx) {
-            throw new ExceptionInApplication("Unsupported jwt", ExceptionType.INVALID);
+            throw new ExceptionInApplication("Unsupported jwt", ExceptionType.UNAUTHORIZED);
         } catch (MalformedJwtException mjEx) {
-            throw new ExceptionInApplication("Malformed jwt", ExceptionType.INVALID);
+            throw new ExceptionInApplication("Malformed jwt", ExceptionType.UNAUTHORIZED);
         } catch (Exception e) {
-            throw new ExceptionInApplication("Invalid token", ExceptionType.INVALID);
+            throw new ExceptionInApplication("Invalid token", ExceptionType.UNAUTHORIZED);
         }
     }
 

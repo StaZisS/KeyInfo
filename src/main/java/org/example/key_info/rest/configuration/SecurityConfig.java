@@ -31,6 +31,7 @@ public class SecurityConfig {
             "/api/v1/schedules",
             "/api/v1/auth/token",
             "/api/v1/audiences/**",
+            "/api/v1/schedules/**",
             "/api/v1/auth/refresh",
             "/swagger-ui/**",
             "/v3/api-docs/**"

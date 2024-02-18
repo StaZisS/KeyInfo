@@ -1,14 +1,23 @@
 package org.example.key_info.core.schedule;
 
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.core.application.ApplicationStatus;
+import org.example.key_info.public_interface.schedule.GetFreeAudienceDto;
+import org.example.key_info.public_interface.schedule.GetFreeTimeSlotsDto;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.example.shop.public_.Tables.TIMESLOT;
+import static com.example.shop.public_.tables.Request.REQUEST;
+import static com.example.shop.public_.tables.Studyroom.STUDYROOM;
+import static org.jooq.impl.DSL.notExists;
+import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.selectOne;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,5 +45,48 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                         record.getEndTime()
                 ))
                 .toList();
+    }
+
+    @Override
+    public List<AudienceEntity> getFreeAudience(GetFreeAudienceDto dto) {
+        Condition condition = DSL.trueCondition();
+
+        if (dto.buildId() != null) {
+            condition = condition.and(STUDYROOM.BUILD.eq(dto.buildId()));
+        }
+
+        if (dto.roomId() != null) {
+            condition = condition.and(STUDYROOM.ROOM.eq(dto.roomId()));
+        }
+
+        return Stream.concat(
+                create.selectFrom(STUDYROOM)
+                        .where(DSL.row(STUDYROOM.BUILD, STUDYROOM.ROOM).notIn(
+                                select(REQUEST.BUILD, REQUEST.ROOM)
+                                        .from(REQUEST)
+                                        .where(REQUEST.START_TIME.eq(dto.startTime()))
+                                        .and(REQUEST.END_TIME.eq(dto.endTime()))
+                                        .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
+                        )).and(condition)
+                        .fetch(r -> new AudienceEntity(
+                                        r.getBuild(),
+                                        r.getRoom(),
+                                        dto.startTime(),
+                                        dto.endTime(),
+                                        AudienceStatus.FREE
+                                )
+                        ).stream(),
+                create.selectFrom(REQUEST)
+                        .where(REQUEST.START_TIME.eq(dto.startTime()))
+                        .and(REQUEST.END_TIME.eq(dto.endTime()))
+                        .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
+                        .fetch(r -> new AudienceEntity(
+                                r.getBuild(),
+                                r.getRoom(),
+                                dto.startTime(),
+                                dto.endTime(),
+                                AudienceStatus.OCCUPIED
+                        )).stream()
+        ).toList();
     }
 }
