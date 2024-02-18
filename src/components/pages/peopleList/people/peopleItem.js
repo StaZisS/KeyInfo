@@ -6,7 +6,6 @@ import UserService from "../../../../services/UserService";
 import('../../../../styles/peopleItem.css')
 
 export const PeopleItem = ({userId, name, email, roles}) => {
-    console.log(userId, name, email, roles)
     const queryClient = useQueryClient()
     const mutation = useMutation((params) => UserService.addRole(params.userId, params.clientRole), {
         onSuccess() {
