@@ -6,7 +6,6 @@ export const Day = () => {
             <h5> 15.07.2024</h5>
             <ul>
                 <li><Time/></li>
-                <li><Time/></li>
             </ul>
             
         </div>
