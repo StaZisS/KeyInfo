@@ -24,13 +24,13 @@ class LocalStorage(context: Context) {
         sharedPreferences.edit().putString(TOKEN_KEY, token.accessToken).apply()
     }
 
-    fun getToken() : TokenResponse{
+    fun getToken(): TokenResponse {
         return TokenResponse(
             sharedPreferences.getString(TOKEN_KEY, Constants.EMPTY_STRING)!!
         )
     }
 
-    fun hasToken() : Boolean {
+    fun hasToken(): Boolean {
         return sharedPreferences.contains(TOKEN_KEY)
     }
 

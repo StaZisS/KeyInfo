@@ -21,11 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.presentation.screen.main.dialog.DeleteDialog
@@ -58,14 +55,14 @@ fun MainScreen(viewModel: MainViewModel) {
         viewModel.getProgressRequests()
     }
 
-    if (state.isDialogOpen){
+    if (state.isDialogOpen) {
         DeleteDialog(
             id = state.currentRequest!!.application_id,
-            audience = state.currentRequest!!.room_id.toString(),
-            building = state.currentRequest!!.build_id.toString(),
+            audience = state.currentRequest!!.room_id,
+            building = state.currentRequest!!.build_id,
             startDate = OffsetDateTime.parse(state.currentRequest!!.start_time),
             endDate = OffsetDateTime.parse(state.currentRequest!!.end_time),
-            onDeleteClick = { viewModel.deleteRequest(state.currentRequest!!.application_id)},
+            onDeleteClick = { viewModel.deleteRequest(state.currentRequest!!.application_id) },
             onCancelClick = { viewModel.processIntent(MainIntent.ChangeDeleteDialogState) }
         )
     }
@@ -120,11 +117,11 @@ fun MainScreen(viewModel: MainViewModel) {
             when (page) {
                 0 -> { // Отклоенные
                     item {
-                        if (state.declinedRequests.isNotEmpty()){
+                        if (state.declinedRequests.isNotEmpty()) {
                             state.declinedRequests.forEachIndexed { index, request ->
                                 KeyCard(
-                                    audience = request.room_id.toString(),
-                                    building = request.build_id.toString(),
+                                    audience = request.room_id,
+                                    building = request.build_id,
                                     startDate = OffsetDateTime.parse(request.start_time),
                                     endDate = OffsetDateTime.parse(request.end_time)
                                 )
@@ -137,11 +134,11 @@ fun MainScreen(viewModel: MainViewModel) {
 
                 1 -> { // Принятые
                     item {
-                        if (state.acceptedRequests.isNotEmpty()){
+                        if (state.acceptedRequests.isNotEmpty()) {
                             state.acceptedRequests.forEachIndexed { index, request ->
                                 KeyCard(
-                                    audience = request.room_id.toString(),
-                                    building = request.build_id.toString(),
+                                    audience = request.room_id,
+                                    building = request.build_id,
                                     startDate = OffsetDateTime.parse(request.start_time),
                                     endDate = OffsetDateTime.parse(request.end_time)
                                 )
@@ -154,17 +151,17 @@ fun MainScreen(viewModel: MainViewModel) {
 
                 2 -> { // В ожидании
                     item {
-                        if (state.processRequests.isNotEmpty()){
+                        if (state.processRequests.isNotEmpty()) {
                             state.processRequests.forEachIndexed { index, request ->
                                 Box(
                                     modifier = Modifier.clickable {
                                         viewModel.processIntent(MainIntent.SetNewRequest(request))
                                         viewModel.processIntent(MainIntent.ChangeDeleteDialogState)
                                     }
-                                ){
+                                ) {
                                     KeyCard(
-                                        audience = request.room_id.toString(),
-                                        building = request.build_id.toString(),
+                                        audience = request.room_id,
+                                        building = request.build_id,
                                         startDate = OffsetDateTime.parse(request.start_time),
                                         endDate = OffsetDateTime.parse(request.end_time)
                                     )

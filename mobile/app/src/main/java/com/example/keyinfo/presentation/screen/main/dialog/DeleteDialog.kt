@@ -29,8 +29,8 @@ import java.time.OffsetDateTime
 @Composable
 fun DeleteDialog(
     id: String,
-    audience: String,
-    building: String,
+    audience: Int,
+    building: Int,
     startDate: OffsetDateTime,
     endDate: OffsetDateTime,
     onDeleteClick: (String) -> Unit,
@@ -43,7 +43,7 @@ fun DeleteDialog(
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
-    ){
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,7 +69,10 @@ fun DeleteDialog(
                 )
 
                 KeyCard(
-                    audience, building, startDate, endDate
+                    audience = audience,
+                    building = building,
+                    startDate = startDate,
+                    endDate = endDate
                 )
 
                 PairButtons(

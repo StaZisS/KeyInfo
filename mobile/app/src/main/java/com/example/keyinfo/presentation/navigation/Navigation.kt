@@ -18,6 +18,7 @@ import com.example.keyinfo.presentation.screen.registration.RegistrationSecondSc
 import com.example.keyinfo.presentation.screen.registration.RegistrationViewModel
 import com.example.keyinfo.presentation.screen.schedule.ScheduleScreen
 import com.example.keyinfo.presentation.screen.selectauth.SelectAuthScreen
+import com.example.keyinfo.presentation.screen.splash.LoadingScreen
 
 
 @Composable
@@ -32,10 +33,11 @@ fun AppNavigation(
     // TODO: replace to splash screen
     NavHost(
         navController,
-        startDestination = Screen.Schedule.route,
+        startDestination = Screen.Splash.route,
     ) {
 
         composable(Screen.Splash.route) {
+            LoadingScreen(navController = navController)
         }
         composable(Screen.Welcome.route) {
             SelectAuthScreen(navController = navController)
@@ -62,7 +64,7 @@ fun AppNavigation(
         composable(Screen.Profile.route) {
             ProfileScreen(profileViewModel) { BottomBarRouter(navController).toAuth() }
         }
-        composable(Screen.Key.route){
+        composable(Screen.Key.route) {
             KeyTransferScreen(
                 viewModel = keyViewModel
             )
