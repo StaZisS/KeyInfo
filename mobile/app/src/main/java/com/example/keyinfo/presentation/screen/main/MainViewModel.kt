@@ -128,7 +128,7 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            _state.value.acceptedRequests = result.getOrNull()!!
+                            _state.value.declinedRequests = result.getOrNull()!!
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)

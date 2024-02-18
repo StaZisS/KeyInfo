@@ -58,6 +58,18 @@ fun MainScreen(viewModel: MainViewModel) {
         viewModel.getProgressRequests()
     }
 
+    if (state.isDialogOpen){
+        DeleteDialog(
+            id = state.currentRequest!!.application_id,
+            audience = state.currentRequest!!.room_id.toString(),
+            building = state.currentRequest!!.build_id.toString(),
+            startDate = OffsetDateTime.parse(state.currentRequest!!.start_time),
+            endDate = OffsetDateTime.parse(state.currentRequest!!.end_time),
+            onDeleteClick = { viewModel.deleteRequest(state.currentRequest!!.application_id)},
+            onCancelClick = { viewModel.processIntent(MainIntent.ChangeDeleteDialogState) }
+        )
+    }
+
     ScrollableTabRow(
         containerColor = Color.Transparent,
         divider = {},
@@ -166,16 +178,4 @@ fun MainScreen(viewModel: MainViewModel) {
             }
         }
     }
-
-//    if (state.isDialogOpen){
-//        DeleteDialog(
-//            id = state.currentRequest!!.application_id,
-//            audience = state.currentRequest!!.room_id.toString(),
-//            building = state.currentRequest!!.build_id.toString(),
-//            startDate = OffsetDateTime.parse(state.currentRequest!!.start_time),
-//            endDate = OffsetDateTime.parse(state.currentRequest!!.end_time),
-//            onDeleteClick = { viewModel.deleteRequest(state.currentRequest!!.application_id)},
-//            onCancelClick = { viewModel.processIntent(MainIntent.ChangeDeleteDialogState) }
-//        )
-//    }
 }
