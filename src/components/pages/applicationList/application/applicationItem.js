@@ -1,9 +1,25 @@
 import {Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, Row} from "react-bootstrap";
 import {RxReload} from "react-icons/rx";
+import {useMutation, useQueryClient} from "react-query";
+import ApplicationService from "../../../../services/ApplicationService";
 
 import('../../../../styles/applicationItem.css')
 
-export const ApplicationItem = ({build, room, name, email, start, end, dublicate}) => {
+export const ApplicationItem = ({id,build, room, name, email, start, end, dublicate}) => {
+
+    const queryClient = useQueryClient()
+    const acceptMutation = useMutation((id) => ApplicationService.acceptApplication(id), {
+        onSuccess() {
+            queryClient.invalidateQueries(['applications'])
+        }
+    })
+
+    const declineMutation = useMutation((id) => ApplicationService.declineApplication(id), {
+        onSuccess() {
+            queryClient.invalidateQueries(['applications'])
+        }
+    })
+
     return (
         <>
             <Container className='mt-3'>
@@ -15,7 +31,7 @@ export const ApplicationItem = ({build, room, name, email, start, end, dublicate
                                 <CardTitle
                                     className='fw-bold'> {start.hours}:{start.minutes} - {end.hours}:{end.minutes}
                                 </CardTitle>
-                                {dublicate && <RxReload/>}
+                                {dublicate && <RxReload title={'Повторяющаяся заявка'}/>}
 
 
                             </Col>
@@ -25,8 +41,8 @@ export const ApplicationItem = ({build, room, name, email, start, end, dublicate
                             </Col>
                         </Row>
                     </CardHeader>
-                    <CardBody className={'d-flex align-items-center'}>
-                        <Row className='w-100'>
+                    <CardBody>
+                        <Row className='w-100 d-flex align-items-center'>
 
                             <Col xs={12} md={8} lg={8} className={'d-flex card-text gap-3 align-items-end'}>
                                 <span className='text-muted'>Фио: <span
@@ -36,9 +52,9 @@ export const ApplicationItem = ({build, room, name, email, start, end, dublicate
                             </Col>
 
                             <Col xs={12} md={1} lg={4}
-                                 className={'ms-auto d-flex gap-3 mt-sm-3 justify-content-sm-end'}>
-                                <Button className='btn-success'>Одобрить</Button>
-                                <Button className='btn-danger'>Отклонить</Button>
+                                 className={'ms-auto d-flex gap-3 mt-3 mt-sm-0 justify-content-end'}>
+                                <Button onClick={() => acceptMutation.mutate(id)} className='btn-success'>Одобрить</Button>
+                                <Button onClick={() => declineMutation.mutate(id)} className='btn-danger'>Отклонить</Button>
                             </Col>
                         </Row>
 

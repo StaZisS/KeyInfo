@@ -16,4 +16,12 @@ export default class ApplicationService {
             }
         })
     }
+
+    static async acceptApplication(id) {
+        return $api.post(`/deaneries/application/${id}/accept`, {}, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    }
+    static async declineApplication(id) {
+        return $api.post(`/deaneries/application/${id}/decline`, {}, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    }
+
 }

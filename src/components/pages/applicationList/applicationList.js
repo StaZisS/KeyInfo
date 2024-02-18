@@ -52,7 +52,13 @@ export const ApplicationList = () => {
         <>Ошибка запроса заявок</>
     }
 
-    console.log(data)
+
+    if (!data.length){
+        return(
+            <Container className='text-center text-danger fs-1 fw-bold mt-3'>Нет заявок</Container>
+        )
+    }
+
     return (
         <div className='mt-5'>
             {data.map((item) => (
@@ -64,6 +70,7 @@ export const ApplicationList = () => {
                                  end={normalizeDate(item.end_time)}
                                  dublicate={item.is_duplicate}
                                  key={item.application_id}
+                                 id={item.application_id}
                 />
 
             ))}
