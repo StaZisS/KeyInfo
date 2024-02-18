@@ -1,9 +1,9 @@
 import('../../../../styles/peopleItem.css')
 
-export const ButtonStudent = () => {
+export const ButtonStudent = ({callback}) => {
     return(
-        <div className="button-role student">
+        <button onClick={callback} className="button-role student">
             <span className='buttonName'>Студент</span>
-        </div>
+        </button>
     )
 }
