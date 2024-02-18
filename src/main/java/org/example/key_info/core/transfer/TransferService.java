@@ -12,6 +12,7 @@ import org.example.key_info.public_interface.transfer.DeleteTransferDto;
 import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.example.key_info.public_interface.transfer.TransferDto;
+import org.example.key_info.rest.controller.transfer.CreateTransferResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
