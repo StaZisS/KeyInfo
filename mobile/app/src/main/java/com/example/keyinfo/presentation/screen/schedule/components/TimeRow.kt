@@ -72,7 +72,8 @@ fun TimeRow(
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = classTime.time, style = TextStyle(
+                    text = "${classTime.startTime} - ${classTime.endTime}",
+                    style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins)),
                         letterSpacing = 0.3.sp,

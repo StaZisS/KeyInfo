@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.schedule
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,21 +9,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.keyinfo.R
+import com.example.keyinfo.common.Constants.CLASSES
+import com.example.keyinfo.domain.model.schedule.Audience
 import com.example.keyinfo.presentation.screen.keytransfer.dialog.ConfirmDialog
 import com.example.keyinfo.presentation.screen.main.KeyCard
 import com.example.keyinfo.presentation.screen.schedule.components.BuildingsRow
@@ -31,69 +34,79 @@ import com.example.keyinfo.presentation.screen.schedule.components.DaysOfWeekTit
 import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
 import com.example.keyinfo.presentation.screen.schedule.components.TimePickerDialog
 import com.example.keyinfo.presentation.screen.schedule.components.TimeRow
+import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.CalendarDayColor
+import com.example.keyinfo.ui.theme.SecondButtonColor
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.daysOfWeek
-import java.time.LocalDate
-import java.time.OffsetDateTime
+import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
 
-// todo add button for month and year selection
 @Composable
 fun ScheduleScreen() {
+    val viewModel: ScheduleViewModel =
+        viewModel(factory = ScheduleViewModelFactory(LocalContext.current))
+
     // todo disable old dates selection (before today)
-    val items = listOf(
-        ClassTime("1 пара", "8:45 - 10:20"),
-        ClassTime("2 пара", "10:35 - 12:10"),
-        ClassTime("3 пара", "12:25 - 14:00"),
-        ClassTime("4 пара", "14:45 - 16:20"),
-        ClassTime("5 пара", "16:35 - 18:10"),
-        ClassTime("6 пара", "18:25 - 20:00"),
-        ClassTime("7 пара", "20:15 - 21:50"),
-    )
-    val audiences = listOf(
-        AudienceCard(101, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(102, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(103, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(104, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(105, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(106, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(107, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(108, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(109, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-        AudienceCard(110, 1, OffsetDateTime.now(), OffsetDateTime.now().plusHours(2)),
-    )
+    LaunchedEffect(Unit) {
+        viewModel.getBuildings()
+    }
+
+
+    var confirmDialogOpened by viewModel.confirmDialogOpened
+    val searchText by viewModel.searchText
+    val selectedBuilding by viewModel.selectedBuilding
+    var selectedDate by viewModel.selectedDate
+    val selectedTimeIndex by viewModel.selectedTimeIndex
+    val dialogVisible by viewModel.dialogVisible
+    var currentAudience by viewModel.currentAudience
+
+
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(50)
     val endMonth = currentMonth.plusMonths(50)
     val daysOfWeek = daysOfWeek()
-    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
+
     val state = rememberCalendarState(
         startMonth = startMonth,
         endMonth = endMonth,
         firstVisibleMonth = currentMonth,
         firstDayOfWeek = daysOfWeek.first()
     )
-    val confirmDialogOpened = remember { mutableStateOf(false) }
-    val currentAudience = remember { mutableStateOf<AudienceCard?>(null) }
-    val searchText = remember { mutableStateOf("") }
-    val dialogVisible = remember { mutableStateOf(false) }
-    val selectedBuildingIndex: MutableState<Int?> = remember { mutableStateOf(null) }
-    val selectedTimeIndex: MutableState<Int?> = remember { mutableStateOf(null) }
+
+
     val allParamsSelected =
-        selectedBuildingIndex.value != null && selectedDate != null && selectedTimeIndex.value != null
-    if (dialogVisible.value) {
-        TimePickerDialog(dialogVisible, selectedTimeIndex, items)
+        selectedBuilding != null && selectedDate != null && selectedTimeIndex != null
+
+    LaunchedEffect(
+        viewModel.selectedBuilding.value,
+        viewModel.selectedDate.value,
+        viewModel.selectedTimeIndex.value
+    ) {
+        if (allParamsSelected) {
+            viewModel.getAudience()
+        }
     }
-    if (confirmDialogOpened.value) {
+    if (dialogVisible) {
+        TimePickerDialog(
+            viewModel.selectedTimeIndex, viewModel.dialogVisible
+        )
+    }
+    if (confirmDialogOpened) {
         ConfirmDialog(
-            onSaveClick = { confirmDialogOpened.value = false },
-            onCancelClick = { confirmDialogOpened.value = false },
-            audienceInfo = currentAudience.value!!)
+            onSaveClick = {
+                viewModel.reserveAudience()
+                confirmDialogOpened = false
+            },
+            onCancelClick = { confirmDialogOpened = false },
+            checkBoxChecked = viewModel.checkBoxChecked,
+            untilDate = viewModel.untilDate,
+            audienceInfo = currentAudience!!
+        )
     }
     LazyColumn(
         modifier = Modifier
@@ -134,53 +147,88 @@ fun ScheduleScreen() {
         item {
             AnimatedVisibility(visible = selectedDate != null) {
                 BuildingsRow(
-                    selectedBuildingIndex, listOf(
-                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-                    )
+                    viewModel.selectedBuilding, viewModel.buildings
                 )
             }
             Spacer(Modifier.height(10.dp))
         }
         item {
-            AnimatedVisibility(visible = selectedBuildingIndex.value != null && selectedDate != null) {
-                if (selectedTimeIndex.value == null) {
-                    TimeRow(dialogVisible, null)
+            AnimatedVisibility(visible = selectedBuilding != null && selectedDate != null) {
+                if (selectedTimeIndex == null) {
+                    TimeRow(viewModel.dialogVisible, null)
                 } else {
-                    TimeRow(dialogVisible, items[selectedTimeIndex.value!!])
+                    TimeRow(viewModel.dialogVisible, CLASSES[selectedTimeIndex!!])
                 }
             }
             Spacer(Modifier.height(10.dp))
         }
-        item {
-            AnimatedVisibility(visible = allParamsSelected) {
-                SearchRow(searchText)
-            }
-        }
-        items(audiences.size) {
-            val audience = audiences[it]
-            AnimatedVisibility(visible = allParamsSelected) {
-                KeyCard(
-                    audience.audience,
-                    audience.building,
-                    audience.startTime,
-                    audience.endTime,
-                    onClick = {
-                        currentAudience.value = audience
-                        confirmDialogOpened.value = true }
+        val filteredAudiences = filterAudiences(viewModel.audiences, searchText)
+        Log.d("ScheduleScreen", "filteredAudiences: $filteredAudiences")
+        if (viewModel.isLoading.value) {
+            item {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                    color = AccentColor,
+                    trackColor = SecondButtonColor
                 )
+
+            }
+        } else {
+            item {
+                AnimatedVisibility(visible = allParamsSelected) {
+                    SearchRow(viewModel.searchText)
+                }
+            }
+            if (filteredAudiences.isEmpty() && allParamsSelected) {
+                item {
+                    Text(
+                        text = "Нет доступных аудиторий",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins)),
+                            color = CalendarDayColor
+                        ),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
+                items(filteredAudiences.size) {
+                    val audience = filteredAudiences[it]
+                    AnimatedVisibility(visible = allParamsSelected) {
+                        KeyCard(
+                            audience = audience.audience,
+                            building = audience.building,
+                            startDate = audience.startTime,
+                            endDate = audience.endTime,
+                            status = audience.status,
+                            onClick = {
+                                currentAudience = audience
+                                confirmDialogOpened = true
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
+fun filterAudiences(audiences: List<Audience>, searchText: String): List<Audience> {
+    return audiences.filter { audience ->
+        audience.audience.toString()
+            .contains(searchText, ignoreCase = true) || audience.building.toString()
+            .contains(searchText, ignoreCase = true)
+    }
+}
 
 data class ClassTime(
-    var name: String, var time: String
+    var name: String, var startTime: LocalTime, var endTime: LocalTime
 )
 
-data class AudienceCard(
-    var audience: Int, var building: Int, var startTime: OffsetDateTime, var endTime: OffsetDateTime
-)
 
 @Preview(backgroundColor = 0xFFFFFFFF)
 @Composable

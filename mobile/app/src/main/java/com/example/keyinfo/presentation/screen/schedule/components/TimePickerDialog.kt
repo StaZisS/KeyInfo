@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.keyinfo.R
-import com.example.keyinfo.presentation.screen.schedule.ClassTime
+import com.example.keyinfo.common.Constants.CLASSES
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.BaseButtonColor
 import com.example.keyinfo.ui.theme.Values
@@ -31,14 +31,10 @@ import com.example.keyinfo.ui.theme.WhiteColor
 
 @Composable
 fun TimePickerDialog(
-    dialogVisible: MutableState<Boolean>,
     selectedTimeIndex: MutableState<Int?>,
-    items: List<ClassTime>
+    dialogVisible: MutableState<Boolean>
 ) {
-    var selected = 0
-    if (selectedTimeIndex.value != null) {
-        selected = selectedTimeIndex.value!!
-    }
+    var selected = selectedTimeIndex.value ?: 0
 
     Dialog(onDismissRequest = {
         dialogVisible.value = false
@@ -55,8 +51,8 @@ fun TimePickerDialog(
             InfiniteCircularList(
                 itemHeight = 40.dp,
                 numberOfDisplayedItems = 3,
-                items = items,
-                initialItem = items[selected],
+                items = CLASSES,
+                initialItem = CLASSES[selected],
                 textStyle = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.poppins)),

@@ -105,7 +105,7 @@ fun InfiniteCircularList(
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = item.time,
+                        text = item.startTime.toString() + " - " + item.endTime.toString(),
                         style = textStyle,
                         color = if (lastSelectedIndex == i) {
                             selectedTextColor

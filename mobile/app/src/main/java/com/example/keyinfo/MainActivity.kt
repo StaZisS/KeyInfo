@@ -31,6 +31,7 @@ import com.example.keyinfo.ui.theme.KeyInfoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // todo utc time zone
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -63,6 +64,11 @@ class MainActivity : ComponentActivity() {
                     context = ctx
                 )
             }
+//            val scheduleViewModel: ScheduleViewModel by viewModels {
+//                ScheduleViewModelFactory(
+//                    context = ctx
+//                )
+//            }
 
             KeyInfoTheme(darkTheme = false) {
                 Scaffold(

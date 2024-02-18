@@ -22,7 +22,7 @@ import com.example.keyinfo.ui.theme.AccentColor
 
 @Composable
 fun SearchRow(
-    searchText: MutableState<String>
+    searchText: MutableState<String>,
 ) {
     TextField(
         value = searchText.value,

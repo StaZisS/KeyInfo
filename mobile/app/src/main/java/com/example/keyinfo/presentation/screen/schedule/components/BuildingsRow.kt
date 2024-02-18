@@ -30,18 +30,20 @@ fun BuildingsRow(
             Box(modifier = Modifier
                 .padding(10.dp)
                 .clickable {
-                    selectedBuilding.value = index
+                    selectedBuilding.value = building
                 }) {
                 Text(
                     text = "Корпус $building", style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins)),
-                        color = if (selectedBuilding.value == index) AccentColor else AccentColor.copy(
+                        color = if (selectedBuilding.value == building) AccentColor else AccentColor.copy(
                             alpha = 0.2f
                         )
                     ), modifier = Modifier
                         .background(
-                            color = if (selectedBuilding.value == index) AccentColor.copy(alpha = 0.1f) else Color.Transparent,
+                            color = if (selectedBuilding.value == building) AccentColor.copy(
+                                alpha = 0.1f
+                            ) else Color.Transparent,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .padding(10.dp)
