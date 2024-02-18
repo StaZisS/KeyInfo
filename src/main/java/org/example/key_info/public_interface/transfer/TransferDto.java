@@ -15,6 +15,8 @@ public record TransferDto(
         String ownerName,
         String ownerEmail,
         String receiverName,
-        String receiverEmail
+        String receiverEmail,
+        int buildId,
+        int roomId
 ) {
 }

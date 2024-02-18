@@ -17,7 +17,7 @@ public record CreateApplicationDtoRequest(
         @JsonProperty(value = "room_id", required = true)
         int roomId,
 
-        @JsonProperty(value = "under_which_role_perform", required = true)
+        @JsonProperty(value = "under_which_role_perform")
         String role,
 
         @JsonProperty(value = "is_duplicate", defaultValue = "false")

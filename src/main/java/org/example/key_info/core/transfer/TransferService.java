@@ -12,7 +12,6 @@ import org.example.key_info.public_interface.transfer.DeleteTransferDto;
 import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.example.key_info.public_interface.transfer.TransferDto;
-import org.example.key_info.rest.controller.transfer.CreateTransferResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -135,6 +134,9 @@ public class TransferService {
         var receiver = clientRepository.getClientByClientId(entity.receiverId())
                 .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
 
+        var key = keyRepository.getKey(entity.keyId())
+                .orElseThrow(() -> new ExceptionInApplication("Ключа не найдено", ExceptionType.NOT_FOUND));
+
         return new TransferDto(
                 entity.transferId(),
                 entity.ownerId(),
@@ -145,7 +147,9 @@ public class TransferService {
                 owner.name(),
                 owner.email(),
                 receiver.name(),
-                receiver.email()
+                receiver.email(),
+                key.buildId(),
+                key.roomId()
         );
     }
 }

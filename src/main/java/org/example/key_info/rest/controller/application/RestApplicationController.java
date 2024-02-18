@@ -7,11 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.application.ApplicationFilterDto;
 import org.example.key_info.core.application.ApplicationService;
 import org.example.key_info.core.application.ApplicationStatus;
+import org.example.key_info.core.client.repository.ClientRole;
 import org.example.key_info.public_interface.application.ApplicationDto;
 import org.example.key_info.public_interface.application.CreateApplicationDto;
 import org.example.key_info.public_interface.application.DeleteApplicationDto;
 import org.example.key_info.public_interface.application.GetMyApplicationDto;
 import org.example.key_info.public_interface.application.UpdateApplicationDto;
+import org.example.key_info.public_interface.exception.ExceptionInApplication;
+import org.example.key_info.public_interface.exception.ExceptionType;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -66,6 +70,15 @@ public class RestApplicationController {
     public ResponseEntity<UUID> createApplication(@RequestBody CreateApplicationDtoRequest dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
+        var role = dto.role();
+        if(role == null) {
+            var minOrdinal = infoAboutClient.clientRoles()
+                    .stream()
+                    .map(Enum::ordinal)
+                    .min(Integer::compareTo)
+                    .orElseThrow(() -> new ExceptionInApplication("Нет роли", ExceptionType.INVALID));
+            role = ClientRole.values()[minOrdinal].name();
+        }
 
         var createApplicationDto = new CreateApplicationDto(
                 infoAboutClient.clientId(),
@@ -74,7 +87,7 @@ public class RestApplicationController {
                 dto.endTime(),
                 dto.buildId(),
                 dto.roomId(),
-                dto.role(),
+                role,
                 dto.isDuplicate(),
                 dto.endTimeToDuplicate()
         );

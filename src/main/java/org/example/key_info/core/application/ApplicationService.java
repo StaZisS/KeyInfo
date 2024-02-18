@@ -66,6 +66,10 @@ public class ApplicationService {
             throw new ExceptionInApplication("Необходимо назначить дату до которой дублировать заявку", ExceptionType.INVALID);
         }
 
+        if (dto.startTime().isBefore(OffsetDateTime.now())) {
+            throw new ExceptionInApplication("Заявка не может быть назначена на уже начавшуюся пару", ExceptionType.INVALID);
+        }
+
         var teacherApplications = applicationRepository.getAcceptedTeacherApplications(dto.buildId(), dto.roomId(), dto.startTime(), dto.endTime());
         if (!teacherApplications.isEmpty() && role == ClientRole.STUDENT) {
             throw new ExceptionInApplication("В это время уже занято учителем", ExceptionType.INVALID);

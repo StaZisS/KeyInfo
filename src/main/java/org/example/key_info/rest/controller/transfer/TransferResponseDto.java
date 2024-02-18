@@ -29,6 +29,12 @@ public record TransferResponseDto(
         String emailReceiver,
 
         @JsonProperty("transfer_id")
-        UUID transferId
+        UUID transferId,
+
+        @JsonProperty("build_id")
+        int buildId,
+
+        @JsonProperty("room_id")
+        int roomId
 ) {
 }
