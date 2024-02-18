@@ -4,7 +4,7 @@ import { Mark } from './mark'
 import('../../../../styles/keysItem.css')
 
 
-export const KeysItem = ({ keyNumber, hasRequests, location }) => {
+export const KeysItem = ({build, room, hasRequests, location }) => {
     // const history = useNavigate();
 
     // const handleClick = () => {
@@ -16,9 +16,10 @@ export const KeysItem = ({ keyNumber, hasRequests, location }) => {
     return (
         <div className='w-100 d-flex item border flex-wrap'>
         
-            <div className={`d-flex flex-grow-1 h-100 align-items-center  ${hasRequests ? 'has-requests' : ''}`} >     {/*onClick={handleClick}*/}
-                <div className='ps-3 d-flex align-items-center flex-grow-1 number'>
-                    <span className='key-number'>Аудитория {keyNumber}</span>
+            <div className={`d-flex flex-grow-1 h-100 align-items-center  ${hasRequests ? 'has-requests' : ''}`} >
+                <div className='ps-3 d-flex align-items-center gap-3 flex-grow-1 number'>
+                    <span className='key-number'>Здание <span className='fw-bold'>{build}</span></span>
+                    <span className='key-number'>Аудитория <span className='fw-bold'>{room}</span></span>
                     {hasRequests && <Mark />}
                 </div>
                 <div className='flex-grow-1'>
