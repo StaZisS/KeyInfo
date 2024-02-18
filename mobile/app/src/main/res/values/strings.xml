@@ -98,4 +98,6 @@
     <string name="accept">Принять</string>
     <string name="reject">Отклонить</string>
     <string name="want_transfer">хочет передать вам ключ</string>
+
+    <string name="dublicate">Дублировать бронь</string>
 </resources>

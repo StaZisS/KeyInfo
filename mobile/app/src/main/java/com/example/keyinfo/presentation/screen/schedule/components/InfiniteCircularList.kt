@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.schedule
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.keyinfo.presentation.screen.schedule.ClassTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -104,7 +105,7 @@ fun InfiniteCircularList(
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = item.time,
+                        text = item.startTime.toString() + " - " + item.endTime.toString(),
                         style = textStyle,
                         color = if (lastSelectedIndex == i) {
                             selectedTextColor

@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.schedule
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,63 +9,104 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.keyinfo.R
+import com.example.keyinfo.common.Constants.CLASSES
+import com.example.keyinfo.domain.model.schedule.Audience
+import com.example.keyinfo.presentation.screen.keytransfer.dialog.ConfirmDialog
 import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.schedule.components.BuildingsRow
+import com.example.keyinfo.presentation.screen.schedule.components.Day
+import com.example.keyinfo.presentation.screen.schedule.components.DaysOfWeekTitle
+import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
+import com.example.keyinfo.presentation.screen.schedule.components.TimePickerDialog
+import com.example.keyinfo.presentation.screen.schedule.components.TimeRow
+import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.CalendarDayColor
+import com.example.keyinfo.ui.theme.SecondButtonColor
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.daysOfWeek
-import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
 
-// todo add button for month and year selection
 @Composable
-fun ScheduleScreen(navController: NavController) {
-    val items = listOf(
-        ClassTime("1 пара", "8:00-9:35"),
-        ClassTime("2 пара", "9:45-11:20"),
-        ClassTime("3 пара", "11:30-13:05"),
-        ClassTime("4 пара", "14:45-16:20"),
-        ClassTime("5 пара", "16:30-18:05"),
-        ClassTime("6 пара", "18:15-19:50"),
-        ClassTime("7 пара", "20:00-21:35")
-    )
+fun ScheduleScreen() {
+    val viewModel: ScheduleViewModel =
+        viewModel(factory = ScheduleViewModelFactory(LocalContext.current))
+
+    // todo disable old dates selection (before today)
+    LaunchedEffect(Unit) {
+        viewModel.getBuildings()
+    }
+
+
+    var confirmDialogOpened by viewModel.confirmDialogOpened
+    val searchText by viewModel.searchText
+    val selectedBuilding by viewModel.selectedBuilding
+    var selectedDate by viewModel.selectedDate
+    val selectedTimeIndex by viewModel.selectedTimeIndex
+    val dialogVisible by viewModel.dialogVisible
+    var currentAudience by viewModel.currentAudience
+
+
     val currentMonth = YearMonth.now()
     val startMonth = currentMonth.minusMonths(50)
     val endMonth = currentMonth.plusMonths(50)
-
     val daysOfWeek = daysOfWeek()
-    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
+
     val state = rememberCalendarState(
         startMonth = startMonth,
         endMonth = endMonth,
         firstVisibleMonth = currentMonth,
         firstDayOfWeek = daysOfWeek.first()
     )
-    val searchText = remember { mutableStateOf("") }
-    val dialogVisible = remember { mutableStateOf(false) }
-//    val selectedBuildingIndex = remember { mutableIntStateOf(0) }
-    val selectedTimeIndex = remember { mutableIntStateOf(3) }
-    if (dialogVisible.value) {
-        TimePickerDialog(dialogVisible, selectedTimeIndex, items)
+
+
+    val allParamsSelected =
+        selectedBuilding != null && selectedDate != null && selectedTimeIndex != null
+
+    LaunchedEffect(
+        viewModel.selectedBuilding.value,
+        viewModel.selectedDate.value,
+        viewModel.selectedTimeIndex.value
+    ) {
+        if (allParamsSelected) {
+            viewModel.getAudience()
+        }
+    }
+    if (dialogVisible) {
+        TimePickerDialog(
+            viewModel.selectedTimeIndex, viewModel.dialogVisible
+        )
+    }
+    if (confirmDialogOpened) {
+        ConfirmDialog(
+            onSaveClick = {
+                viewModel.reserveAudience()
+                confirmDialogOpened = false
+            },
+            onCancelClick = { confirmDialogOpened = false },
+            checkBoxChecked = viewModel.checkBoxChecked,
+            untilDate = viewModel.untilDate,
+            audienceInfo = currentAudience!!
+        )
     }
     LazyColumn(
         modifier = Modifier
@@ -100,41 +142,93 @@ fun ScheduleScreen(navController: NavController) {
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek)
                 },
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
         }
         item {
             AnimatedVisibility(visible = selectedDate != null) {
-                BuildingsRow()
-                Spacer(Modifier.height(20.dp))
+                BuildingsRow(
+                    viewModel.selectedBuilding, viewModel.buildings
+                )
             }
+            Spacer(Modifier.height(10.dp))
         }
         item {
-            AnimatedVisibility(visible = selectedDate != null) {
-                TimeRow(dialogVisible, items[selectedTimeIndex.intValue])
-                Spacer(Modifier.height(20.dp))
+            AnimatedVisibility(visible = selectedBuilding != null && selectedDate != null) {
+                if (selectedTimeIndex == null) {
+                    TimeRow(viewModel.dialogVisible, null)
+                } else {
+                    TimeRow(viewModel.dialogVisible, CLASSES[selectedTimeIndex!!])
+                }
             }
+            Spacer(Modifier.height(10.dp))
         }
-        item {
-            AnimatedVisibility(visible = selectedDate != null) {
-                SearchRow(searchText)
+        val filteredAudiences = filterAudiences(viewModel.audiences, searchText)
+        Log.d("ScheduleScreen", "filteredAudiences: $filteredAudiences")
+        if (viewModel.isLoading.value) {
+            item {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                    color = AccentColor,
+                    trackColor = SecondButtonColor
+                )
+
             }
-        }
-        items(5) {
-            AnimatedVisibility(visible = selectedDate != null) {
-                KeyCard()
+        } else {
+            item {
+                AnimatedVisibility(visible = allParamsSelected) {
+                    SearchRow(viewModel.searchText)
+                }
+            }
+            if (filteredAudiences.isEmpty() && allParamsSelected) {
+                item {
+                    Text(
+                        text = "Нет доступных аудиторий",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins)),
+                            color = CalendarDayColor
+                        ),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
+                items(filteredAudiences.size) {
+                    val audience = filteredAudiences[it]
+                    AnimatedVisibility(visible = allParamsSelected) {
+                        KeyCard(
+                            audience = audience.audience,
+                            building = audience.building,
+                            startDate = audience.startTime,
+                            endDate = audience.endTime,
+                            status = audience.status,
+                            onClick = {
+                                currentAudience = audience
+                                confirmDialogOpened = true
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-
-data class Building(
-    val name: String, var isSelected: Boolean
-)
+fun filterAudiences(audiences: List<Audience>, searchText: String): List<Audience> {
+    return audiences.filter { audience ->
+        audience.audience.toString()
+            .contains(searchText, ignoreCase = true) || audience.building.toString()
+            .contains(searchText, ignoreCase = true)
+    }
+}
 
 data class ClassTime(
-    var name: String, var time: String
+    var name: String, var startTime: LocalTime, var endTime: LocalTime
 )
+
 
 @Preview(backgroundColor = 0xFFFFFFFF)
 @Composable

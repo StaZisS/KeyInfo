@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,6 +29,8 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
+import com.example.keyinfo.domain.model.schedule.AudienceStatus
+import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.example.keyinfo.ui.theme.LightGrayColor
 import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
@@ -36,11 +40,21 @@ import java.util.Locale
 
 @Composable
 fun KeyCard(
-    audience: String = "220",
-    building: String = "2",
+    modifier: Modifier = Modifier,
+    audience: Int = 220,
+    building: Int = 2,
     startDate: OffsetDateTime = OffsetDateTime.now(),
-    endDate: OffsetDateTime = OffsetDateTime.now().plusHours(2)
+    endDate: OffsetDateTime = OffsetDateTime.now().plusHours(1).plusMinutes(35),
+    status: AudienceStatus = AudienceStatus.OCCUPIED,
+    onClick: () -> Unit = {},
 ) {
+    val cardModifier = if (onClick != {} && status == AudienceStatus.FREE) {
+        modifier.clickable {
+            onClick()
+        }
+    } else {
+        modifier
+    }
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
@@ -48,26 +62,39 @@ fun KeyCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
-        modifier = Modifier.softLayerShadow(
-            spread = 1.dp,
-            color = Color.Black.copy(alpha = 0.02f),
-            radius = 2.dp,
-            offset = DpOffset(0.dp, 5.dp),
-            shape = RoundedCornerShape(12.dp),
-            isAlphaContentClip = true
-        )
-
+        modifier = cardModifier
+            .softLayerShadow(
+                spread = 1.dp,
+                color = Color.Black.copy(alpha = 0.02f),
+                radius = 2.dp,
+                offset = DpOffset(0.dp, 5.dp),
+                shape = RoundedCornerShape(12.dp),
+                isAlphaContentClip = true
+            )
     ) {
         Column(
-            Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 20.dp)
+            modifier = Modifier
+                .padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 20.dp)
+                .fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(id = R.string.card_audience) + " $audience",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(700),
-                ),
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.card_audience) + " $audience",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(700),
+                    ),
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                if (status == AudienceStatus.OCCUPIED) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.lock),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = AccentColor
+                    )
+                }
+            }
             Spacer(modifier = Modifier.padding(top = 8.dp))
             Text(
                 text = stringResource(id = R.string.card_building) + " $building",
@@ -119,12 +146,10 @@ fun KeyCard(
                     ), color = LightBlueColor
                 )
             }
-
         }
     }
 }
 
-// TODO: Move to viewmodel
 fun formatOffsetDateTime(dateTime: OffsetDateTime): String {
     val dayOfWeek = dateTime.dayOfWeek.getDisplayName(
         java.time.format.TextStyle.SHORT,
@@ -152,8 +177,8 @@ fun KeyCardPreview() {
             .padding(16.dp),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
     ) {
-        KeyCard()
-        KeyCard()
-        KeyCard()
+        KeyCard(status = AudienceStatus.OCCUPIED)
+        KeyCard(status = AudienceStatus.FREE)
+        KeyCard(status = AudienceStatus.OCCUPIED)
     }
 }

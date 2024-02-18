@@ -44,4 +44,7 @@ object NetworkService {
 
     val keysApiService: KeysApiService =
         retrofit.create(KeysApiService::class.java)
+
+    val scheduleApiService: ScheduleApiService =
+        retrofit.create(ScheduleApiService::class.java)
 }

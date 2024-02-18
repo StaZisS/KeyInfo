@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.keyinfo.presentation.navigation.AppNavigation
@@ -32,6 +33,7 @@ import com.example.keyinfo.ui.theme.KeyInfoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // todo utc time zone
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,6 +66,11 @@ class MainActivity : ComponentActivity() {
                     context = ctx
                 )
             }
+//            val scheduleViewModel: ScheduleViewModel by viewModels {
+//                ScheduleViewModelFactory(
+//                    context = ctx
+//                )
+//            }
 
             val mainViewModel: MainViewModel by viewModels {
                 MainViewModelFactory(
@@ -85,8 +92,8 @@ class MainActivity : ComponentActivity() {
                     }) {
                     Box(
                         modifier = Modifier
-                            .padding(it)
                             .fillMaxSize()
+                            .padding(top = it.calculateTopPadding(), bottom = 40.dp)
                     ) {
                         AppNavigation(
                             navController = navController,

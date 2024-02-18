@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.schedule
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,7 +22,7 @@ import com.example.keyinfo.ui.theme.AccentColor
 
 @Composable
 fun SearchRow(
-    searchText: MutableState<String>
+    searchText: MutableState<String>,
 ) {
     TextField(
         value = searchText.value,

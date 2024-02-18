@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.schedule
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

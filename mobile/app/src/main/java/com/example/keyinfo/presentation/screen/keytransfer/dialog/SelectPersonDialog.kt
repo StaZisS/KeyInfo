@@ -27,7 +27,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
-import com.example.keyinfo.presentation.screen.schedule.SearchRow
 import com.example.keyinfo.ui.theme.Values
 
 @Composable
@@ -64,9 +63,9 @@ fun SelectPersonDialog(
                     ),
                 )
                 Spacer(modifier = Modifier.height(Values.BasePadding))
-                SearchRow(
-                    searchText = searchText
-                )
+//                SearchRow(
+//                    searchText = searchText
+//                )
                 LazyColumn {
                     items(10) {
                         SmallKeyCard()

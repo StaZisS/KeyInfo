@@ -1,10 +1,7 @@
 package com.example.keyinfo.presentation.screen.profile
 
-import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.domain.state.ProfileState
@@ -17,13 +14,13 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-class ProfileViewModel(val context: Context): ViewModel() {
+class ProfileViewModel(val context: Context) : ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> get() = _state
 
     private val getProfileUseCase = GetProfileUseCase()
 
-    fun getProfile(){
+    fun getProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getProfileUseCase.invoke()
@@ -40,8 +37,10 @@ class ProfileViewModel(val context: Context): ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -57,6 +56,7 @@ class ProfileViewModel(val context: Context): ViewModel() {
                 400 -> showToast("Something went wrong...")
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
+
             else -> showToast("Ошибка соединения с сервером")
         }
     }
