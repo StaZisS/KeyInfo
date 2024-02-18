@@ -1,4 +1,6 @@
 .button-role{
+    text-decoration: none;
+    border: none;
     margin-right: 8px;
     padding-inline: 15px;
     background-color: #4894FE;

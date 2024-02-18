@@ -34,18 +34,6 @@ export const KeysList = observer(() => {
         )
     }
 
-    // if (!data.data.length) {
-    //     return (
-    //         <>
-    //             <Container className='mt-5'>
-    //                 <Button onClick={() => setAddKeyModal(true)} className='btn-success'>Создать ключ</Button>
-    //             </Container>
-    //             <AddKeyModal show={addKeyModal} onHide={() => setAddKeyModal(false)}/>
-    //             <KeyFilter/>
-    //             <Container className='text-center text-danger fs-1 fw-bold mt-3'>Нет ключей</Container>
-    //         </>
-    //     )
-    // }
     return (
         <>
             <Container className='mt-5'>
