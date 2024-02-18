@@ -23,7 +23,7 @@ class LocalStorage(context: Context) {
 
     fun saveToken(token: TokenResponse) {
         sharedPreferences.edit().putString(TOKEN_KEY, token.accessToken).apply()
-        sharedPreferences.edit().putString(REFRESH_KEY, token.accessToken).apply()
+        sharedPreferences.edit().putString(REFRESH_KEY, token.refreshToken).apply()
     }
 
     fun getToken(): TokenResponse {

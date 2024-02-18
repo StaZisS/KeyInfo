@@ -1,12 +1,14 @@
 package com.example.keyinfo.presentation.screen.profile
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.common.Constants
 import com.example.keyinfo.common.Formatter
 import com.example.keyinfo.data.network.NetworkService
+import com.example.keyinfo.data.storage.LocalStorage
 import com.example.keyinfo.domain.state.ProfileState
 import com.example.keyinfo.domain.usecase.DeleteTokenUseCase
 import com.example.keyinfo.domain.usecase.GetProfileUseCase
@@ -30,11 +32,13 @@ class ProfileViewModel(val context: Context) : ViewModel() {
     fun logoutUser(toAfterLogout: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = postLogoutUseCase.invoke()
+                val result = postLogoutUseCase.invoke(LocalStorage(context).getToken().refreshToken)
                 if (result.isSuccess) {
                     deleteTokenUseCase.invoke()
                     NetworkService.setAuthToken(Constants.EMPTY_STRING)
-                    toAfterLogout()
+                    withContext(Dispatchers.Main){
+                        toAfterLogout()
+                    }
                 } else {
                     withContext(Dispatchers.Main) {
                         result.fold(
@@ -47,6 +51,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    Log.d("eee", e.message.toString())
                     showToast("Произошла ошибка: ${e.message}")
                 }
             }

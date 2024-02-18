@@ -2,6 +2,7 @@ package com.example.keyinfo.data.repository
 
 import com.example.keyinfo.data.model.TokenResponse
 import com.example.keyinfo.data.network.NetworkService
+import com.example.keyinfo.domain.model.RefreshToken
 import com.example.keyinfo.domain.model.authorization.Login
 import com.example.keyinfo.domain.model.authorization.Registration
 import retrofit2.Response
@@ -16,7 +17,7 @@ class AuthenticationRepository {
         return NetworkService.authenticationApiService.postRegistration(registration)
     }
 
-    suspend fun postLogout(): Response<Unit> {
-        return NetworkService.authenticationApiService.postLogout()
+    suspend fun postLogout(refresh: RefreshToken): Response<Unit> {
+        return NetworkService.authenticationApiService.postLogout(refresh)
     }
 }
