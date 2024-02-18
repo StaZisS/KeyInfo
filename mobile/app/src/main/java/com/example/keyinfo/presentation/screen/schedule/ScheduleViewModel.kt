@@ -97,7 +97,6 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
                     result.fold(onSuccess = {
                         audiences = result.getOrNull()!!
                         Log.d("ScheduleViewModel", "getAudience success: $audiences")
-                        isLoading.value = false
                     }, onFailure = { exception ->
                         handleRequestException(exception)
                     })
@@ -113,6 +112,8 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
                     Log.d("ScheduleViewModel", "getAudience: ${e.message}")
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                isLoading.value = false
             }
         }
     }

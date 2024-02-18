@@ -45,7 +45,7 @@ fun KeyCard(
     building: Int = 2,
     startDate: OffsetDateTime = OffsetDateTime.now(),
     endDate: OffsetDateTime = OffsetDateTime.now().plusHours(1).plusMinutes(35),
-    status: AudienceStatus = AudienceStatus.OCCUPIED,
+    status: AudienceStatus = AudienceStatus.FREE,
     onClick: () -> Unit = {},
 ) {
     val cardModifier = if (onClick != {} && status == AudienceStatus.FREE) {

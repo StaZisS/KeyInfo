@@ -3,6 +3,7 @@ package com.example.keyinfo.presentation.screen.main
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.domain.model.request.TransferStatus
@@ -24,11 +25,12 @@ class MainViewModel(private val context: Context) : ViewModel(){
     private val getRequestsUseCase = GetRequestsUseCase()
     private val deleteRequestUseCase = DeleteRequestUseCase()
 
+    var confirmDialogOpened = mutableStateOf(false)
+
     fun processIntent(intent: MainIntent) {
         when (intent) {
             is MainIntent.ChangeDeleteDialogState -> {
-                _state.value.isDialogOpen = !state.value.isDialogOpen
-                Log.d("WHERE", _state.value.isDialogOpen.toString())
+                confirmDialogOpened.value = !confirmDialogOpened.value
                 Log.d("WHERE2", _state.value.currentRequest.toString())
             }
 
@@ -63,6 +65,8 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                processIntent(MainIntent.ChangeDeleteDialogState)
             }
         }
     }

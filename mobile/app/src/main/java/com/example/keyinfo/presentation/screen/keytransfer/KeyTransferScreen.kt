@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +11,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -25,17 +28,26 @@ import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButtonsRow
 import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.main.MainIntent
+import com.example.keyinfo.presentation.screen.main.PageEmptyScreen
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import java.time.OffsetDateTime
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun KeyTransferScreen(
     viewModel: KeyTransferViewModel
 ) {
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit){
+        viewModel.getUserKeys()
+    }
+
     val pagerState = rememberPagerState(1)
     val pages = listOf(
         "Передачи ключей",
@@ -44,7 +56,7 @@ fun KeyTransferScreen(
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         CustomIndicator(tabPositions, pagerState)
     }
-    val state by viewModel.state.collectAsState()
+
     ScrollableTabRow(
         containerColor = Color.Transparent,
         divider = {},
@@ -106,14 +118,26 @@ fun KeyTransferScreen(
                             }
                         )
                     }
-                    items(10) {
+                    items(1) {
                         SmallKeyCard()
                     }
                 }
 
-                1 -> { // Мои ключи
-                    items(1) {
-                        KeyCard()
+                1 -> {
+                    item{
+                        if (state.myKeys.isNotEmpty()){
+                            state.myKeys.forEach { key ->
+                                SmallKeyCard(
+                                    audience = key.room.toString(),
+                                    building = key.build.toString()
+                                )
+                            }
+                        } else {
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.keys_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
+                        }
                     }
                 }
             }

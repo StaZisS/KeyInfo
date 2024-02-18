@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +39,7 @@ import java.time.OffsetDateTime
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
     val state by viewModel.state.collectAsState()
+    val confirmDialogOpened by viewModel.confirmDialogOpened
 
     val pagerState = rememberPagerState(1)
     val pages = listOf(
@@ -55,7 +57,7 @@ fun MainScreen(viewModel: MainViewModel) {
         viewModel.getProgressRequests()
     }
 
-    if (state.isDialogOpen) {
+    if (confirmDialogOpened) {
         DeleteDialog(
             id = state.currentRequest!!.application_id,
             audience = state.currentRequest!!.room_id,
@@ -127,7 +129,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 )
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }
@@ -144,7 +149,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 )
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }
@@ -168,7 +176,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 }
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }

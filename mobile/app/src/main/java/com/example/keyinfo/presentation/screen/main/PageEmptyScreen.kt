@@ -21,7 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
 
 @Composable
-fun PageEmptyScreen() {
+fun PageEmptyScreen(
+    label: String,
+    description: String
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,7 +40,7 @@ fun PageEmptyScreen() {
         )
 
         Text(
-            text = stringResource(id = R.string.main_empty), style = TextStyle(
+            text = label, style = TextStyle(
                 fontSize = 20.sp,
                 lineHeight = 24.sp,
                 fontWeight = FontWeight(700),
@@ -48,7 +51,7 @@ fun PageEmptyScreen() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(id = R.string.main_empty_description), style = TextStyle(
+            text = description, style = TextStyle(
                 fontSize = 15.sp,
                 fontWeight = FontWeight(400),
                 textAlign = TextAlign.Center,

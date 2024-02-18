@@ -8,6 +8,7 @@ import com.example.keyinfo.data.model.TokenResponse
 
 const val SHARED_PREF = "shared_pref"
 const val TOKEN_KEY = "token_key"
+const val REFRESH_KEY = "refresh_key"
 
 class LocalStorage(context: Context) {
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
@@ -22,11 +23,13 @@ class LocalStorage(context: Context) {
 
     fun saveToken(token: TokenResponse) {
         sharedPreferences.edit().putString(TOKEN_KEY, token.accessToken).apply()
+        sharedPreferences.edit().putString(REFRESH_KEY, token.refreshToken).apply()
     }
 
     fun getToken(): TokenResponse {
         return TokenResponse(
-            sharedPreferences.getString(TOKEN_KEY, Constants.EMPTY_STRING)!!
+            sharedPreferences.getString(TOKEN_KEY, Constants.EMPTY_STRING)!!,
+            sharedPreferences.getString(REFRESH_KEY, Constants.EMPTY_STRING)!!
         )
     }
 
@@ -36,5 +39,6 @@ class LocalStorage(context: Context) {
 
     fun removeToken() {
         sharedPreferences.edit().remove(TOKEN_KEY).apply()
+        sharedPreferences.edit().remove(REFRESH_KEY).apply()
     }
 }

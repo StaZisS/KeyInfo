@@ -44,4 +44,18 @@ object Formatter {
         val date = inputFormat.parse(inputDate)
         return outputFormat.format(date!!)
     }
+
+    fun getNormalRoleString(input: ArrayList<String>): String {
+        var output = ""
+        input.forEach{ input ->
+            when(input){
+                "ADMIN" -> output += "Администратор\n"
+                "STUDENT" -> output += "Студент\n"
+                "TEACHER" -> output += "Преподаватель\n"
+                "UNSPECIFIED" -> output += "Не подтвержден\n"
+                "DEANERY" -> output += "Деканат\n"
+            }
+        }
+        return output;
+    }
 }
