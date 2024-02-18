@@ -4,6 +4,7 @@ import com.example.keyinfo.data.network.api.AuthenticationApiService
 import com.example.keyinfo.data.network.api.KeysApiService
 import com.example.keyinfo.data.network.api.ProfileApiService
 import com.example.keyinfo.data.network.api.RequestApiService
+import com.example.keyinfo.data.network.api.ScheduleApiService
 import com.example.keyinfo.data.network.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
