@@ -51,6 +51,7 @@ public class AccommodationRepositoryImpl implements AccommodationRepository {
     public List<Integer> getBuildings() {
         return create.selectDistinct(STUDYROOM.BUILD)
                 .from(STUDYROOM)
+                .orderBy(STUDYROOM.BUILD)
                 .fetch(Record1::value1);
     }
 
@@ -59,6 +60,7 @@ public class AccommodationRepositoryImpl implements AccommodationRepository {
         return create.select(STUDYROOM.ROOM)
                 .from(STUDYROOM)
                 .where(STUDYROOM.BUILD.eq(buildId))
+                .orderBy(STUDYROOM.ROOM)
                 .fetch(Record1::value1);
     }
 }
