@@ -5,11 +5,11 @@ import UserService from "../../../../services/UserService";
 
 import('../../../../styles/peopleItem.css')
 
-export const PeopleItem = ({userId, name, email}) => {
-
+export const PeopleItem = ({userId, name, email, roles}) => {
+    console.log(userId, name, email, roles)
     const queryClient = useQueryClient()
-    const mutation = useMutation((params) => UserService.addRole(params.userId, params.clientRole),{
-        onSuccess(){
+    const mutation = useMutation((params) => UserService.addRole(params.userId, params.clientRole), {
+        onSuccess() {
             queryClient.invalidateQueries(['users'])
         }
     })
@@ -28,8 +28,20 @@ export const PeopleItem = ({userId, name, email}) => {
                 </div>
             </div>
             <div className="buttons d-flex h-100 align-items-center">
-                <ButtonStudent callback={() => handleAddRole(['STUDENT'])}/>
-                <ButtonTeacher callback={() => handleAddRole(['TEACHER'])}/>
+                {roles.includes('TEACHER') &&
+                    <ButtonTeacher roles={roles} callback={() => handleAddRole(['TEACHER'])}/>
+                }
+                {roles.includes('STUDENT') &&
+                    <ButtonStudent roles={roles} callback={() => handleAddRole(['STUDENT'])}/>
+                }
+                {roles.includes('UNSPECIFIED') &&
+                    <>
+                        <ButtonStudent roles={roles} callback={() => handleAddRole(['STUDENT'])}/>
+                        <ButtonTeacher roles={roles} callback={() => handleAddRole(['TEACHER'])}/>
+                    </>
+                }
+
+
             </div>
 
         </div>

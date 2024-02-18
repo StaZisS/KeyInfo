@@ -22,6 +22,7 @@ export const PeopleList = () => {
         keepPreviousData: true
     },)
 
+
     if (isLoading) {
         return (
             <Loading/>
@@ -50,6 +51,7 @@ export const PeopleList = () => {
                                     name={user.name}
                                     email={user.email}
                                     userId={user.clientId}
+                                    roles={'UNSPECIFIED'}
                                 />
                             ))}
                         </CardBody>
@@ -70,6 +72,7 @@ export const PeopleList = () => {
                                     name={user.name}
                                     email={user.email}
                                     userId={user.clientId}
+                                    roles={'TEACHER'}
                                 />
                             ))}
                         </CardBody>
@@ -90,6 +93,7 @@ export const PeopleList = () => {
                                     name={user.name}
                                     email={user.email}
                                     userId={user.clientId}
+                                    roles={'STUDENT'}
                                 />
                             ))}
                         </CardBody>
