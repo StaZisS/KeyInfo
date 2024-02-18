@@ -130,7 +130,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 )
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }
@@ -147,7 +150,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 )
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }
@@ -171,7 +177,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 }
                             }
                         } else {
-                            PageEmptyScreen()
+                            PageEmptyScreen(
+                                label = stringResource(id = R.string.main_empty),
+                                description = stringResource(id = R.string.main_empty_description)
+                            )
                         }
                     }
                 }
