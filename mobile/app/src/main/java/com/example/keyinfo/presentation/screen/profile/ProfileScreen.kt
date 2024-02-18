@@ -75,7 +75,7 @@ fun ProfileScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         TextButton(
-            onClick = { viewModel.logoutUser(clickOnLeave) },
+            onClick = { clickOnLeave() },
             colors = TextButtonColor,
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(10.dp)

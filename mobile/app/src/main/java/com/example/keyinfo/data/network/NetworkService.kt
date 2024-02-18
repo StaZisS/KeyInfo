@@ -47,11 +47,9 @@ object NetworkService {
     val keysApiService: KeysApiService =
         retrofit.create(KeysApiService::class.java)
 
-<<<<<<< HEAD
     val scheduleApiService: ScheduleApiService =
         retrofit.create(ScheduleApiService::class.java)
-=======
+
     val refreshTokenApiService: RefreshTokenApiService =
         retrofit.create(RefreshTokenApiService::class.java)
->>>>>>> mobile-feature-keys
 }
