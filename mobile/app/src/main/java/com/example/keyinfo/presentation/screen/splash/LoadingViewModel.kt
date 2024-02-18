@@ -30,6 +30,7 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
                             },
                             onFailure = { exception ->
                                 handleRegistrationError(exception)
+                                onResult(ApiResult.Error())
                             }
                         )
                     }
@@ -40,10 +41,12 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
                                     "Пожалуйста, проверьте ваше интернет-соединение."
                         )
                     }
+                    onResult(ApiResult.Error())
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         showToast("Произошла ошибка: ${e.message}")
                     }
+                    onResult(ApiResult.Error())
                 }
             } else {
                 onResult(ApiResult.Error())

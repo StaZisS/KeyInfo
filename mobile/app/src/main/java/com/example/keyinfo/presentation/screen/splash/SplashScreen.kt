@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.splash
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -37,12 +38,7 @@ fun LoadingScreen(navController: NavHostController) {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    navController.navigate(Screen.Welcome.route) {
-                        popUpTo(Screen.Splash.route) { inclusive = true }
-                    }
-                }
-
-                else -> {
+                    Log.d("LoadingScreen", "Error: ${it.message}")
                     navController.navigate(Screen.Welcome.route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
@@ -57,7 +53,8 @@ fun LoadingScreen(navController: NavHostController) {
             painter = painterResource(id = R.drawable.splash_screen),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
         Box(
             modifier = Modifier
