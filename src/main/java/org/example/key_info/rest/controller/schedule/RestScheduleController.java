@@ -54,7 +54,8 @@ public class RestScheduleController {
                 dto.buildId(),
                 dto.roomId(),
                 dto.startTime(),
-                dto.endTime()
+                dto.endTime(),
+                dto.status().name()
         );
     }
 }

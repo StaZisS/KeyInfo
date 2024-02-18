@@ -15,6 +15,8 @@ public record FreeAudienceResponseDto(
         OffsetDateTime startTime,
 
         @JsonProperty("end_time")
-        OffsetDateTime endTime
+        OffsetDateTime endTime,
+
+        String status
 ) {
 }

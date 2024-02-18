@@ -65,7 +65,8 @@ public class ScheduleService {
                 entity.buildId(),
                 entity.roomId(),
                 entity.startTime(),
-                entity.endTime()
+                entity.endTime(),
+                entity.status()
         );
     }
 

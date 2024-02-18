@@ -6,6 +6,7 @@ public record AudienceEntity(
         int buildId,
         int roomId,
         OffsetDateTime startTime,
-        OffsetDateTime endTime
+        OffsetDateTime endTime,
+        AudienceStatus status
 ) {
 }
