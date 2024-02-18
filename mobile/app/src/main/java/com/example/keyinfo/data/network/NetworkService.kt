@@ -3,6 +3,7 @@ package com.example.keyinfo.data.network
 import com.example.keyinfo.data.network.api.AuthenticationApiService
 import com.example.keyinfo.data.network.api.KeysApiService
 import com.example.keyinfo.data.network.api.ProfileApiService
+import com.example.keyinfo.data.network.api.RefreshTokenApiService
 import com.example.keyinfo.data.network.api.RequestApiService
 import com.example.keyinfo.data.network.api.ScheduleApiService
 import com.example.keyinfo.data.network.interceptor.AuthInterceptor
@@ -46,6 +47,11 @@ object NetworkService {
     val keysApiService: KeysApiService =
         retrofit.create(KeysApiService::class.java)
 
+<<<<<<< HEAD
     val scheduleApiService: ScheduleApiService =
         retrofit.create(ScheduleApiService::class.java)
+=======
+    val refreshTokenApiService: RefreshTokenApiService =
+        retrofit.create(RefreshTokenApiService::class.java)
+>>>>>>> mobile-feature-keys
 }
