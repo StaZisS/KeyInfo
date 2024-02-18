@@ -40,7 +40,7 @@ export const PeopleList = () => {
         <Container className='mt-5'>
             <Card className={'rounded-0'}>
                 <CardHeader onClick={() => setUnspOpen(!unspOpen)}>
-                    <CardTitle className='user-select-none'>Не верифицированные пользователи ({data.UNSPECIFIED.length})</CardTitle>
+                    <CardTitle className='user-select-none'>Неверифицированные пользователи ({data.UNSPECIFIED.length})</CardTitle>
                 </CardHeader>
                 <Collapse in={unspOpen}>
                     <div>

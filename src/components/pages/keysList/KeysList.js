@@ -51,7 +51,8 @@ export const KeysList = observer(() => {
                                 {data.data.map((key) => (
                                     <KeysItem
                                         key={key.key_id}
-                                        keyNumber={key.room}
+                                        build={key.build}
+                                        room={key.room}
                                         //hasRequests={key.hasRequests}
                                         //location={key.location}
                                     />
