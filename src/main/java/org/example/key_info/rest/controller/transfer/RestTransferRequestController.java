@@ -32,7 +32,7 @@ public class RestTransferRequestController {
     @Operation(summary = "Создать запрос на передачу ключа другому пользователю")
     @PostMapping("/{receiver_id}")
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<UUID> create(@PathVariable(name = "receiver_id") UUID receiverId,
+    public ResponseEntity<CreateTransferResponseDto> create(@PathVariable(name = "receiver_id") UUID receiverId,
                                        @RequestBody CreateTransferRequest createTransferRequest) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
@@ -42,9 +42,8 @@ public class RestTransferRequestController {
                 receiverId,
                 createTransferRequest.keyId()
         );
-        var transferId = transferService.createTransfer(createTransferDto);
 
-        return ResponseEntity.ok(transferId);
+        return ResponseEntity.ok(transferService.createTransfer(createTransferDto));
     }
 
     @Operation(summary = "Получить запросы, отправленные другим пользователям")

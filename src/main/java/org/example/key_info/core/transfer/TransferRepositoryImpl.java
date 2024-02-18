@@ -1,6 +1,7 @@
 package org.example.key_info.core.transfer;
 
 import lombok.RequiredArgsConstructor;
+import org.example.key_info.rest.controller.transfer.TransferResponseDto;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 

@@ -12,6 +12,7 @@ import org.example.key_info.public_interface.transfer.DeleteTransferDto;
 import org.example.key_info.public_interface.transfer.GetForeignTransfersDto;
 import org.example.key_info.public_interface.transfer.GetMyTransfersDto;
 import org.example.key_info.public_interface.transfer.TransferDto;
+import org.example.key_info.rest.controller.transfer.CreateTransferResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -25,7 +26,7 @@ public class TransferService {
     private final ClientRepository clientRepository;
     private final KeyRepository keyRepository;
 
-    public UUID createTransfer(CreateTransferDto dto) {
+    public CreateTransferResponseDto createTransfer(CreateTransferDto dto) {
         var isDuplicate = !transferRepository.isNotDuplicate(dto.ownerId(), dto.receiverId(), dto.keyId());
         if (isDuplicate) {
             throw new ExceptionInApplication("Данная заявка уже существует", ExceptionType.INVALID);
@@ -40,7 +41,19 @@ public class TransferService {
                 dto.keyId()
         );
 
-        return transferRepository.createTransfer(transferEntity);
+        var transferId = transferRepository.createTransfer(transferEntity);
+
+        var transfer = transferRepository.getTransferById(transferId)
+                .orElseThrow(() -> new ExceptionInApplication("Заявка на передачу не найдена", ExceptionType.NOT_FOUND));
+
+        var key = keyRepository.getKey(transfer.keyId())
+                .orElseThrow(() -> new ExceptionInApplication("Ключ не найден", ExceptionType.NOT_FOUND));
+
+        return new CreateTransferResponseDto(
+                transferId,
+                key.buildId(),
+                key.roomId()
+        );
     }
 
     public List<TransferDto> getMyTransfers(GetMyTransfersDto dto) {
