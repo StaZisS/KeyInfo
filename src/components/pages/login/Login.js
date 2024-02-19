@@ -17,7 +17,7 @@ export const Login = () => {
             console.log('Вход. isAuth = ' + Store.isAuth)
             navigate('/')
         } catch (e) {
-
+            console.log(e)
         }
     }
 

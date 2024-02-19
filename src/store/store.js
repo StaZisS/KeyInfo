@@ -23,13 +23,17 @@ class Store {
         this.setLoading(true)
         try {
             const response = await AuthService.login(email, password)
-            localStorage.setItem('token', response.data.accessToken)
-            localStorage.setItem('refreshToken', response.data.refreshToken)
-            this.setAuth(true)
+            runInAction(() => {
+                localStorage.setItem('token', response.data.accessToken)
+                localStorage.setItem('refreshToken', response.data.refreshToken)
+                this.setAuth(true)
+            })
         } catch (e) {
             console.log(e)
         }
-        this.setLoading(false)
+        finally {
+            this.setLoading(false)
+        }
     }
 
     async logout() {
@@ -45,21 +49,26 @@ class Store {
         } catch (e) {
             console.log(e)
         }
-        this.setLoading(false)
+        finally {
+            this.setLoading(false)
+        }
     }
 
     async checkAuth() {
         try {
             this.setLoading(true)
             const response = await AuthService.refreshAccessToken(localStorage.getItem('refreshToken'))
-            localStorage.setItem('token', response.data.accessToken)
-            localStorage.setItem('refreshToken', response.data.refreshToken)
-            this.setAuth(true)
+            runInAction(() => {
+                localStorage.setItem('token', response.data.accessToken)
+                localStorage.setItem('refreshToken', response.data.refreshToken)
+                this.setAuth(true)
+            })
         } catch (e) {
             console.log(e)
-            this.setAuth(false)
         }
-        this.setLoading(false)
+        finally {
+            this.setLoading(false)
+        }
     }
 }
 
