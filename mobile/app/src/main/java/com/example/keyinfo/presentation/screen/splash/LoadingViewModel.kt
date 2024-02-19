@@ -2,6 +2,7 @@ package com.example.keyinfo.presentation.screen.splash
 
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,7 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
                                 onResult(ApiResult.Success())
                             },
                             onFailure = { exception ->
+                                LocalStorage(context).removeToken()
                                 handleRegistrationError(exception)
                                 onResult(ApiResult.Error())
                             }
@@ -59,7 +61,13 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
         when (exception) {
             is HttpException -> when (exception.code()) {
                 400 -> showToast("Something went wrong...")
-                else -> showToast("Неизвестная ошибка: ${exception.code()}")
+                500 -> {
+                    Log.d("LoadingViewModel", "Error: ${exception.message()}")
+                    showToast("Необходима повторная авторизация")
+                }
+                else -> {
+                    showToast("Неизвестная ошибка: ${exception.code()}")
+                }
             }
 
             else -> showToast("Ошибка соединения с сервером")

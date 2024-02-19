@@ -30,7 +30,6 @@ fun AppNavigation(
     profileViewModel: ProfileViewModel,
     mainViewModel: MainViewModel
 ) {
-    // TODO: replace to splash screen
     NavHost(
         navController,
         startDestination = Screen.Splash.route,

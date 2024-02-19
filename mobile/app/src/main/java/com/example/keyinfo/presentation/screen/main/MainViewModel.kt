@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-class MainViewModel(private val context: Context) : ViewModel(){
+class MainViewModel(private val context: Context) : ViewModel() {
     private val _state = MutableStateFlow(MainState())
     val state: StateFlow<MainState> get() = _state
 
@@ -40,7 +40,7 @@ class MainViewModel(private val context: Context) : ViewModel(){
         }
     }
 
-    fun deleteRequest(id: String){
+    fun deleteRequest(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = deleteRequestUseCase.invoke(id)
@@ -58,8 +58,10 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -71,7 +73,8 @@ class MainViewModel(private val context: Context) : ViewModel(){
         }
     }
 
-    fun getAcceptedRequests(){
+    fun getAcceptedRequests() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getRequestsUseCase.invoke(TransferStatus.ACCEPTED)
@@ -79,6 +82,7 @@ class MainViewModel(private val context: Context) : ViewModel(){
                     result.fold(
                         onSuccess = {
                             _state.value.acceptedRequests = result.getOrNull()!!
+                            Log.d("WHERE", _state.value.acceptedRequests.toString())
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -87,18 +91,23 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
 
-    fun getProgressRequests(){
+    fun getProgressRequests() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getRequestsUseCase.invoke(TransferStatus.IN_PROCESS)
@@ -114,18 +123,23 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
 
-    fun getDeclinedRequests(){
+    fun getDeclinedRequests() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getRequestsUseCase.invoke(TransferStatus.DECLINED)
@@ -141,13 +155,17 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+            _state.value.isLoading = false
             }
         }
     }
@@ -158,6 +176,7 @@ class MainViewModel(private val context: Context) : ViewModel(){
                 400 -> showToast("Something went wrong...")
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
+
             else -> {
                 Log.d("Sss", exception.message.toString())
                 showToast("Ошибка соединения с сервером")

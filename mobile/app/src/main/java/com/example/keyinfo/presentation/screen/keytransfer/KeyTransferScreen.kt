@@ -1,6 +1,5 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,15 +26,12 @@ import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButtonsRow
-import com.example.keyinfo.presentation.screen.main.KeyCard
-import com.example.keyinfo.presentation.screen.main.MainIntent
 import com.example.keyinfo.presentation.screen.main.PageEmptyScreen
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import java.time.OffsetDateTime
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -44,7 +40,7 @@ fun KeyTransferScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.getUserKeys()
     }
 
@@ -124,8 +120,8 @@ fun KeyTransferScreen(
                 }
 
                 1 -> {
-                    item{
-                        if (state.myKeys.isNotEmpty()){
+                    item {
+                        if (state.myKeys.isNotEmpty()) {
                             state.myKeys.forEach { key ->
                                 SmallKeyCard(
                                     audience = key.room.toString(),

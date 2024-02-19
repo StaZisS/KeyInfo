@@ -13,7 +13,6 @@ import com.example.keyinfo.domain.model.authorization.Login
 import com.example.keyinfo.domain.state.LoginState
 import com.example.keyinfo.domain.usecase.PostLoginUseCase
 import com.example.keyinfo.presentation.navigation.router.AppRouter
-import com.example.keyinfo.presentation.screen.registration.RegistrationIntent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-class LoginViewModel (
+class LoginViewModel(
     private val context: Context,
     private val router: AppRouter
 ) : ViewModel() {
@@ -49,38 +48,46 @@ class LoginViewModel (
                     clearData()
                 }
             }
+
             LoginIntent.GoBack -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
                 router.toAuth()
             }
+
             is LoginIntent.UpdateLogin -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
                 _state.value = state.value.copy(login = intent.login.trim())
             }
+
             is LoginIntent.UpdatePassword -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
                 _state.value = state.value.copy(password = intent.password.trim())
             }
+
             is LoginIntent.UpdatePasswordVisibility -> {
                 _state.value = state.value.copy(isPasswordHide = !_state.value.isPasswordHide)
             }
+
             LoginIntent.UpdateError -> {
                 _state.value = state.value.copy(isError = !_state.value.isError)
             }
+
             is LoginIntent.UpdateErrorText -> {
                 _state.value = state.value.copy(isErrorText = intent.errorText)
             }
+
             LoginIntent.UpdateLoading -> {
                 _state.value = state.value.copy(isLoading = !_state.value.isLoading)
             }
+
             LoginIntent.GoToRegistration -> {
                 router.toRegistration()
             }
         }
     }
 
-    fun isLoginButtonAvailable() : Boolean {
-        return  state.value.password.isNotEmpty() &&
+    fun isLoginButtonAvailable(): Boolean {
+        return state.value.password.isNotEmpty() &&
                 state.value.login.isNotEmpty()
     }
 
@@ -99,6 +106,7 @@ class LoginViewModel (
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { tokenResponse ->
+                            Log.d("Token", tokenResponse.accessToken)
                             LocalStorage(context).saveToken(tokenResponse)
                             NetworkService.setAuthToken(tokenResponse.accessToken)
                             routeAfterLogin()
@@ -111,8 +119,10 @@ class LoginViewModel (
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " +
+                                "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -130,8 +140,12 @@ class LoginViewModel (
             is HttpException -> when (exception.code()) {
                 400 -> processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
                 404 -> processIntent(LoginIntent.UpdateErrorText(context.getString(R.string.auth_error)))
-                else -> showToast("Неизвестная ошибка: ${exception.code()}")
+                else -> {
+                    Log.d("LoginViewModel", "Error: ${exception.message()}")
+                    showToast("Неизвестная ошибка: ${exception.code()}")
+                }
             }
+
             else -> showToast("Ошибка соединения с сервером")
         }
     }

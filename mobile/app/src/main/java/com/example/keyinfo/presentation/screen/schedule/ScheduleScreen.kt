@@ -183,12 +183,12 @@ fun ScheduleScreen() {
             }
             if (filteredAudiences.isEmpty() && allParamsSelected) {
                 item {
+                    Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = "Нет доступных аудиторий",
                         style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins)),
-                            color = CalendarDayColor
                         ),
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()

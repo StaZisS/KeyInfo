@@ -88,6 +88,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
     implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
 
 
 

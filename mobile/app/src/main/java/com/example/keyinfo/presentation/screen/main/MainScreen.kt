@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -116,57 +116,18 @@ fun MainScreen(viewModel: MainViewModel) {
             modifier = Modifier.padding(top = 90.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Log.d("MainScreen", "isLoading: ${state.isLoading}")
+
             when (page) {
                 0 -> { // Отклоенные
-                    item {
-                        if (state.declinedRequests.isNotEmpty()) {
-                            state.declinedRequests.forEachIndexed { index, request ->
-                                KeyCard(
-                                    audience = request.room_id,
-                                    building = request.build_id,
-                                    startDate = OffsetDateTime.parse(request.start_time),
-                                    endDate = OffsetDateTime.parse(request.end_time)
-                                )
-                            }
-                        } else {
-                            PageEmptyScreen(
-                                label = stringResource(id = R.string.main_empty),
-                                description = stringResource(id = R.string.main_empty_description)
-                            )
+                    if (state.isLoading && state.declinedRequests.isEmpty()) {
+                        items(4) {
+                            KeyCardShimmer()
                         }
-                    }
-                }
-
-                1 -> { // Принятые
-                    item {
-                        if (state.acceptedRequests.isNotEmpty()) {
-                            state.acceptedRequests.forEachIndexed { index, request ->
-                                KeyCard(
-                                    audience = request.room_id,
-                                    building = request.build_id,
-                                    startDate = OffsetDateTime.parse(request.start_time),
-                                    endDate = OffsetDateTime.parse(request.end_time)
-                                )
-                            }
-                        } else {
-                            PageEmptyScreen(
-                                label = stringResource(id = R.string.main_empty),
-                                description = stringResource(id = R.string.main_empty_description)
-                            )
-                        }
-                    }
-                }
-
-                2 -> { // В ожидании
-                    item {
-                        if (state.processRequests.isNotEmpty()) {
-                            state.processRequests.forEachIndexed { index, request ->
-                                Box(
-                                    modifier = Modifier.clickable {
-                                        viewModel.processIntent(MainIntent.SetNewRequest(request))
-                                        viewModel.processIntent(MainIntent.ChangeDeleteDialogState)
-                                    }
-                                ) {
+                    } else {
+                        item {
+                            if (state.declinedRequests.isNotEmpty()) {
+                                state.declinedRequests.forEachIndexed { index, request ->
                                     KeyCard(
                                         audience = request.room_id,
                                         building = request.build_id,
@@ -174,12 +135,72 @@ fun MainScreen(viewModel: MainViewModel) {
                                         endDate = OffsetDateTime.parse(request.end_time)
                                     )
                                 }
+                            } else {
+                                PageEmptyScreen(
+                                    label = stringResource(id = R.string.main_empty),
+                                    description = stringResource(id = R.string.main_empty_description)
+                                )
                             }
-                        } else {
-                            PageEmptyScreen(
-                                label = stringResource(id = R.string.main_empty),
-                                description = stringResource(id = R.string.main_empty_description)
-                            )
+                        }
+                    }
+                }
+
+                1 -> { // Принятые
+//                    Log.d("MainScreen", "isLoading now: ${viewModel.isLoading.value} ${state.acceptedRequests}")
+                    if (state.isLoading && state.acceptedRequests.isEmpty()) {
+                        items(4) {
+                            KeyCardShimmer()
+                        }
+                    } else {
+                        item {
+                            if (state.acceptedRequests.isNotEmpty()) {
+                                state.acceptedRequests.forEachIndexed { index, request ->
+                                    KeyCard(
+                                        audience = request.room_id,
+                                        building = request.build_id,
+                                        startDate = OffsetDateTime.parse(request.start_time),
+                                        endDate = OffsetDateTime.parse(request.end_time)
+                                    )
+                                }
+                            } else {
+                                PageEmptyScreen(
+                                    label = stringResource(id = R.string.main_empty),
+                                    description = stringResource(id = R.string.main_empty_description)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                2 -> { // В ожидании
+                    if (state.isLoading && state.processRequests.isEmpty()) {
+                        items(4) {
+                            KeyCardShimmer()
+                        }
+                    } else {
+                        item {
+                            if (state.processRequests.isNotEmpty()) {
+                                state.processRequests.forEachIndexed { index, request ->
+                                    Box(
+                                        modifier = Modifier.clickable {
+                                            viewModel.processIntent(MainIntent.SetNewRequest(request))
+                                            viewModel.processIntent(MainIntent.ChangeDeleteDialogState)
+                                        }
+                                    ) {
+                                        KeyCard(
+                                            audience = request.room_id,
+                                            building = request.build_id,
+                                            startDate = OffsetDateTime.parse(request.start_time),
+                                            endDate = OffsetDateTime.parse(request.end_time)
+                                        )
+                                    }
+                                }
+                            } else {
+                                PageEmptyScreen(
+                                    label = stringResource(id = R.string.main_empty),
+                                    description = stringResource(id = R.string.main_empty_description)
+                                )
+                            }
                         }
                     }
                 }

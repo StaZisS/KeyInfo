@@ -26,10 +26,13 @@ import com.example.keyinfo.ui.theme.CalendarTopColor
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.Locale
 
 @Composable
 fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
+    val enabledDay =
+        day.position == DayPosition.MonthDate && day.date >= LocalDate.now()
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -39,7 +42,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
                 shape = RoundedCornerShape(14.dp)
             )
             .clickable(
-                enabled = day.position == DayPosition.MonthDate,
+                enabled = enabledDay,
                 onClick = { onClick(day) }
             ),
         contentAlignment = Alignment.Center
@@ -50,7 +53,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
                 fontSize = 14.sp,
                 fontFamily = FontFamily(Font(R.font.poppins)),
                 color = if (isSelected) AccentColor else CalendarDayColor.copy(
-                    alpha = if (day.position == DayPosition.MonthDate) 1f else 0.4f
+                    alpha = if (enabledDay) 1f else 0.4f
                 )
             )
         )
@@ -64,7 +67,10 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
+                text = dayOfWeek.getDisplayName(
+                    java.time.format.TextStyle.SHORT,
+                    Locale.getDefault()
+                )
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                 style = TextStyle(
                     fontSize = 12.sp,

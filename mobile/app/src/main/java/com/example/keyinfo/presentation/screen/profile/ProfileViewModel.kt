@@ -36,7 +36,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                 if (result.isSuccess) {
                     deleteTokenUseCase.invoke()
                     NetworkService.setAuthToken(Constants.EMPTY_STRING)
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         toAfterLogout()
                     }
                 } else {
@@ -59,6 +59,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
     }
 
     fun getProfile() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getProfileUseCase.invoke()
@@ -85,6 +86,9 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
+
             }
         }
     }

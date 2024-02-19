@@ -1,10 +1,13 @@
 package com.example.keyinfo.presentation.screen.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
 import com.example.keyinfo.domain.model.schedule.AudienceStatus
+import com.example.keyinfo.presentation.screen.components.customShimmer
 import com.example.keyinfo.ui.theme.AccentColor
+import com.example.keyinfo.ui.theme.GreyColor
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.example.keyinfo.ui.theme.LightGrayColor
 import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
@@ -48,13 +53,6 @@ fun KeyCard(
     status: AudienceStatus = AudienceStatus.FREE,
     onClick: () -> Unit = {},
 ) {
-    val cardModifier = if (onClick != {} && status == AudienceStatus.FREE) {
-        modifier.clickable {
-            onClick()
-        }
-    } else {
-        modifier
-    }
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
@@ -62,7 +60,8 @@ fun KeyCard(
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
-        modifier = cardModifier
+        modifier = modifier
+            .clickable(enabled = onClick != {} && status == AudienceStatus.FREE, onClick = onClick)
             .softLayerShadow(
                 spread = 1.dp,
                 color = Color.Black.copy(alpha = 0.02f),
@@ -150,6 +149,19 @@ fun KeyCard(
     }
 }
 
+@Composable
+fun KeyCardShimmer() {
+    Box(Modifier.customShimmer(1000)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(GreyColor, shape = RoundedCornerShape(12.dp))
+                .height(140.dp)
+        ) {
+        }
+    }
+}
+
 fun formatOffsetDateTime(dateTime: OffsetDateTime): String {
     val dayOfWeek = dateTime.dayOfWeek.getDisplayName(
         java.time.format.TextStyle.SHORT,
@@ -169,16 +181,30 @@ fun formatOffsetDateTimeTime(dateTime: OffsetDateTime): String {
     return dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
 }
 
+//@Preview
+//@Composable
+//fun KeyCardPreview() {
+//    Column(
+//        modifier = Modifier
+//            .padding(16.dp),
+//        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
+//    ) {
+//        KeyCard(status = AudienceStatus.OCCUPIED)
+//        KeyCard(status = AudienceStatus.FREE)
+//        KeyCard(status = AudienceStatus.OCCUPIED)
+//    }
+//}
+
 @Preview
 @Composable
-fun KeyCardPreview() {
+fun ShimmerCardPreview() {
     Column(
         modifier = Modifier
             .padding(16.dp),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
     ) {
-        KeyCard(status = AudienceStatus.OCCUPIED)
-        KeyCard(status = AudienceStatus.FREE)
-        KeyCard(status = AudienceStatus.OCCUPIED)
+        KeyCardShimmer()
+        KeyCardShimmer()
+        KeyCardShimmer()
     }
 }
