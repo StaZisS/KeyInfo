@@ -20,12 +20,9 @@ import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
 import org.example.key_info.public_interface.key.GetKeysDto;
 import org.example.key_info.public_interface.key.KeyCreateDto;
 import org.example.key_info.public_interface.key.KeyDeleteDto;
-import org.example.key_info.public_interface.key.KeyDto;
 import org.example.key_info.rest.controller.application.ApplicationResponseDto;
-import org.example.key_info.rest.controller.key.ResponseKeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -163,11 +160,8 @@ public class RestDeaneriesController {
         );
 
         var keys = keyService.getAllKeys(getKeysDto);
-        var body = keys.parallelStream()
-                .map(this::mapToResponseDto)
-                .toList();
 
-        return ResponseEntity.ok(body);
+        return ResponseEntity.ok(keys);
     }
 
     @Operation(summary = "Добавить новый ключ")
@@ -243,15 +237,6 @@ public class RestDeaneriesController {
         keyService.acceptKeyDeaneries(acceptKeyDeaneriesDto);
 
         return ResponseEntity.ok().build();
-    }
-
-    private ResponseKeyDto mapToResponseDto(KeyDto dto) {
-        return new org.example.key_info.rest.controller.key.ResponseKeyDto(
-                dto.keyId(),
-                dto.buildId(),
-                dto.roomId(),
-                dto.lastAccess()
-        );
     }
 
     private ApplicationResponseDto mapToResponseDto(ApplicationDto dto) {

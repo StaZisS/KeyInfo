@@ -2,11 +2,13 @@ package org.example.key_info.core.key.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.accommodation.AccommodationRepository;
+import org.example.key_info.core.client.repository.ClientRepository;
 import org.example.key_info.core.client.repository.ClientRole;
 import org.example.key_info.core.key.repository.FilterKeyDto;
 import org.example.key_info.core.key.repository.KeyEntity;
 import org.example.key_info.core.key.repository.KeyRepository;
 import org.example.key_info.core.key.repository.KeyStatus;
+import org.example.key_info.public_interface.client.ClientProfileDto;
 import org.example.key_info.public_interface.deaneries.AcceptKeyDeaneriesDto;
 import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
@@ -15,6 +17,7 @@ import org.example.key_info.public_interface.key.GetKeysDto;
 import org.example.key_info.public_interface.key.KeyCreateDto;
 import org.example.key_info.public_interface.key.KeyDeleteDto;
 import org.example.key_info.public_interface.key.KeyDto;
+import org.example.key_info.rest.controller.deanery.ResponseKeyDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -28,21 +31,60 @@ public class KeyService {
     private static final List<ClientRole> ROLES_CONTROL_KEY_LIFECYCLE = List.of(ClientRole.DEANERY, ClientRole.ADMIN);
     private final AccommodationRepository accommodationRepository;
     private final KeyRepository keyRepository;
+    private final ClientRepository clientRepository;
 
-    public List<KeyDto> getAllKeys(GetKeysDto dto) {
+    public List<ResponseKeyDto> getAllKeys(GetKeysDto dto) {
         checkClientRoles(dto.roles());
 
-        try {
+        var keys = getKeyDto(dto);
+
+        var responseKeyDto = keys.stream()
+                .map(keyDto -> {
+
+                    ClientProfileDto clientDto = null;
+                    if (keyDto.keyHolderId() != null) {
+                        var client = clientRepository.getClientByClientId(keyDto.keyHolderId())
+                                .orElseThrow(() -> new ExceptionInApplication("Пользователь не найден", ExceptionType.NOT_FOUND));
+
+                        clientDto = new ClientProfileDto(
+                                client.clientId(),
+                                client.name(),
+                                client.email(),
+                                client.gender(),
+                                client.createdDate(),
+                                client.role());
+                    }
+
+                    return new ResponseKeyDto(
+                            keyDto.keyId(),
+                            keyDto.buildId(),
+                            keyDto.roomId(),
+                            keyDto.status().name(),
+                            keyDto.lastAccess(),
+                            clientDto
+                    );
+                })
+                .toList();
+
+        return responseKeyDto;
+    }
+
+    private List<KeyDto> getKeyDto(GetKeysDto dto) {
         if (dto.keyStatus() == null) {
-            return keyRepository.getAllKeys(dto.buildId(), dto.roomId())
-                    .stream()
-                    .map(this::mapEntityToDto)
-                    .toList();
-        } }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
+            return getAllKeyDto(dto);
         }
 
+        return getFilteredKeyDto(dto);
+    }
+
+    private List<KeyDto> getAllKeyDto(GetKeysDto dto) {
+        return keyRepository.getAllKeys(dto.buildId(), dto.roomId())
+                .stream()
+                .map(this::mapEntityToDto)
+                .toList();
+    }
+
+    private List<KeyDto> getFilteredKeyDto(GetKeysDto dto) {
         var filterKeyDto = new FilterKeyDto(
                 KeyStatus.getKeyStatusByName(dto.keyStatus()),
                 dto.buildId(),
