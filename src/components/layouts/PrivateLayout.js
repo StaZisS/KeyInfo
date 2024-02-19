@@ -19,7 +19,7 @@ export const PrivateLayout = ({children}) => {
             }
         }
         checkAuth()
-    }, []);
+    });
 
     return (
         <>

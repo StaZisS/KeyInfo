@@ -12,9 +12,15 @@ class KeysStore {
     }
 
 
-    setKeysFilter({keysStatus, build, room}) {
-        this.keys_status = keysStatus
+    setKeyStatus(status){
+        this.keys_status = status
+    }
+
+    setBuild(build){
         this.build = build
+    }
+
+    setRoom(room){
         this.room = room
     }
 

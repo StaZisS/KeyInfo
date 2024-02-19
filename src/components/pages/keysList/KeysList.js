@@ -54,7 +54,8 @@ export const KeysList = observer(() => {
                                         build={key.build}
                                         room={key.room}
                                         //hasRequests={key.hasRequests}
-                                        //location={key.location}
+                                        location={key.key_status}
+                                        owner={key.client}
                                     />
                                 ))}
                             </CardBody>

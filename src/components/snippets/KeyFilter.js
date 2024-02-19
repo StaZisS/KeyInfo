@@ -25,16 +25,6 @@ export const KeyFilter = () => {
     const [build, setBuild] = useState(KeysStore.build === undefined ? "" : KeysStore.build)
     const [room, setRoom] = useState(KeysStore.room === undefined ? "" : KeysStore.room)
 
-    const handleFind = () => {
-        debugger
-        let keyStatus
-        if (!inAll) {
-            keyStatus = inDeanery ? 'IN_DEANERY' : 'IN_HAND'
-        }
-        KeysStore.setKeysFilter({keysStatus: keyStatus, build: build, room: room})
-    }
-
-
     const handleSwitchInAll = (e) => {
         if (e.target.value === 'on') {
             setInAll(!inAll)
@@ -84,31 +74,31 @@ export const KeyFilter = () => {
                                 <Row className='d-flex align-content-between'>
                                     <Col lg={inAll ? 4 : 3} xs={6}>
                                         <FormControl min={0} max={30} onChange={(e) => {
-                                            KeysStore.build = e.target.value
+                                            KeysStore.setBuild(e.target.value)
                                         }} placeholder={'Номер здания'} type='number'/>
                                     </Col>
                                     <Col lg={inAll ? 4 : 3} xs={6}>
                                         <FormControl min={0} max={30} onChange={(e) => {
-                                            KeysStore.room = e.target.value
+                                            KeysStore.setRoom(e.target.value)
                                         }} placeholder={'Номер аудитории'} type='number'/>
                                     </Col>
                                     <Col lg={inAll ? 3 : 2} md={6} sm={4} xs={12}>
                                         <FormCheck checked={inAll} onChange={(e) => {
                                             handleSwitchInAll(e)
-                                            KeysStore.keys_status = undefined
+                                            KeysStore.setKeyStatus(undefined)
                                         }} className='mt-2 mt-lg-0' type={'switch'} label={'Выбрать все'}/>
                                     </Col>
                                     {inAll === false && <>
                                         <Col lg={2} md={3} sm={4} xs={6}>
                                             <FormCheck checked={inDeanery} onChange={(e) => {
                                                 handleSwitchInDeanery(e)
-                                                KeysStore.keys_status = 'IN_DEANERY'
+                                                KeysStore.setKeyStatus('IN_DEANERY')
                                             }} className='mt-2 mt-lg-0' type={'radio'} label={'В деканате'}/>
                                         </Col>
                                         <Col lg={2} md={3} sm={4} xs={6}>
                                             <FormCheck checked={inHand} onChange={(e) => {
                                                 handleSwitchInHand(e)
-                                                KeysStore.keys_status = 'IN_HAND'
+                                                KeysStore.setKeyStatus('IN_HAND')
                                             }} className='mt-2 mt-lg-0' type={'radio'} label={'На руках'}/>
                                         </Col>
                                     </>}

@@ -4,14 +4,7 @@ import { Mark } from './mark'
 import('../../../../styles/keysItem.css')
 
 
-export const KeysItem = ({build, room, hasRequests, location }) => {
-    // const history = useNavigate();
-
-    // const handleClick = () => {
-    //     if (hasRequests) {
-    //         history.push('/key/application');
-    //     }
-    // };
+export const KeysItem = ({build, room, hasRequests, location,owner }) => {
 
     return (
         <div className='w-100 d-flex item border flex-wrap'>
@@ -22,12 +15,13 @@ export const KeysItem = ({build, room, hasRequests, location }) => {
                     <span className='key-number'>Аудитория <span className='fw-bold'>{room}</span></span>
                     {hasRequests && <Mark />}
                 </div>
-                <div className='flex-grow-1'>
-                    <span className='location'>{location}</span>
+                <div className='flex-grow-1 gap-3'>
+                    <span className='location'>{location === 'IN_DEANERY' && 'В деканате' }</span>
+                    <span className='location fw-bolder'>{owner && owner.name}</span>
                 </div>
             </div>
 
-            {location === 'в деканате' ? <ButtonDel /> : <ButtonGet />}
+            {location === 'IN_DEANERY'? <ButtonGet /> : <ButtonDel />}
         </div>
     )
 }
