@@ -1,4 +1,4 @@
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, runInAction} from "mobx";
 import AuthService from "../services/AuthService";
 import axios from "axios";
 import KeyService from "../services/KeyService";
@@ -36,9 +36,12 @@ class Store {
         this.setLoading(true)
         try {
             const response = await AuthService.logout(localStorage.getItem('refreshToken'))
-            localStorage.removeItem('token')
-            localStorage.removeItem('refreshToken')
-            this.setAuth(false)
+            runInAction(() => {
+                localStorage.removeItem('refreshToken')
+                localStorage.removeItem('token')
+                this.setAuth(false)
+            })
+
         } catch (e) {
             console.log(e)
         }
