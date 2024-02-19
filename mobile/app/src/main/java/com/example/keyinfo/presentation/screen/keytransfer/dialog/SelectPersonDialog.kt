@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,16 +26,23 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
+import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
+import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
 import com.example.keyinfo.ui.theme.Values
 
 @Composable
 fun SelectPersonDialog(
-    onCardClick: () -> Unit,
-    searchText: String
+    audience: String,
+    building: String,
+    onConfirmClick: () -> Unit,
+    onCancelClick: () -> Unit,
+    searchText: MutableState<String>
 ) {
     Dialog(
-        onDismissRequest = {},
+        onDismissRequest = {
+            onCancelClick()
+        },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
@@ -47,30 +55,44 @@ fun SelectPersonDialog(
             shape = RoundedCornerShape(Values.DialogRound),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(Values.BasePadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(id = R.string.key_tranfser_dialog),
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
-                    ),
-                )
-                Spacer(modifier = Modifier.height(Values.BasePadding))
-//                SearchRow(
-//                    searchText = searchText
-//                )
-                LazyColumn {
-                    items(10) {
-                        SmallKeyCard()
+            Column {
+                Column(
+                    modifier = Modifier
+                        .padding(Values.BasePadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.key_tranfser_dialog),
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(Values.BasePadding))
+                    SmallKeyCard(
+                        audience = audience,
+                        building = building
+                    )
+                    Spacer(modifier = Modifier.height(Values.BasePadding))
+                    SearchRow(
+                        searchText = searchText
+                    )
+                    LazyColumn {
+                        items(10) {
+                            SmallKeyCard()
+                        }
                     }
                 }
 
+                PairButtons(
+                    firstLabel = stringResource(id = R.string.confirm),
+                    firstClick = { onConfirmClick() },
+                    secondLabel = stringResource(id = R.string.cancel),
+                    secondClick = { onCancelClick() },
+                    modifier = Modifier
+                )
             }
         }
     }

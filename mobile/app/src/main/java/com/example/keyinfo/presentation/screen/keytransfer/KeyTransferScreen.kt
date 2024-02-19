@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun KeyTransferScreen(
@@ -171,7 +174,9 @@ fun KeyTransferScreen(
                         if (state.myKeys.isNotEmpty()) {
                             state.myKeys.forEach { key ->
                                 Box(
-                                    modifier = Modifier.clickable {  }
+                                    modifier = Modifier.clickable {
+                                        viewModel.processIntent(KeyTransferIntent.UpdateConfirmDialogState)
+                                    }
                                 ){
                                     SmallKeyCard(
                                         audience = key.room.toString(),
@@ -193,8 +198,11 @@ fun KeyTransferScreen(
     
     if (myKeysTransferDialogOpen){
         SelectPersonDialog(
-            onCardClick = { },
-            searchText = "1"
+            audience = "220",
+            building = "2",
+            onConfirmClick = { },
+            onCancelClick = { },
+            searchText = mutableStateOf("A")
         )
     }
 

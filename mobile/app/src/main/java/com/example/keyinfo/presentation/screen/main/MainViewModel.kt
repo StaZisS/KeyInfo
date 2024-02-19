@@ -50,6 +50,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                             getAcceptedRequests()
                             getProgressRequests()
                             getDeclinedRequests()
+                            showToast("Успешно удалено")
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)

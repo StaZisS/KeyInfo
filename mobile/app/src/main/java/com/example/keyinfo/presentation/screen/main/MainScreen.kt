@@ -181,19 +181,16 @@ fun MainScreen(viewModel: MainViewModel) {
                         item {
                             if (state.processRequests.isNotEmpty()) {
                                 state.processRequests.forEachIndexed { index, request ->
-                                    Box(
-                                        modifier = Modifier.clickable {
+                                    KeyCard(
+                                        audience = request.room_id,
+                                        building = request.build_id,
+                                        startDate = OffsetDateTime.parse(request.start_time),
+                                        endDate = OffsetDateTime.parse(request.end_time),
+                                        onClick = {
                                             viewModel.processIntent(MainIntent.SetNewRequest(request))
                                             viewModel.processIntent(MainIntent.ChangeDeleteDialogState)
                                         }
-                                    ) {
-                                        KeyCard(
-                                            audience = request.room_id,
-                                            building = request.build_id,
-                                            startDate = OffsetDateTime.parse(request.start_time),
-                                            endDate = OffsetDateTime.parse(request.end_time)
-                                        )
-                                    }
+                                    )
                                 }
                             } else {
                                 PageEmptyScreen(

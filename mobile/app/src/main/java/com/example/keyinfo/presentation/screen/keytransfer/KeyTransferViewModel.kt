@@ -63,6 +63,13 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                     getMyRequests(TransferStatus.IN_PROCESS)
                 }
             }
+
+            KeyTransferIntent.UpdateConfirmDialogState -> {
+                myKeysTransferDialogOpen.value = !myKeysTransferDialogOpen.value
+            }
+            KeyTransferIntent.UpdateTransferDialogState -> {
+                transferDialogOpened.value = !transferDialogOpened.value
+            }
         }
     }
 
