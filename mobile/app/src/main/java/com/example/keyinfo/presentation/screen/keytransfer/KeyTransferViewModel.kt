@@ -46,18 +46,6 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
 
     fun processIntent(intent: KeyTransferIntent) {
         when (intent) {
-            KeyTransferIntent.AcceptTransfer -> {
-
-            }
-
-            KeyTransferIntent.ConfirmReserve -> {
-
-            }
-
-            KeyTransferIntent.RejectTransfer -> {
-
-            }
-
             is KeyTransferIntent.ClickOnCard -> {
                 _state.value.currentTransfer = intent.transfer
                 transferDialogOpened.value = !transferDialogOpened.value
@@ -91,9 +79,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 val result = getUserKeysUseCase.invoke()
                 withContext(Dispatchers.Main) {
                     result.fold(
-                        onSuccess = {
-                            Log.d("KEYS", result.getOrNull()!!.toString())
-                            _state.value.myKeys = result.getOrNull()!!
+                        onSuccess = { requests ->
+                            _state.value = state.value.copy(myKeys = requests)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -120,8 +107,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { requests ->
-                            Log.d("MY_REQUESTS", requests.toString())
-                            _state.value.myRequests = result.getOrNull()!!
+                            _state.value = state.value.copy(myRequests = requests)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -130,7 +116,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения. " +
+                            "Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -147,8 +134,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { requests ->
-                            Log.d("FOREIGN_REQUESTS", requests.toString())
-                            _state.value.fromMeRequests = result.getOrNull()!!
+                            _state.value = state.value.copy(fromMeRequests = requests)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -157,7 +143,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения." +
+                            " Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -174,7 +161,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            Log.d("DELETE_TRANSFER", "Transfer request with ID $id was successfully deleted.")
+                            showToast("Успешно удалено")
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -183,7 +170,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения." +
+                            " Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -203,7 +191,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            Log.d("DELETE_TRANSFER", "Transfer request with ID $id was successfully deleted.")
+                            showToast("Успешно")
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -212,7 +200,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения. " +
+                            "Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -232,7 +221,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            Log.d("DELETE_TRANSFER", "Transfer request with ID $id was successfully deleted.")
+                            showToast("Успешно")
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -241,7 +230,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения. " +
+                            "Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -261,8 +251,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { users ->
-                            Log.d("USERS", users.toString())
-                            _state.value.users = result.getOrNull()!!
+                            _state.value = state.value.copy(users = users)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -271,7 +260,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения." +
+                            " Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -292,7 +282,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            Log.d("TRANSFER", "Успешная передача ключа")
+                            showToast("Успешно")
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -301,7 +291,8 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast("Превышено время ожидания соединения." +
+                            " Пожалуйста, проверьте ваше интернет-соединение.")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

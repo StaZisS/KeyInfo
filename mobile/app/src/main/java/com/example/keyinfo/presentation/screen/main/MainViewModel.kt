@@ -31,7 +31,6 @@ class MainViewModel(private val context: Context) : ViewModel() {
         when (intent) {
             is MainIntent.ChangeDeleteDialogState -> {
                 confirmDialogOpened.value = !confirmDialogOpened.value
-                Log.d("WHERE2", _state.value.currentRequest.toString())
             }
 
             is MainIntent.SetNewRequest -> {
@@ -81,9 +80,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val result = getRequestsUseCase.invoke(TransferStatus.ACCEPTED)
                 withContext(Dispatchers.Main) {
                     result.fold(
-                        onSuccess = {
-                            _state.value.acceptedRequests = result.getOrNull()!!
-                            Log.d("WHERE", _state.value.acceptedRequests.toString())
+                        onSuccess = { request ->
+                            _state.value = state.value.copy(acceptedRequests = request)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -114,8 +112,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val result = getRequestsUseCase.invoke(TransferStatus.IN_PROCESS)
                 withContext(Dispatchers.Main) {
                     result.fold(
-                        onSuccess = {
-                            _state.value.processRequests = result.getOrNull()!!
+                        onSuccess = { request ->
+                            _state.value = state.value.copy(processRequests = request)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -146,8 +144,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val result = getRequestsUseCase.invoke(TransferStatus.DECLINED)
                 withContext(Dispatchers.Main) {
                     result.fold(
-                        onSuccess = {
-                            _state.value.declinedRequests = result.getOrNull()!!
+                        onSuccess = {request ->
+                            _state.value = state.value.copy(declinedRequests = request)
                         },
                         onFailure = { exception ->
                             handleRegistrationError(exception)
@@ -166,7 +164,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     showToast("Произошла ошибка: ${e.message}")
                 }
             } finally {
-            _state.value.isLoading = false
+                _state.value.isLoading = false
             }
         }
     }

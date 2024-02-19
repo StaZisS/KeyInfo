@@ -40,7 +40,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun KeyTransferScreen(
@@ -56,7 +55,6 @@ fun KeyTransferScreen(
         viewModel.getAllUsers()
         viewModel.getMyRequests(TransferStatus.IN_PROCESS)
         viewModel.getForeignRequests(TransferStatus.IN_PROCESS)
-
     }
 
     val pagerState = rememberPagerState(1)
