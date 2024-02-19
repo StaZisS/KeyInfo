@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
 import com.example.keyinfo.ui.theme.AccentColor
@@ -23,6 +22,7 @@ import com.example.keyinfo.ui.theme.AccentColor
 @Composable
 fun SearchRow(
     searchText: MutableState<String>,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     TextField(
         value = searchText.value,
@@ -57,6 +57,6 @@ fun SearchRow(
             fontFamily = FontFamily(Font(R.font.poppins)),
             color = AccentColor
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = keyboardOptions
     )
 }

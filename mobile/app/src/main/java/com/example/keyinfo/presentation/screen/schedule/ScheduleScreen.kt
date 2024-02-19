@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +42,6 @@ import com.example.keyinfo.ui.theme.SecondButtonColor
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.daysOfWeek
-import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -51,7 +52,6 @@ fun ScheduleScreen() {
     val viewModel: ScheduleViewModel =
         viewModel(factory = ScheduleViewModelFactory(LocalContext.current))
 
-    // todo disable old dates selection (before today)
     LaunchedEffect(Unit) {
         viewModel.getBuildings()
     }
@@ -178,7 +178,10 @@ fun ScheduleScreen() {
         } else {
             item {
                 AnimatedVisibility(visible = allParamsSelected) {
-                    SearchRow(viewModel.searchText)
+                    SearchRow(
+                        viewModel.searchText,
+                        KeyboardOptions(keyboardType = KeyboardType.Number),
+                    )
                 }
             }
             if (filteredAudiences.isEmpty() && allParamsSelected) {
@@ -224,10 +227,6 @@ fun filterAudiences(audiences: List<Audience>, searchText: String): List<Audienc
             .contains(searchText, ignoreCase = true)
     }
 }
-
-data class ClassTime(
-    var name: String, var startTime: LocalTime, var endTime: LocalTime
-)
 
 
 @Preview(backgroundColor = 0xFFFFFFFF)

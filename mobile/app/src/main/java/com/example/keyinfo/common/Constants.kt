@@ -1,6 +1,6 @@
 package com.example.keyinfo.common
 
-import com.example.keyinfo.presentation.screen.schedule.ClassTime
+import com.example.keyinfo.domain.model.schedule.ClassTime
 import java.time.LocalTime
 
 object Constants {

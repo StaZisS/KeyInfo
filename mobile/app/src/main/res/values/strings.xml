@@ -101,4 +101,6 @@
 
     <string name="dublicate">Дублировать бронь</string>
     <string name="keys_empty">У вас нет ключей на руках</string>
+
+    <string name="not_found">Никого не найдено</string>
 </resources>

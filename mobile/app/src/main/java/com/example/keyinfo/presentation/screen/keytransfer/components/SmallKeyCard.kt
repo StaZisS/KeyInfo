@@ -24,10 +24,11 @@ import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
 
 @Composable
 fun SmallKeyCard(
-    audience: String = "220",
-    building: String = "2",
+    title: String = "220",
+    description: String = "2",
     buttonState: Int = 0,
-    name: String? = null
+    name: String? = null,
+    isAudience: Boolean = true
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -39,19 +40,19 @@ fun SmallKeyCard(
         modifier = Modifier
             .fillMaxWidth()
             .softLayerShadow(
-            spread = 1.dp,
-            color = Color.Black.copy(alpha = 0.02f),
-            radius = 2.dp,
-            offset = DpOffset(0.dp, 5.dp),
-            shape = RoundedCornerShape(12.dp),
-            isAlphaContentClip = true
-        )
+                spread = 1.dp,
+                color = Color.Black.copy(alpha = 0.02f),
+                radius = 2.dp,
+                offset = DpOffset(0.dp, 5.dp),
+                shape = RoundedCornerShape(12.dp),
+                isAlphaContentClip = true
+            )
     ) {
         Column(
             Modifier.padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 20.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.card_audience) + " $audience",
+                text = if (isAudience) stringResource(id = R.string.card_audience) + " $title" else title,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight(700),
@@ -59,7 +60,7 @@ fun SmallKeyCard(
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
             Text(
-                text = stringResource(id = R.string.card_building) + " $building",
+                text = if (isAudience) stringResource(id = R.string.card_building) + " $description" else description,
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
@@ -70,9 +71,9 @@ fun SmallKeyCard(
                 Spacer(modifier = Modifier.padding(top = 8.dp))
                 Text(
                     text = if (buttonState == 0) "От: $name" else "Кому: $name",
-                            style = TextStyle(
-                            fontSize = 14.sp,
-                    fontWeight = FontWeight(400),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(400),
                     ),
                     color = LightBlueColor
                 )

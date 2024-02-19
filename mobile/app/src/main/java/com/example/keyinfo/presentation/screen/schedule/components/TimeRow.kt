@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
-import com.example.keyinfo.presentation.screen.schedule.ClassTime
+import com.example.keyinfo.domain.model.schedule.ClassTime
 import com.example.keyinfo.ui.theme.AccentColor
 
 @Composable

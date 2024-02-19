@@ -26,7 +26,7 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.keyinfo.presentation.screen.schedule.ClassTime
+import com.example.keyinfo.domain.model.schedule.ClassTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

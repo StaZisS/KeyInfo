@@ -132,8 +132,8 @@ fun KeyTransferScreen(
                                         modifier = Modifier.clickable {  }
                                     ){
                                         SmallKeyCard(
-                                            audience = transfer.room_id.toString(),
-                                            building = transfer.build_id.toString(),
+                                            title = transfer.room_id.toString(),
+                                            description = transfer.build_id.toString(),
                                             buttonState = 0,
                                             name = transfer.owner_name
                                         )
@@ -152,8 +152,8 @@ fun KeyTransferScreen(
                                         modifier = Modifier.clickable {  }
                                     ) {
                                         SmallKeyCard(
-                                            audience = transfer.room_id.toString(),
-                                            building = transfer.build_id.toString(),
+                                            title = transfer.room_id.toString(),
+                                            description = transfer.build_id.toString(),
                                             buttonState = 1,
                                             name = transfer.receiver_name
                                         )
@@ -179,8 +179,8 @@ fun KeyTransferScreen(
                                     }
                                 ){
                                     SmallKeyCard(
-                                        audience = key.room.toString(),
-                                        building = key.build.toString()
+                                        title = key.room.toString(),
+                                        description = key.build.toString()
                                     )
                                 }
                             }
@@ -202,7 +202,8 @@ fun KeyTransferScreen(
             building = "2",
             onConfirmClick = { },
             onCancelClick = { },
-            searchText = mutableStateOf("A")
+            searchText = mutableStateOf("A"),
+            users = emptyList()
         )
     }
 
