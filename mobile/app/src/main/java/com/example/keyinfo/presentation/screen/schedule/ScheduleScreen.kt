@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
@@ -179,6 +180,7 @@ fun ScheduleScreen() {
             item {
                 AnimatedVisibility(visible = allParamsSelected) {
                     SearchRow(
+                        text = stringResource(id = R.string.schedule_search),
                         viewModel.searchText,
                         KeyboardOptions(keyboardType = KeyboardType.Number),
                     )

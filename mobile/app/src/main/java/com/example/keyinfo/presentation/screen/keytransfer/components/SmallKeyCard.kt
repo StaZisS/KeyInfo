@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
+import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
 import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
 
@@ -28,14 +30,16 @@ fun SmallKeyCard(
     description: String = "2",
     buttonState: Int = 0,
     name: String? = null,
-    isAudience: Boolean = true
+    isAudience: Boolean = true,
+    isSelected: Boolean = false
 ) {
+    val backgroundColor = if (isSelected) AccentColor.copy(alpha = 0.16f) else Color.Transparent
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
+            containerColor = backgroundColor
         ),
         modifier = Modifier
             .fillMaxWidth()

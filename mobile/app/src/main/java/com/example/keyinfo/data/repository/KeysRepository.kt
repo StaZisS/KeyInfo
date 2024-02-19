@@ -2,7 +2,9 @@ package com.example.keyinfo.data.repository
 
 import com.example.keyinfo.data.network.NetworkService
 import com.example.keyinfo.domain.model.keys.Key
+import com.example.keyinfo.domain.model.keys.KeyId
 import com.example.keyinfo.domain.model.keys.Transfer
+import com.example.keyinfo.domain.model.keys.User
 import retrofit2.Response
 
 class KeysRepository {
@@ -30,5 +32,13 @@ class KeysRepository {
 
     suspend fun declineRequest(id: String): Response<Unit> {
         return keysApiService.declineRequest(id)
+    }
+
+    suspend fun getAllUsers(): Response<ArrayList<User>> {
+        return keysApiService.getAllUsers()
+    }
+
+    suspend fun createTransfer(receiverId: String, body: KeyId): Response<Unit> {
+        return keysApiService.createTransfer(receiverId, body)
     }
 }

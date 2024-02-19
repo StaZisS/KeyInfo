@@ -1,5 +1,7 @@
 package com.example.keyinfo.presentation.screen.keytransfer.dialog
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,11 +39,12 @@ import java.time.OffsetDateTime
 fun SelectPersonDialog(
     audience: String,
     building: String,
-    onConfirmClick: () -> Unit,
+    onConfirmClick: (selectedUser: User?) -> Unit,
     onCancelClick: () -> Unit,
     searchText: MutableState<String>,
-    users: List<User>
-) {
+    users: List<User>,
+    selectedUser: MutableState<User?>
+){
     Dialog(
         onDismissRequest = {
             onCancelClick()
@@ -77,6 +80,7 @@ fun SelectPersonDialog(
                 )
                 Spacer(modifier = Modifier.height(Values.BasePadding))
                 SearchRow(
+                    text = "Поиск пользователей",
                     searchText = searchText
                 )
                 val filteredUsers = filterUsers(users, searchText.value)
@@ -96,21 +100,29 @@ fun SelectPersonDialog(
                         }
                     } else {
                         items(filteredUsers.size) {
-                            SmallKeyCard(
-                                filteredUsers[it].name,
-                                filteredUsers[it].roles.first(),
-                                isAudience = false,
-                            )
+                            Box(
+                                modifier = Modifier.clickable {
+                                    selectedUser.value = if (selectedUser.value?.clientId == filteredUsers[it].clientId) null else filteredUsers[it]
+                                }
+                            ) {
+                                SmallKeyCard(
+                                    filteredUsers[it].name,
+                                    getNormalRoleName(filteredUsers[it].roles.first()),
+                                    isAudience = false,
+                                    isSelected = selectedUser.value?.clientId == filteredUsers[it].clientId
+                                )
+                            }
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(Values.BasePadding))
                 PairButtons(
                     firstLabel = stringResource(id = R.string.confirm),
-                    firstClick = { onConfirmClick() },
+                    firstClick = { onConfirmClick(selectedUser.value) },
                     secondLabel = stringResource(id = R.string.cancel),
                     secondClick = { onCancelClick() },
-                    modifier = Modifier
+                    modifier = Modifier,
+                    firstEnabled = selectedUser.value != null
                 )
             }
         }
@@ -123,21 +135,32 @@ fun filterUsers(users: List<User>, searchText: String): List<User> {
     }
 }
 
-
-@Preview
-@Composable
-fun PersonPreview() {
-    val text = remember { mutableStateOf("") }
-    val users = listOf(
-        User("1", "Имя Фамилия", "mail@mail.ru", "Male", OffsetDateTime.now(), listOf("STUDENT"))
-    )
-
-    SelectPersonDialog(
-        audience = "220",
-        building = "2",
-        onConfirmClick = { /*TODO*/ },
-        onCancelClick = { /*TODO*/ },
-        searchText = text,
-        users = users
-    )
+fun getNormalRoleName(name: String) : String {
+    var output = ""
+    when(name){
+        "ADMIN" -> output = "Администратор"
+        "STUDENT" -> output = "Студент"
+        "TEACHER" -> output = "Преподаватель"
+        "UNSPECIFIED" -> output = "Не подтвержден"
+        "DEANERY" -> output = "Деканат"
+    }
+    return output
 }
+
+//@Preview
+//@Composable
+//fun PersonPreview() {
+//    val text = remember { mutableStateOf("") }
+//    val users = listOf(
+//        User("1", "Имя Фамилия", "mail@mail.ru", "Male", OffsetDateTime.now().toString(), arrayListOf("STUDENT"))
+//    )
+//
+//    SelectPersonDialog(
+//        audience = "220",
+//        building = "2",
+//        onConfirmClick = { /*TODO*/ },
+//        onCancelClick = { /*TODO*/ },
+//        searchText = text,
+//        users = users
+//    )
+//}

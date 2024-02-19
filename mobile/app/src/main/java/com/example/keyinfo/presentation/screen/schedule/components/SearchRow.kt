@@ -21,6 +21,7 @@ import com.example.keyinfo.ui.theme.AccentColor
 
 @Composable
 fun SearchRow(
+    text: String,
     searchText: MutableState<String>,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -29,7 +30,7 @@ fun SearchRow(
         onValueChange = { searchText.value = it },
         label = {
             Text(
-                stringResource(id = R.string.schedule_search),
+                text,
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.poppins)),

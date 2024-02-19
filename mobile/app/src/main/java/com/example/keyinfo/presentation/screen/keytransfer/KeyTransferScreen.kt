@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.keyinfo.R
+import com.example.keyinfo.domain.model.request.TransferStatus
 import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButtonsRow
@@ -52,6 +53,10 @@ fun KeyTransferScreen(
     
     LaunchedEffect(Unit) {
         viewModel.getUserKeys()
+        viewModel.getAllUsers()
+        viewModel.getMyRequests(TransferStatus.IN_PROCESS)
+        viewModel.getForeignRequests(TransferStatus.IN_PROCESS)
+
     }
 
     val pagerState = rememberPagerState(1)
@@ -129,7 +134,9 @@ fun KeyTransferScreen(
                             if (state.fromMeRequests.isNotEmpty()){
                                 state.fromMeRequests.forEach{ transfer ->
                                     Box (
-                                        modifier = Modifier.clickable {  }
+                                        modifier = Modifier.clickable {
+                                            viewModel.processIntent(KeyTransferIntent.ClickOnCard(transfer))
+                                        }
                                     ){
                                         SmallKeyCard(
                                             title = transfer.room_id.toString(),
@@ -149,7 +156,9 @@ fun KeyTransferScreen(
                             if (state.myRequests.isNotEmpty()){
                                 state.myRequests.forEach{ transfer ->
                                     Box(
-                                        modifier = Modifier.clickable {  }
+                                        modifier = Modifier.clickable {
+                                            viewModel.processIntent(KeyTransferIntent.ClickOnCard(transfer))
+                                        }
                                     ) {
                                         SmallKeyCard(
                                             title = transfer.room_id.toString(),
@@ -176,6 +185,7 @@ fun KeyTransferScreen(
                                 Box(
                                     modifier = Modifier.clickable {
                                         viewModel.processIntent(KeyTransferIntent.UpdateConfirmDialogState)
+                                        state.currentKey = key
                                     }
                                 ){
                                     SmallKeyCard(
@@ -197,34 +207,54 @@ fun KeyTransferScreen(
     }
     
     if (myKeysTransferDialogOpen){
-        SelectPersonDialog(
-            audience = "220",
-            building = "2",
-            onConfirmClick = { },
-            onCancelClick = { },
-            searchText = mutableStateOf("A"),
-            users = emptyList()
-        )
+        state.currentKey?.let {
+            SelectPersonDialog(
+                audience = it.room.toString(),
+                building = it.build.toString(),
+                onConfirmClick = { selectedUser ->
+                    viewModel.updateConfirmDialogState(selectedUser)
+                    viewModel.createTransfer(selectedUser, it.key_id)
+                },
+                onCancelClick = {
+                    viewModel.processIntent(KeyTransferIntent.UpdateConfirmDialogState)
+                    viewModel.selectedUser.value = null
+                },
+                searchText = mutableStateOf(""),
+                users = state.users,
+                selectedUser = viewModel.selectedUser
+            )
+        }
     }
 
     if (transferDialogOpen){
-        if (state.currentButton == 0){
-            TransferDialog(
-                audience = "220",
-                building = "2",
-                name = "Sanya",
-                onAcceptClick = { },
-                onRejectClick = { }
-            )
-        } else {
-            DeleteTransferDialog(
-                audience = "220",
-                building = "2",
-                buttonState = 1,
-                name = "Sanya",
-                onDeleteClick = { /*TODO*/ },
-                onCancelClick = { }
-            )
+        state.currentTransfer?.let{
+            if (state.currentButton == 0){
+                TransferDialog(
+                    audience = state.currentTransfer?.room_id.toString(),
+                    building = state.currentTransfer?.build_id.toString(),
+                    name = state.currentTransfer!!.receiver_name,
+                    onAcceptClick = {
+                        viewModel.acceptRequest(state.currentTransfer!!.transfer_id)
+                        viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
+                    },
+                    onRejectClick = {
+                        viewModel.declineRequest(state.currentTransfer!!.transfer_id)
+                        viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
+                    }
+                )
+            } else {
+                DeleteTransferDialog(
+                    audience = state.currentTransfer?.room_id.toString(),
+                    building = state.currentTransfer?.build_id.toString(),
+                    buttonState = 1,
+                    name = state.currentTransfer!!.receiver_name,
+                    onDeleteClick = {
+                        viewModel.deleteMyTransfer(state.currentTransfer!!.transfer_id)
+                        viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
+                    },
+                    onCancelClick = { viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)}
+                )
+            }
         }
     }
 }
