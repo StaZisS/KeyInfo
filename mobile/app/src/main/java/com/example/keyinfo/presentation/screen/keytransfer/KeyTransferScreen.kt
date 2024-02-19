@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,9 @@ import com.example.keyinfo.R
 import com.example.keyinfo.presentation.screen.components.CustomIndicator
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButtonsRow
+import com.example.keyinfo.presentation.screen.keytransfer.dialog.DeleteTransferDialog
+import com.example.keyinfo.presentation.screen.keytransfer.dialog.SelectPersonDialog
+import com.example.keyinfo.presentation.screen.keytransfer.dialog.TransferDialog
 import com.example.keyinfo.presentation.screen.main.PageEmptyScreen
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
@@ -40,6 +44,9 @@ fun KeyTransferScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    val myKeysTransferDialogOpen by viewModel.myKeysTransferDialogOpen
+    val transferDialogOpen by viewModel.transferDialogOpened
+    
     LaunchedEffect(Unit) {
         viewModel.getUserKeys()
     }
@@ -114,8 +121,48 @@ fun KeyTransferScreen(
                             }
                         )
                     }
-                    items(1) {
-                        SmallKeyCard()
+                    item {
+                        if (state.currentButton == 0) {
+                            if (state.fromMeRequests.isNotEmpty()){
+                                state.fromMeRequests.forEach{ transfer ->
+                                    Box (
+                                        modifier = Modifier.clickable {  }
+                                    ){
+                                        SmallKeyCard(
+                                            audience = transfer.room_id.toString(),
+                                            building = transfer.build_id.toString(),
+                                            buttonState = 0,
+                                            name = transfer.owner_name
+                                        )
+                                    }
+                                }
+                            } else {
+                                PageEmptyScreen(
+                                    label = "У вас нет заявок",
+                                    description = "К сожалению вам никто не хочет передать свой ключ"
+                                )
+                            }
+                        } else {
+                            if (state.myRequests.isNotEmpty()){
+                                state.myRequests.forEach{ transfer ->
+                                    Box(
+                                        modifier = Modifier.clickable {  }
+                                    ) {
+                                        SmallKeyCard(
+                                            audience = transfer.room_id.toString(),
+                                            building = transfer.build_id.toString(),
+                                            buttonState = 1,
+                                            name = transfer.receiver_name
+                                        )
+                                    }
+                                }
+                            } else {
+                                PageEmptyScreen(
+                                    label = "Вы никому не отправили заявок",
+                                    description = "К сожалению вы никому не хотите передать свой ключ"
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -123,10 +170,14 @@ fun KeyTransferScreen(
                     item {
                         if (state.myKeys.isNotEmpty()) {
                             state.myKeys.forEach { key ->
-                                SmallKeyCard(
-                                    audience = key.room.toString(),
-                                    building = key.build.toString()
-                                )
+                                Box(
+                                    modifier = Modifier.clickable {  }
+                                ){
+                                    SmallKeyCard(
+                                        audience = key.room.toString(),
+                                        building = key.build.toString()
+                                    )
+                                }
                             }
                         } else {
                             PageEmptyScreen(
@@ -137,6 +188,34 @@ fun KeyTransferScreen(
                     }
                 }
             }
+        }
+    }
+    
+    if (myKeysTransferDialogOpen){
+        SelectPersonDialog(
+            onCardClick = { },
+            searchText = "1"
+        )
+    }
+
+    if (transferDialogOpen){
+        if (state.currentButton == 0){
+            TransferDialog(
+                audience = "220",
+                building = "2",
+                name = "Sanya",
+                onAcceptClick = { },
+                onRejectClick = { }
+            )
+        } else {
+            DeleteTransferDialog(
+                audience = "220",
+                building = "2",
+                buttonState = 1,
+                name = "Sanya",
+                onDeleteClick = { /*TODO*/ },
+                onCancelClick = { }
+            )
         }
     }
 }

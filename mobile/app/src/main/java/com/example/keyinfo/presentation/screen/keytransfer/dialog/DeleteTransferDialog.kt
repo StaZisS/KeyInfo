@@ -1,18 +1,15 @@
 package com.example.keyinfo.presentation.screen.keytransfer.dialog
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,35 +22,43 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.keyinfo.R
+import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.ui.theme.Values
 
 @Composable
-fun SelectPersonDialog(
-    onCardClick: () -> Unit,
-    searchText: String
+fun DeleteTransferDialog(
+    audience: String,
+    building: String,
+    buttonState: Int,
+    name: String,
+    onDeleteClick: () -> Unit,
+    onCancelClick: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = {},
+        onDismissRequest = {
+            onCancelClick()
+        },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
-    ) {
+    ){
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(600.dp)
                 .padding(Values.BasePadding),
-            shape = RoundedCornerShape(Values.DialogRound),
+            shape = RoundedCornerShape(Values.LittleRound),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(
                 modifier = Modifier
-                    .padding(Values.BasePadding),
+                    .padding(Values.CenterPadding),
+                verticalArrangement = Arrangement.Absolute.spacedBy(Values.CenterPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.padding(top = 2.dp))
                 Text(
-                    text = stringResource(id = R.string.key_tranfser_dialog),
+                    text = "Удаление заявки",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
@@ -61,17 +66,32 @@ fun SelectPersonDialog(
                         textAlign = TextAlign.Center
                     ),
                 )
-                Spacer(modifier = Modifier.height(Values.BasePadding))
-//                SearchRow(
-//                    searchText = searchText
-//                )
-                LazyColumn {
-                    items(10) {
-                        SmallKeyCard()
-                    }
-                }
 
+                SmallKeyCard(
+                    audience, building, buttonState, name
+                )
+
+                PairButtons(
+                    firstLabel = stringResource(R.string.delete),
+                    firstClick = { onDeleteClick() },
+                    secondLabel = stringResource(R.string.cancel),
+                    secondClick = { onCancelClick() },
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun DeleteTransferDialogPreview(){
+    DeleteTransferDialog(
+        audience = "220",
+        building = "2",
+        buttonState = 1,
+        name = "Sanya",
+        onDeleteClick = { /*TODO*/ },
+        onCancelClick = { }
+    )
 }

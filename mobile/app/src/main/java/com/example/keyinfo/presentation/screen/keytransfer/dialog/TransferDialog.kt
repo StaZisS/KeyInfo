@@ -28,6 +28,8 @@ import com.example.keyinfo.ui.theme.Values
 
 @Composable
 fun TransferDialog(
+    audience: String,
+    building: String,
     name: String,
     onAcceptClick: () -> Unit,
     onRejectClick: () -> Unit,
@@ -64,7 +66,10 @@ fun TransferDialog(
                     ),
                 )
 
-                SmallKeyCard()
+                SmallKeyCard(
+                    audience = audience,
+                    building = building
+                )
 
                 PairButtons(
                     firstLabel = stringResource(R.string.accept),
@@ -75,13 +80,5 @@ fun TransferDialog(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun TransferDialogPreview() {
-    TransferDialog(name = "Sanya", onAcceptClick = { }) {
-
     }
 }

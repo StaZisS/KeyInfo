@@ -25,7 +25,9 @@ import com.gigamole.composeshadowsplus.softlayer.softLayerShadow
 @Composable
 fun SmallKeyCard(
     audience: String = "220",
-    building: String = "2"
+    building: String = "2",
+    buttonState: Int = 0,
+    name: String? = null
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -64,6 +66,18 @@ fun SmallKeyCard(
                 ),
                 color = LightBlueColor
             )
+            if (name != null) {
+                Spacer(modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = if (buttonState == 0) "От: $name" else "Кому: $name",
+                            style = TextStyle(
+                            fontSize = 14.sp,
+                    fontWeight = FontWeight(400),
+                    ),
+                    color = LightBlueColor
+                )
+            }
+
         }
     }
 }
