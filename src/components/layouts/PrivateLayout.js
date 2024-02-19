@@ -26,18 +26,11 @@ export const PrivateLayout = ({children}) => {
             <Navigate to={'/login'}/>
         )
     }
-
-    // useEffect(() => {
-    //     const checkAuth = async () => {
-    //         console.log('Проверка пользователя началась')
-    //         await Store.checkAuth()
-    //         console.log('Проверка пользователя окончилась = ' + Store.isAuth)
-    //         if (Store.isAuth === false) {
-    //             navigate('/login')
-    //         }
-    //     }
-    //     checkAuth()
-    // });
+    if (!Store.isAuth){
+        return (
+            <Navigate to={'/login'}/>
+        )
+    }
 
     return (
         <>

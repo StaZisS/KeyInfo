@@ -33,6 +33,7 @@ class KeysStore {
         }
     }
 
+
     async addKey(build, room) {
         try {
             await KeyService.addKey(build, room)

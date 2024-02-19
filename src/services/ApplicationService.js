@@ -17,6 +17,20 @@ export default class ApplicationService {
         })
     }
 
+    static async getAcceptedApplications({status = 'ACCEPTED', start, buildId, roomId}) {
+        return $api.get(`deaneries/applications`, {
+            params: {
+                status: status,
+                start: start,
+                build_id: buildId,
+                room_id: roomId,
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+    }
+
     static async acceptApplication(id) {
         return $api.post(`/deaneries/application/${id}/accept`, {}, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
     }

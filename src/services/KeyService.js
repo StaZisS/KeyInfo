@@ -16,4 +16,12 @@ export default class KeyService {
         return $api.delete(`/deaneries/keys/${keyId}`, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
     }
 
+    static async giveKey(id,keyHolderId){
+        return $api.patch(`/deaneries/keys/giving/${id}`, {}, {params: {keyHolderId},headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    }
+
+    static async takeKey(id,keyHolderId){
+        return $api.patch(`/deaneries/keys/acceptance/${id}`, {}, {params: {keyHolderId},headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    }
+
 }

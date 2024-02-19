@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite";
 import {Loading} from "../../snippets/Loading";
 import {AddKeyModal} from "../../snippets/AddKeyModal";
 import {useState} from "react";
+import {AcceptedApplicationsModal} from "../../snippets/AcceptedApplicationsModal";
 
 
 export const KeysList = observer(() => {
@@ -40,8 +41,7 @@ export const KeysList = observer(() => {
                 <Button onClick={() => setAddKeyModal(true)} className='btn-success'>Создать ключ</Button>
             </Container>
             <KeyFilter/>
-            <AddKeyModal show={addKeyModal} onHide={() => setAddKeyModal(false)
-            }/>
+            <AddKeyModal show={addKeyModal}  onHide={() => setAddKeyModal(false)}/>
             {data.data.length
                 ?
                 <>
@@ -51,9 +51,9 @@ export const KeysList = observer(() => {
                                 {data.data.map((key) => (
                                     <KeysItem
                                         key={key.key_id}
+                                        id={key.key_id}
                                         build={key.build}
                                         room={key.room}
-                                        //hasRequests={key.hasRequests}
                                         location={key.key_status}
                                         owner={key.client}
                                     />
