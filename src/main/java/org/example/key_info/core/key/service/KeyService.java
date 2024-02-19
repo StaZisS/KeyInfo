@@ -40,20 +40,7 @@ public class KeyService {
 
         var responseKeyDto = keys.stream()
                 .map(keyDto -> {
-
-                    ClientProfileDto clientDto = null;
-                    if (keyDto.keyHolderId() != null) {
-                        var client = clientRepository.getClientByClientId(keyDto.keyHolderId())
-                                .orElseThrow(() -> new ExceptionInApplication("Пользователь не найден", ExceptionType.NOT_FOUND));
-
-                        clientDto = new ClientProfileDto(
-                                client.clientId(),
-                                client.name(),
-                                client.email(),
-                                client.gender(),
-                                client.createdDate(),
-                                client.role());
-                    }
+                    var clientDto = getClientProfileDto(keyDto);
 
                     return new ResponseKeyDto(
                             keyDto.keyId(),
@@ -67,6 +54,24 @@ public class KeyService {
                 .toList();
 
         return responseKeyDto;
+    }
+
+    private ClientProfileDto getClientProfileDto(KeyDto keyDto) {
+        ClientProfileDto clientDto = null;
+
+        if (keyDto.keyHolderId() != null) {
+            var client = clientRepository.getClientByClientId(keyDto.keyHolderId())
+                    .orElseThrow(() -> new ExceptionInApplication("Пользователь не найден", ExceptionType.NOT_FOUND));
+
+            clientDto = new ClientProfileDto(
+                    client.clientId(),
+                    client.name(),
+                    client.email(),
+                    client.gender(),
+                    client.createdDate(),
+                    client.role());
+        }
+        return clientDto;
     }
 
     private List<KeyDto> getKeyDto(GetKeysDto dto) {
