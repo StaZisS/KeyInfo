@@ -1,7 +1,6 @@
 package com.example.keyinfo.presentation.screen.main
 
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -75,7 +74,7 @@ fun MainScreen(viewModel: MainViewModel) {
         selectedTabIndex = pagerState.currentPage,
         indicator = indicator,
         modifier = Modifier
-            .padding(top = 16.dp)
+            .padding(top = 16.dp, bottom = 48.dp)
     ) {
         pages.forEachIndexed { index, title ->
             Tab(text = {

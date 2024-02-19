@@ -69,7 +69,7 @@ fun KeyTransferScreen(
         selectedTabIndex = pagerState.currentPage,
         indicator = indicator,
         modifier = Modifier
-            .padding(top = 16.dp)
+            .padding(top = 16.dp, bottom = 48.dp)
     ) {
         pages.forEachIndexed { index, title ->
             Tab(text = {
