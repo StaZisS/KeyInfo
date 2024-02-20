@@ -57,6 +57,7 @@ export const ApplicationList = () => {
                                  start={DateHelper.normalizeDate(item.start_time)}
                                  end={DateHelper.normalizeDate(item.end_time)}
                                  dublicate={item.is_duplicate}
+                                 dublicate_end={item.end_time_duplicate}
                                  key={item.application_id}
                                  id={item.application_id}
                 />

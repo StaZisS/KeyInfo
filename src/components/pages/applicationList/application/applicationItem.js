@@ -2,10 +2,16 @@ import {Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container,
 import {RxReload} from "react-icons/rx";
 import {useMutation, useQueryClient} from "react-query";
 import ApplicationService from "../../../../services/ApplicationService";
+import DateHelper from "../../../../helpers/DateHelper";
 
 import('../../../../styles/applicationItem.css')
 
-export const ApplicationItem = ({id, build, room, name, email, start, end, dublicate}) => {
+export const ApplicationItem = ({id, dublicate_end, build, room, name, email, start, end, dublicate}) => {
+
+    let endDate
+    if (dublicate) {
+        endDate = DateHelper.normalizeDate(dublicate_end)
+    }
 
     const queryClient = useQueryClient()
     const acceptMutation = useMutation((id) => ApplicationService.acceptApplication(id), {
@@ -26,18 +32,24 @@ export const ApplicationItem = ({id, build, room, name, email, start, end, dubli
                 <Card>
                     <CardHeader className='container-fluid '>
                         <Row className='w-100'>
-                            <Col lg={8} md={6} className={'d-flex gap-3'}>
+                            <Col className={'d-flex gap-3'}>
                                 <div className='d-flex gap-3'>
                                     <CardTitle>Корпус <span className='fw-bold'>{build}</span></CardTitle>
-                                    <CardTitle>Аудитория <span className='fw-bold border-end border-black pe-3'>{room}</span></CardTitle>
+                                    <CardTitle>Аудитория <span
+                                        className='fw-bold border-end border-black pe-3'>{room}</span></CardTitle>
                                 </div>
-                                <CardTitle>{start.day}.{start.month}.{start.year}</CardTitle>
-                                <CardTitle className='fw-bold'>{start.hours}:{start.minutes} - {end.hours}:{end.minutes}
-                                </CardTitle>
-                                {dublicate && <RxReload title={'Повторяющаяся заявка'}/>}
-
-                            </Col>
-                            <Col lg={4} md={6} sm={12} className={'d-flex gap-3 justify-content-md-end'}>
+                                <CardTitle className={!dublicate ?'fw-bold border-end border-black pe-3' : 'fw-bold'}>{start.day}.{start.month}.{start.year}</CardTitle>
+                                {dublicate && <CardTitle>-</CardTitle>}
+                                {dublicate &&
+                                    <CardTitle
+                                        className={dublicate ? 'fw-bold border-end border-black pe-3' : 'fw-bold'}>{endDate.day}.{endDate.month}.{endDate.year}</CardTitle>}
+                                <CardTitle
+                                    className='fw-bold'>{start.hours}:{start.minutes} - {end.hours}:{end.minutes}</CardTitle>
+                                {dublicate &&
+                                    <>
+                                        <RxReload title={'Повторяющаяся заявка'}/>
+                                    </>
+                                }
 
                             </Col>
                         </Row>
