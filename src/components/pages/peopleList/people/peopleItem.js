@@ -22,8 +22,8 @@ export const PeopleItem = ({userId, name, email, roles}) => {
 
             <div className='d-flex h-100 align-items-center'>
                 <div className='ps-3 d-flex align-items-center flex-grow-0 gap-3 number'>
-                    <span>ФИО: {name}</span>
-                    <span>email: {email}</span>
+                    <span>ФИО: <span className={'fw-bold'}>{name}</span></span>
+                    <span>Email: <span className={'fw-bold'}>{email}</span></span>
                 </div>
             </div>
             <div className="buttons d-flex h-100 align-items-center">
