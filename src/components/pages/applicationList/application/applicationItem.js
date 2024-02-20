@@ -3,8 +3,9 @@ import {RxReload} from "react-icons/rx";
 import {useMutation, useQueryClient} from "react-query";
 import ApplicationService from "../../../../services/ApplicationService";
 import DateHelper from "../../../../helpers/DateHelper";
+import styles from "../application.module.css";
+import('../../../../styles/applicationItem.css');
 
-import('../../../../styles/applicationItem.css')
 
 export const ApplicationItem = ({id, dublicate_end, build, room, name, email, start, end, dublicate}) => {
 
@@ -35,8 +36,8 @@ export const ApplicationItem = ({id, dublicate_end, build, room, name, email, st
                             <Col className={'d-flex gap-3'}>
                                 <div className='d-flex gap-3'>
                                     <CardTitle>Корпус <span className='fw-bold'>{build}</span></CardTitle>
-                                    <CardTitle>Аудитория <span
-                                        className='fw-bold border-end border-black pe-3'>{room}</span></CardTitle>
+                                    <CardTitle className="border-end border-black pe-3">Аудитория <span
+                                        className='fw-bold'>{room}</span></CardTitle>
                                 </div>
                                 <CardTitle className={!dublicate ?'fw-bold border-end border-black pe-3' : 'fw-bold'}>{start.day}.{start.month}.{start.year}</CardTitle>
                                 {dublicate && <CardTitle>-</CardTitle>}
@@ -65,7 +66,7 @@ export const ApplicationItem = ({id, dublicate_end, build, room, name, email, st
                             </Col>
 
                             <Col xs={12} md={1} lg={4}
-                                 className={'ms-auto d-flex gap-3 mt-3 mt-sm-0 justify-content-end'}>
+                                 className={` ${styles.buttons} ms-auto d-flex gap-3 mt-3 mt-sm-0 justify-content-end`}>
                                 <Button onClick={() => acceptMutation.mutate(id)}
                                         className='get border-0 rounded-4'>Одобрить</Button>
                                 <Button onClick={() => declineMutation.mutate(id)}

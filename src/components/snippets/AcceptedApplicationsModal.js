@@ -9,6 +9,7 @@ import {
 import DateHelper from "../../helpers/DateHelper";
 import {useMutation, useQueryClient} from "react-query";
 import KeyService from "../../services/KeyService";
+import styles from "../pages/keysList/key/style.module.css"
 
 export const AcceptedApplicationsModal = (props) => {
 
@@ -36,12 +37,12 @@ export const AcceptedApplicationsModal = (props) => {
 
             <ModalBody>
                 <Container>
-                    <Row className={'d-flex text-start border-bottom mb-1'}>
-                        <Col className='fw-bold'>Дата</Col>
-                        <Col className='fw-bold'>Время</Col>
-                        <Col className='fw-bold'>Email</Col>
-                        <Col className='fw-bold'>ФИО</Col>
-                        <Col className='fw-bold'></Col>
+                    <Row className={'d-flex text-start border-bottom mb-1 w-100'}>
+                        <div className={`fw-bold ${styles.wrap_title} `}>Дата</div>
+                        <div className={`fw-bold ${styles.wrap_title}`}>Время</div>
+                        <div className={`fw-bold ${styles.wrap_title}`}>Email</div>
+                        <div className={`fw-bold ${styles.wrap_title}`}>ФИО</div>
+                        {/* <Col className={`fw-bold `}></Col> */}
                     </Row>
                 </Container>
                 <Container>
@@ -50,22 +51,26 @@ export const AcceptedApplicationsModal = (props) => {
                         const endTime = DateHelper.normalizeDate(app.end_time)
                         return (
                             <Row key={app.application_id}
-                                 className='text-start border-bottom mb-1 d-flex align-items-center'>
-                                <Col>
+                                className='text-start border-bottom mb-1 d-flex align-items-center flex-wrap'>
+                                <div className={`d-flex ${styles.wrapper}`}>
+                                <Col className={`flex-grow-1`}>
                                     {startTime.day}.{startTime.month}.{startTime.year}
                                 </Col>
-                                <Col>
+                                <Col className={`flex-grow-1 ${styles.wrap}`}>
                                     {startTime.hours}:{startTime.minutes} - {endTime.hours}:{endTime.minutes}
                                 </Col>
 
-                                <Col>
-                                    {app.owner_name}
-                                </Col>
-                                <Col>
+                                <Col className={`flex-grow-1 ${styles.wrap}`}>
                                     {app.owner_email}
+                                    gdgdgd
                                 </Col>
-                                <Col>
-                                    <Button onClick={() => handleGet(app.owner_id)} className={'btn rounded-5 btn-success mb-1'}>
+                                <Col className={`flex-grow-1 ${styles.wrap}`}>
+                                {app.owner_name}
+                                </Col>
+                                </div>
+                                
+                                <Col className={`flex-grow-1  ${styles.wrap_button} d-flex `}>
+                                    <Button onClick={() => handleGet(app.owner_id)} className={`btn px-4 rounded-5 btn-success mb-1 ${styles.modal_button}`}>
                                         Отдать
                                     </Button>
                                 </Col>

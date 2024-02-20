@@ -1,0 +1,9 @@
+
+@media (max-width: 767px){
+    .buttons{
+        padding-bottom: 15px;
+        width: 100%;
+        justify-content: end;
+        margin-left:-4px ;
+    }
+}

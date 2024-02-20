@@ -1,3 +1,4 @@
+
 import {ButtonDel} from './buttonDel'
 import {ButtonGet} from './buttonGet'
 import {Mark} from './mark'
@@ -9,8 +10,11 @@ import ApplicationService from "../../../../services/ApplicationService";
 import {Loading} from "../../../snippets/Loading";
 import KeyService from "../../../../services/KeyService";
 import {RiDeleteBin7Line} from "react-icons/ri";
-
+import styles from "./style.module.css";
 import('../../../../styles/keysItem.css')
+
+
+
 
 
 export const KeysItem = ({id, build, room, location, owner}) => {
@@ -70,16 +74,16 @@ export const KeysItem = ({id, build, room, location, owner}) => {
                         <span className='key-number'>Аудитория <span className='fw-bold'>{room}</span></span>
                     </Col>
                     <Col>
-                        <div className='d-flex text-start'>
+                        <div className={`d-flex text-start ${styles.location}`}>
                             <span className='location'>{location === 'IN_DEANERY' && 'В деканате'}</span>
                             <span className='location fw-bolder me-3'>{owner && owner.name}</span>
                             <span className='location text-muted'>{owner && owner.email}</span>
                         </div>
                     </Col>
-                    <Col md={2} className='text-center'>
+                    <Col md={2} className={`text-center ${styles.button_wrapper}`}>
                         {(location === 'IN_DEANERY' && data.data.length !== 0) &&
                             <Button onClick={() => setAcceptedApplicationsModal(true)}
-                                    className="btn rounded-5 w-100 get border-0 btn-success">
+                                    className={`btn rounded-5 w-100 get border-0 btn-success ${styles.button}`}>
                                 Выдать
                             </Button>
                         }
@@ -90,7 +94,7 @@ export const KeysItem = ({id, build, room, location, owner}) => {
                             </Button>
                         }
                         {(location === 'IN_HAND') &&
-                            <Button onClick={handleTakeKey} className="btn rounded-5 w-100 delit border-0">
+                            <Button onClick={handleTakeKey} className={`btn rounded-5 w-100 delit border-0 ${styles.button}`}>
                                 Забрать
                             </Button>
                         }
