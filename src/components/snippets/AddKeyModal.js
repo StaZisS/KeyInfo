@@ -4,14 +4,19 @@ import {useMutation, useQueryClient} from "react-query";
 import KeyService from "../../services/KeyService";
 
 export const AddKeyModal = (props) => {
-
     const [build, setBuild] = useState("")
     const [room, setRoom] = useState("")
 
+
+    const a = props.keys.map((key) => {
+        return {build: key.build, room: key.room}
+    })
+
+
     const queryClient = useQueryClient()
 
-    const mutation = useMutation((keyParams) => KeyService.addKey(keyParams.build,keyParams.room), {
-        onSuccess(){
+    const mutation = useMutation((keyParams) => KeyService.addKey(keyParams.build, keyParams.room), {
+        onSuccess() {
             setBuild("")
             setRoom("")
             queryClient.invalidateQueries(['keys'])
@@ -20,6 +25,10 @@ export const AddKeyModal = (props) => {
 
 
     const handleCreateKey = () => {
+        if (a.some(key => key.build == build && key.room == room)){
+            alert('Такой ключ уже существует')
+            return
+        }
         mutation.mutate({build, room})
         props.onHide()
     }

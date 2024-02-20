@@ -44,7 +44,7 @@ export const KeysList = observer(() => {
                 <Button onClick={() => setAddKeyModal(true)} className='get border-0'>Создать ключ</Button>
             </Container>
             <KeyFilter/>
-            <AddKeyModal show={addKeyModal}  onHide={() => setAddKeyModal(false)}/>
+            <AddKeyModal show={addKeyModal} keys={data.data}  onHide={() => setAddKeyModal(false)}/>
             {data.data.length
                 ?
                 <>

@@ -5,7 +5,7 @@ import ApplicationService from "../../../../services/ApplicationService";
 
 import('../../../../styles/applicationItem.css')
 
-export const ApplicationItem = ({id,build, room, name, email, start, end, dublicate}) => {
+export const ApplicationItem = ({id, build, room, name, email, start, end, dublicate}) => {
 
     const queryClient = useQueryClient()
     const acceptMutation = useMutation((id) => ApplicationService.acceptApplication(id), {
@@ -27,17 +27,18 @@ export const ApplicationItem = ({id,build, room, name, email, start, end, dublic
                     <CardHeader className='container-fluid '>
                         <Row className='w-100'>
                             <Col lg={8} md={6} className={'d-flex gap-3'}>
-                                <CardTitle> {start.day}.{start.month}.{start.year}</CardTitle>
-                                <CardTitle
-                                    className='fw-bold'> {start.hours}:{start.minutes} - {end.hours}:{end.minutes}
+                                <div className='d-flex gap-3'>
+                                    <CardTitle>Корпус <span className='fw-bold'>{build}</span></CardTitle>
+                                    <CardTitle>Аудитория <span className='fw-bold border-end border-black pe-3'>{room}</span></CardTitle>
+                                </div>
+                                <CardTitle>{start.day}.{start.month}.{start.year}</CardTitle>
+                                <CardTitle className='fw-bold'>{start.hours}:{start.minutes} - {end.hours}:{end.minutes}
                                 </CardTitle>
                                 {dublicate && <RxReload title={'Повторяющаяся заявка'}/>}
 
-
                             </Col>
                             <Col lg={4} md={6} sm={12} className={'d-flex gap-3 justify-content-md-end'}>
-                                <CardTitle> Корпус <span className='fw-bold'>{build}</span></CardTitle>
-                                <CardTitle>Аудитория <span className='fw-bold'>{room}</span></CardTitle>
+
                             </Col>
                         </Row>
                     </CardHeader>
@@ -53,8 +54,10 @@ export const ApplicationItem = ({id,build, room, name, email, start, end, dublic
 
                             <Col xs={12} md={1} lg={4}
                                  className={'ms-auto d-flex gap-3 mt-3 mt-sm-0 justify-content-end'}>
-                                <Button onClick={() => acceptMutation.mutate(id)} className='get border-0'>Одобрить</Button>
-                                <Button onClick={() => declineMutation.mutate(id)} className='delit border-0'>Отклонить</Button>
+                                <Button onClick={() => acceptMutation.mutate(id)}
+                                        className='get border-0 rounded-4'>Одобрить</Button>
+                                <Button onClick={() => declineMutation.mutate(id)}
+                                        className='delit border-0 rounded-4'>Отклонить</Button>
                             </Col>
                         </Row>
 
