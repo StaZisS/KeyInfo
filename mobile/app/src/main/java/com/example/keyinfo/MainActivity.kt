@@ -30,6 +30,7 @@ import com.example.keyinfo.presentation.screen.registration.RegistrationViewMode
 import com.example.keyinfo.ui.theme.KeyInfoTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

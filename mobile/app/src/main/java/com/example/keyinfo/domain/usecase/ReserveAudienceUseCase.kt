@@ -12,6 +12,7 @@ class ReserveAudienceUseCase {
         return try {
             val response = scheduleRepository.reserveAudience(request)
             Log.d("ReserveAudienceUseCase", "invoke: ${response.body()}")
+            Log.d("ReserveAudienceUseCase", "invoke: ${response.message()}")
             if (response.isSuccessful) {
                 response.body()?.let {
                     Result.success(it)

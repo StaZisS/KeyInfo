@@ -3,7 +3,9 @@ package com.example.keyinfo.presentation.screen.main
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ScrollableTabRow
@@ -112,7 +114,7 @@ fun MainScreen(viewModel: MainViewModel) {
         state = pagerState,
     ) { page ->
         LazyColumn(
-            modifier = Modifier.padding(top = 90.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+            modifier = Modifier.padding(top = 90.dp, start = 16.dp, end = 16.dp, bottom = 48.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Log.d("MainScreen", "isLoading: ${state.isLoading}")
@@ -134,6 +136,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                         endDate = OffsetDateTime.parse(request.end_time)
                                     )
                                 }
+                                Spacer(modifier = Modifier.height(4.dp))
                             } else {
                                 PageEmptyScreen(
                                     label = stringResource(id = R.string.main_empty),
@@ -160,6 +163,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                         startDate = OffsetDateTime.parse(request.start_time),
                                         endDate = OffsetDateTime.parse(request.end_time)
                                     )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
                             } else {
                                 PageEmptyScreen(
@@ -190,6 +194,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                             viewModel.processIntent(MainIntent.ChangeDeleteDialogState)
                                         }
                                     )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
                             } else {
                                 PageEmptyScreen(

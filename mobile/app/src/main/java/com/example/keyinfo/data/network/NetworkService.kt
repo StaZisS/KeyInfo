@@ -24,7 +24,7 @@ object NetworkService {
         .addInterceptor(authInterceptor)
         .build()
 
-    private val retrofit : Retrofit =
+    private val retrofit: Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
@@ -33,6 +33,10 @@ object NetworkService {
 
     fun setAuthToken(token: String) {
         authInterceptor.setAuthToken(token)
+    }
+
+    fun removeAuthToken() {
+        authInterceptor.setAuthToken("")
     }
 
     val authenticationApiService: AuthenticationApiService =

@@ -7,12 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.common.Constants
 import com.example.keyinfo.common.Formatter
+import com.example.keyinfo.data.model.TokenResponse
 import com.example.keyinfo.data.network.NetworkService
 import com.example.keyinfo.data.storage.LocalStorage
+import com.example.keyinfo.domain.model.RefreshToken
 import com.example.keyinfo.domain.state.ProfileState
 import com.example.keyinfo.domain.usecase.DeleteTokenUseCase
 import com.example.keyinfo.domain.usecase.GetProfileUseCase
 import com.example.keyinfo.domain.usecase.PostLogoutUseCase
+import com.example.keyinfo.domain.usecase.RefreshTokenUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +30,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
 
     private val getProfileUseCase = GetProfileUseCase()
     private val postLogoutUseCase = PostLogoutUseCase()
+    private val refreshTokenUseCase = RefreshTokenUseCase()
     private val deleteTokenUseCase = DeleteTokenUseCase(context)
 
     fun logoutUser(toAfterLogout: () -> Unit) {
@@ -58,6 +62,47 @@ class ProfileViewModel(val context: Context) : ViewModel() {
         }
     }
 
+    fun refreshToken() {
+        val token = LocalStorage(context).getToken().refreshToken
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = refreshTokenUseCase.invoke(RefreshToken(token))
+                if (result.isSuccess) {
+                    withContext(Dispatchers.Main) {
+                        result.fold(
+                            onSuccess = {
+                                LocalStorage(context).saveToken(
+                                    TokenResponse(
+                                        it.accessToken,
+                                        token
+                                    )
+                                )
+                                NetworkService.setAuthToken(it.accessToken)
+                            },
+                            onFailure = { exception ->
+                                handleRegistrationError(exception)
+                            }
+                        )
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        result.fold(
+                            onSuccess = {},
+                            onFailure = { exception ->
+                                handleRegistrationError(exception)
+                            }
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.d("eee", e.message.toString())
+                    showToast("Произошла ошибка: ${e.message}")
+                }
+            }
+        }
+    }
+
     fun getProfile() {
         _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -67,6 +112,9 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                     result.fold(
                         onSuccess = {
                             _state.value.name = result.getOrNull()!!.name;
+                            if (_state.value.name == "UNSPECIFIED") {
+                                refreshToken()
+                            }
                             _state.value.role =
                                 Formatter.getNormalRoleString(result.getOrNull()!!.roles)
                         },

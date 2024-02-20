@@ -1,10 +1,12 @@
 package com.example.keyinfo.presentation.screen.keytransfer
 
-import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ScrollableTabRow
@@ -33,6 +35,7 @@ import com.example.keyinfo.presentation.screen.keytransfer.components.ToggleButt
 import com.example.keyinfo.presentation.screen.keytransfer.dialog.DeleteTransferDialog
 import com.example.keyinfo.presentation.screen.keytransfer.dialog.SelectPersonDialog
 import com.example.keyinfo.presentation.screen.keytransfer.dialog.TransferDialog
+import com.example.keyinfo.presentation.screen.main.KeyCardShimmer
 import com.example.keyinfo.presentation.screen.main.PageEmptyScreen
 import com.example.keyinfo.ui.theme.AccentColor
 import com.example.keyinfo.ui.theme.LightBlueColor
@@ -49,7 +52,7 @@ fun KeyTransferScreen(
 
     val myKeysTransferDialogOpen by viewModel.myKeysTransferDialogOpen
     val transferDialogOpen by viewModel.transferDialogOpened
-    
+
     LaunchedEffect(Unit) {
         viewModel.getUserKeys()
         viewModel.getAllUsers()
@@ -65,7 +68,7 @@ fun KeyTransferScreen(
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         CustomIndicator(tabPositions, pagerState)
     }
-
+    Log.d("KeyTransferScreen", "KeyTransferScreen: ${state.isLoading}")
     ScrollableTabRow(
         containerColor = Color.Transparent,
         divider = {},
@@ -126,16 +129,27 @@ fun KeyTransferScreen(
                                 )
                             }
                         )
+//                        }
                     }
                     item {
                         if (state.currentButton == 0) {
-                            if (state.fromMeRequests.isNotEmpty()){
-                                state.fromMeRequests.forEach{ transfer ->
-                                    Box (
+//                            if (state.isLoading) {
+//                                for (i in 0..3) {
+//                                    KeyCardShimmer()
+//                                    Spacer(modifier = Modifier.height(2.dp))
+//                                }
+//                            } else {
+                            if (state.fromMeRequests.isNotEmpty()) {
+                                state.fromMeRequests.forEach { transfer ->
+                                    Box(
                                         modifier = Modifier.clickable {
-                                            viewModel.processIntent(KeyTransferIntent.ClickOnCard(transfer))
+                                            viewModel.processIntent(
+                                                KeyTransferIntent.ClickOnCard(
+                                                    transfer
+                                                )
+                                            )
                                         }
-                                    ){
+                                    ) {
                                         SmallKeyCard(
                                             title = transfer.room_id.toString(),
                                             description = transfer.build_id.toString(),
@@ -149,13 +163,24 @@ fun KeyTransferScreen(
                                     label = "У вас нет заявок",
                                     description = "К сожалению вам никто не хочет передать свой ключ"
                                 )
+
                             }
                         } else {
-                            if (state.myRequests.isNotEmpty()){
-                                state.myRequests.forEach{ transfer ->
+//                            if (state.isLoading) {
+//                                for (i in 0..3) {
+//                                    KeyCardShimmer()
+//                                    Spacer(modifier = Modifier.height(2.dp))
+//                                }
+//                            } else {
+                            if (state.myRequests.isNotEmpty()) {
+                                state.myRequests.forEach { transfer ->
                                     Box(
                                         modifier = Modifier.clickable {
-                                            viewModel.processIntent(KeyTransferIntent.ClickOnCard(transfer))
+                                            viewModel.processIntent(
+                                                KeyTransferIntent.ClickOnCard(
+                                                    transfer
+                                                )
+                                            )
                                         }
                                     ) {
                                         SmallKeyCard(
@@ -176,35 +201,42 @@ fun KeyTransferScreen(
                     }
                 }
 
-                1 -> {
-                    item {
-                        if (state.myKeys.isNotEmpty()) {
-                            state.myKeys.forEach { key ->
-                                Box(
-                                    modifier = Modifier.clickable {
-                                        viewModel.processIntent(KeyTransferIntent.UpdateConfirmDialogState)
-                                        state.currentKey = key
+                1 -> { // Мои ключи
+                    if (state.isLoading) {
+                        items(4) {
+                            KeyCardShimmer()
+                        }
+                    } else {
+                        item {
+                            if (state.myKeys.isNotEmpty()) {
+                                state.myKeys.forEach { key ->
+                                    Box(
+                                        modifier = Modifier.clickable {
+                                            viewModel.processIntent(KeyTransferIntent.UpdateConfirmDialogState)
+                                            state.currentKey = key
+                                        }
+                                    ) {
+                                        SmallKeyCard(
+                                            title = key.room.toString(),
+                                            description = key.build.toString()
+                                        )
                                     }
-                                ){
-                                    SmallKeyCard(
-                                        title = key.room.toString(),
-                                        description = key.build.toString()
-                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
+                            } else {
+                                PageEmptyScreen(
+                                    label = stringResource(id = R.string.keys_empty),
+                                    description = stringResource(id = R.string.main_empty_description)
+                                )
                             }
-                        } else {
-                            PageEmptyScreen(
-                                label = stringResource(id = R.string.keys_empty),
-                                description = stringResource(id = R.string.main_empty_description)
-                            )
                         }
                     }
                 }
             }
         }
     }
-    
-    if (myKeysTransferDialogOpen){
+
+    if (myKeysTransferDialogOpen) {
         state.currentKey?.let {
             SelectPersonDialog(
                 audience = it.room.toString(),
@@ -224,9 +256,9 @@ fun KeyTransferScreen(
         }
     }
 
-    if (transferDialogOpen){
-        state.currentTransfer?.let{
-            if (state.currentButton == 0){
+    if (transferDialogOpen) {
+        state.currentTransfer?.let {
+            if (state.currentButton == 0) {
                 TransferDialog(
                     audience = state.currentTransfer?.room_id.toString(),
                     building = state.currentTransfer?.build_id.toString(),
@@ -250,7 +282,7 @@ fun KeyTransferScreen(
                         viewModel.deleteMyTransfer(state.currentTransfer!!.transfer_id)
                         viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
                     },
-                    onCancelClick = { viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)}
+                    onCancelClick = { viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState) }
                 )
             }
         }

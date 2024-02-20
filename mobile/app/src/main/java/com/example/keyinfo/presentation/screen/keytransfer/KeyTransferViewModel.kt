@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.keyinfo.domain.model.keys.KeyId
 import com.example.keyinfo.domain.model.keys.User
 import com.example.keyinfo.domain.model.request.TransferStatus
 import com.example.keyinfo.domain.state.KeysState
@@ -63,6 +62,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
             KeyTransferIntent.UpdateConfirmDialogState -> {
                 myKeysTransferDialogOpen.value = !myKeysTransferDialogOpen.value
             }
+
             KeyTransferIntent.UpdateTransferDialogState -> {
                 transferDialogOpened.value = !transferDialogOpened.value
             }
@@ -73,105 +73,107 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
         this.selectedUser.value = selectedUser
     }
 
-    fun getUserKeys(){
+    fun getUserKeys() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getUserKeysUseCase.invoke()
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = { requests ->
-                            _state.value = state.value.copy(myKeys = requests)
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = { requests ->
+                        _state.value = state.value.copy(myKeys = requests)
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " + "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
 
     fun getMyRequests(status: String) {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getMyRequestsUseCase.invoke(status)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = { requests ->
-                            _state.value = state.value.copy(myRequests = requests)
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = { requests ->
+                        _state.value = state.value.copy(myRequests = requests)
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " + "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
 
     fun getForeignRequests(status: String) {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getForeignRequestsUseCase.invoke(status)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = { requests ->
-                            _state.value = state.value.copy(fromMeRequests = requests)
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = { requests ->
+                        _state.value = state.value.copy(fromMeRequests = requests)
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения." +
-                            " Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения." + " Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
 
     fun deleteMyTransfer(id: String) {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = deleteMyTransferUseCase.invoke(id)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = {
-                            showToast("Успешно удалено")
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = {
+                        showToast("Успешно удалено")
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения." +
-                            " Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения." + " Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -180,28 +182,28 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
             } finally {
                 getMyRequests(TransferStatus.IN_PROCESS)
                 getForeignRequests(TransferStatus.IN_PROCESS)
+                _state.value.isLoading = false
             }
         }
     }
 
-    fun acceptRequest(id: String){
+    fun acceptRequest(id: String) {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = acceptRequestUseCase.invoke(id)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = {
-                            showToast("Успешно")
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = {
+                        showToast("Успешно")
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " + "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -210,28 +212,28 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
             } finally {
                 getMyRequests(TransferStatus.IN_PROCESS)
                 getForeignRequests(TransferStatus.IN_PROCESS)
+                _state.value.isLoading = false
             }
         }
     }
 
-    fun declineRequest(id: String){
+    fun declineRequest(id: String) {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = declineRequestUseCase.invoke(id)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = {
-                            showToast("Успешно")
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = {
+                        showToast("Успешно")
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения. " +
-                            "Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения. " + "Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -240,33 +242,35 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
             } finally {
                 getMyRequests(TransferStatus.IN_PROCESS)
                 getForeignRequests(TransferStatus.IN_PROCESS)
+                _state.value.isLoading = false
             }
         }
     }
 
     fun getAllUsers() {
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getAllUsersUseCase.invoke()
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = { users ->
-                            _state.value = state.value.copy(users = users)
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = { users ->
+                        _state.value = state.value.copy(users = users)
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения." +
-                            " Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения." + " Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                _state.value.isLoading = false
             }
         }
     }
@@ -276,23 +280,22 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
             showToast("Необходимо выбрать пользователя")
             return
         }
+        _state.value.isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = createTransferUseCase.invoke(user.clientId, keyId)
                 withContext(Dispatchers.Main) {
-                    result.fold(
-                        onSuccess = {
-                            showToast("Успешно")
-                        },
-                        onFailure = { exception ->
-                            handleRegistrationError(exception)
-                        }
-                    )
+                    result.fold(onSuccess = {
+                        showToast("Успешно")
+                    }, onFailure = { exception ->
+                        handleRegistrationError(exception)
+                    })
                 }
             } catch (e: SocketTimeoutException) {
                 withContext(Dispatchers.Main) {
-                    showToast("Превышено время ожидания соединения." +
-                            " Пожалуйста, проверьте ваше интернет-соединение.")
+                    showToast(
+                        "Превышено время ожидания соединения." + " Пожалуйста, проверьте ваше интернет-соединение."
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -302,6 +305,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 getUserKeys()
                 selectedUser.value = null
                 processIntent(KeyTransferIntent.UpdateConfirmDialogState)
+                _state.value.isLoading = false
             }
         }
     }
@@ -313,6 +317,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
                 400 -> showToast("Something went wrong...")
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
+
             else -> {
                 Log.d("Sss", exception.message.toString())
                 showToast("Ошибка соединения с сервером")

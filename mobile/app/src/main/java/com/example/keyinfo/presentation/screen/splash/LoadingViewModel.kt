@@ -31,6 +31,7 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
                             },
                             onFailure = { exception ->
                                 LocalStorage(context).removeToken()
+                                NetworkService.removeAuthToken()
                                 handleRegistrationError(exception)
                                 onResult(ApiResult.Error())
                             }
@@ -63,8 +64,10 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
                 400 -> showToast("Something went wrong...")
                 500 -> {
                     Log.d("LoadingViewModel", "Error: ${exception.message()}")
+                    Log.d("LoadingViewModel", "Error: ${exception.response()}")
                     showToast("Необходима повторная авторизация")
                 }
+
                 else -> {
                     showToast("Неизвестная ошибка: ${exception.code()}")
                 }

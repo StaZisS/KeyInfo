@@ -1,5 +1,6 @@
 package com.example.keyinfo.presentation.screen.keytransfer.dialog
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,15 +15,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -33,7 +31,6 @@ import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.presentation.screen.keytransfer.components.SmallKeyCard
 import com.example.keyinfo.presentation.screen.schedule.components.SearchRow
 import com.example.keyinfo.ui.theme.Values
-import java.time.OffsetDateTime
 
 @Composable
 fun SelectPersonDialog(
@@ -44,7 +41,7 @@ fun SelectPersonDialog(
     searchText: MutableState<String>,
     users: List<User>,
     selectedUser: MutableState<User?>
-){
+) {
     Dialog(
         onDismissRequest = {
             onCancelClick()
@@ -102,7 +99,15 @@ fun SelectPersonDialog(
                         items(filteredUsers.size) {
                             Box(
                                 modifier = Modifier.clickable {
-                                    selectedUser.value = if (selectedUser.value?.clientId == filteredUsers[it].clientId) null else filteredUsers[it]
+                                    Log.d("SelectPersonDialog", "clicked ${filteredUsers[it].name}")
+                                    Log.d("SelectPersonDialog", "selectedUser: ${selectedUser.value?.clientId}")
+                                    Log.d("SelectPersonDialog", "filtered: ${filteredUsers[it]}")
+                                    selectedUser.value =
+                                        if (selectedUser.value?.clientId == filteredUsers[it].clientId) null else filteredUsers[it]
+                                    Log.d(
+                                        "SelectPersonDialog",
+                                        "selectedUser: ${selectedUser.value}"
+                                    )
                                 }
                             ) {
                                 SmallKeyCard(
@@ -135,9 +140,9 @@ fun filterUsers(users: List<User>, searchText: String): List<User> {
     }
 }
 
-fun getNormalRoleName(name: String) : String {
+fun getNormalRoleName(name: String): String {
     var output = ""
-    when(name){
+    when (name) {
         "ADMIN" -> output = "Администратор"
         "STUDENT" -> output = "Студент"
         "TEACHER" -> output = "Преподаватель"

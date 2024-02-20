@@ -11,5 +11,7 @@ data class KeysState(
     var fromMeRequests: ArrayList<Transfer> = arrayListOf(),
     var users: ArrayList<User> = arrayListOf(),
     var currentKey: Key? = null,
-    var currentTransfer: Transfer? = null
+    var currentTransfer: Transfer? = null,
+
+    var isLoading: Boolean = true,
 )

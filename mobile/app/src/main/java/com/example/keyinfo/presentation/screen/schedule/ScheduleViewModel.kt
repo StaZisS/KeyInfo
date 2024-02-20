@@ -118,13 +118,13 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
         }
     }
 
-    private fun formatDateToISO8601(birthDate: String): OffsetDateTime {
+    private fun formatDateToISO8601(birthDate: String): String {
         val inputFormat = SimpleDateFormat("ddMMyyyy", Locale.getDefault())
 
         val date: Date = inputFormat.parse(birthDate)!!
         val outputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        val formattedDate: String = outputFormat.format(date)
-        return OffsetDateTime.parse(formattedDate)
+
+        return outputFormat.format(date)
     }
 
 
@@ -135,12 +135,12 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
                 audience = currentAudience.value!!.audience,
                 startTime = currentAudience.value!!.startTime,
                 endTime = currentAudience.value!!.endTime,
-                role = "TEACHER",
+                role = null,
                 isDuplicate = checkBoxChecked.value,
                 untilWhenDuplicate = if (checkBoxChecked.value) {
                     formatDateToISO8601(untilDate.value)
                 } else {
-                    null
+                    ""
                 }
             )
             Log.d("ScheduleViewModel", "reserveAudience: $requestData")

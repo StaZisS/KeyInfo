@@ -1,6 +1,6 @@
 package com.example.keyinfo.domain.model.keys
 
-data class User (
+data class User(
     val clientId: String,
     val name: String,
     val email: String,

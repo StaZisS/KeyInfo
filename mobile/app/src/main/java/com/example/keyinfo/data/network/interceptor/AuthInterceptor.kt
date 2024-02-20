@@ -22,11 +22,11 @@ class AuthInterceptor : Interceptor {
                 .build()
         }
 
-        return try{
+        return try {
             response = chain.proceed(request)
             Log.d("Interceptor", response.message)
             response
-        } catch (e: Exception){
+        } catch (e: Exception) {
             response?.close()
             chain.proceed(request)
         }

@@ -1,17 +1,16 @@
 package com.example.keyinfo.domain.usecase
 
-import android.util.Log
-import com.example.keyinfo.data.repository.KeysRepository
-import com.example.keyinfo.domain.model.keys.User
+import com.example.keyinfo.data.model.TokenResponse
+import com.example.keyinfo.data.repository.RefreshTokenRepository
+import com.example.keyinfo.domain.model.RefreshToken
 import retrofit2.HttpException
 
-class GetAllUsersUseCase {
-    private val keysRepository = KeysRepository()
 
-    suspend fun invoke(): Result<ArrayList<User>> {
+class RefreshTokenUseCase {
+    private val refreshTokenRepository = RefreshTokenRepository()
+    suspend fun invoke(refreshToken: RefreshToken): Result<TokenResponse> {
         return try {
-            val response = keysRepository.getAllUsers()
-            Log.d("GetAllUsersUseCase", "invoke: ${response.body()}")
+            val response = refreshTokenRepository.getNewToken(refreshToken)
             if (response.isSuccessful) {
                 response.body()?.let {
                     Result.success(it)

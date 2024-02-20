@@ -33,6 +33,12 @@ class LocalStorage(context: Context) {
         )
     }
 
+    fun isAccessTokenExpired(): Boolean {
+        val currentTimeMillis = System.currentTimeMillis()
+        val expirationTimeMillis = sharedPreferences.getLong("expiration_time", 0)
+        return currentTimeMillis >= expirationTimeMillis
+    }
+
     fun hasToken(): Boolean {
         return sharedPreferences.contains(TOKEN_KEY)
     }

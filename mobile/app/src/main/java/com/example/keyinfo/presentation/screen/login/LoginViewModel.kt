@@ -125,6 +125,7 @@ class LoginViewModel(
                     )
                 }
             } catch (e: Exception) {
+                Log.d("LoginViewModel", "Error: ${e.message}")
                 withContext(Dispatchers.Main) {
                     showToast("Произошла ошибка: ${e.message}")
                 }
