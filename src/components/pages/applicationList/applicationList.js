@@ -47,7 +47,6 @@ export const ApplicationList = () => {
             <Container className='text-center text-danger fs-1 fw-bold mt-5'>Нет заявок</Container>
         )
     }
-
     return (
         <div className='mt-5'>
             {data.map((item) => (

@@ -44,6 +44,10 @@ export const KeyFilter = () => {
         }
     }
 
+    const handleReset = () =>{
+
+    }
+
     const handleSwitchInDeanery = (e) => {
         if (e.target.value === 'on') {
             setInDeanery(true)

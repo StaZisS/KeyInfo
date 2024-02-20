@@ -17,11 +17,12 @@ export default class ApplicationService {
         })
     }
 
-    static async getAcceptedApplications({status = 'ACCEPTED', start, buildId, roomId}) {
+    static async getAcceptedApplications({status = 'ACCEPTED', buildId, roomId}) {
+        let currentDate = new Date()
         return $api.get(`deaneries/applications`, {
             params: {
                 status: status,
-                start: start,
+                start: currentDate.toISOString(),
                 build_id: buildId,
                 room_id: roomId,
             },

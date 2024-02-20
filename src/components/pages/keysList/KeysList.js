@@ -1,13 +1,13 @@
 import {KeysItem} from "./key/keyItem";
 import {KeyFilter} from "../../snippets/KeyFilter";
 import {Button, Card, CardBody, CardHeader, CardTitle, Container} from "react-bootstrap";
-import {useQuery} from "react-query";
+import {useMutation, useQuery} from "react-query";
 import KeysStore from "../../../store/keysStore";
 import {observer} from "mobx-react-lite";
 import {Loading} from "../../snippets/Loading";
 import {AddKeyModal} from "../../snippets/AddKeyModal";
 import {useState} from "react";
-import {AcceptedApplicationsModal} from "../../snippets/AcceptedApplicationsModal";
+import KeyService from "../../../services/KeyService";
 
 
 export const KeysList = observer(() => {
@@ -23,6 +23,8 @@ export const KeysList = observer(() => {
         keepPreviousData: true
     })
 
+
+
     if (isLoading) {
         return (
             <Loading/>
@@ -35,10 +37,11 @@ export const KeysList = observer(() => {
         )
     }
 
+
     return (
         <>
-            <Container className='mt-5'>
-                <Button onClick={() => setAddKeyModal(true)} className='btn-success'>Создать ключ</Button>
+            <Container className='mt-5 d-flex gap-3'>
+                <Button onClick={() => setAddKeyModal(true)} className='get border-0'>Создать ключ</Button>
             </Container>
             <KeyFilter/>
             <AddKeyModal show={addKeyModal}  onHide={() => setAddKeyModal(false)}/>

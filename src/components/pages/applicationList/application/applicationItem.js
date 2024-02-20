@@ -36,7 +36,7 @@ export const ApplicationItem = ({id,build, room, name, email, start, end, dublic
 
                             </Col>
                             <Col lg={4} md={6} sm={12} className={'d-flex gap-3 justify-content-md-end'}>
-                                <CardTitle> Здание <span className='fw-bold'>{build}</span></CardTitle>
+                                <CardTitle> Корпус <span className='fw-bold'>{build}</span></CardTitle>
                                 <CardTitle>Аудитория <span className='fw-bold'>{room}</span></CardTitle>
                             </Col>
                         </Row>
@@ -53,8 +53,8 @@ export const ApplicationItem = ({id,build, room, name, email, start, end, dublic
 
                             <Col xs={12} md={1} lg={4}
                                  className={'ms-auto d-flex gap-3 mt-3 mt-sm-0 justify-content-end'}>
-                                <Button onClick={() => acceptMutation.mutate(id)} className='btn-success'>Одобрить</Button>
-                                <Button onClick={() => declineMutation.mutate(id)} className='btn-danger'>Отклонить</Button>
+                                <Button onClick={() => acceptMutation.mutate(id)} className='get border-0'>Одобрить</Button>
+                                <Button onClick={() => declineMutation.mutate(id)} className='delit border-0'>Отклонить</Button>
                             </Col>
                         </Row>
 

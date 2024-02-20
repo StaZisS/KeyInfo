@@ -28,7 +28,7 @@ export const AcceptedApplicationsModal = (props) => {
         <Modal {...props} size={'lg'} centered autoFocus={true}>
             <ModalHeader className='d-flex'>
                 <div className='d-flex gap-3'>
-                    <Modal.Title>Здание {props.build}</Modal.Title>
+                    <Modal.Title>Корпус {props.build}</Modal.Title>
                     <Modal.Title>Аудитория {props.room}</Modal.Title>
                 </div>
                 <Modal.Title>Одобренные заявки</Modal.Title>
@@ -50,7 +50,7 @@ export const AcceptedApplicationsModal = (props) => {
                         const endTime = DateHelper.normalizeDate(app.end_time)
                         return (
                             <Row key={app.application_id}
-                                 className='text-start border-bottom mb-3 d-flex align-items-center'>
+                                 className='text-start border-bottom mb-1 d-flex align-items-center'>
                                 <Col>
                                     {startTime.day}.{startTime.month}.{startTime.year}
                                 </Col>
