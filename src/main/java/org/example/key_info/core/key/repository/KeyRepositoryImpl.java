@@ -36,6 +36,7 @@ public class KeyRepositoryImpl implements KeyRepository {
                 .set(KEY.ROOM, entity.roomId())
                 .set(KEY.BUILD, entity.buildId())
                 .set(KEY.LAST_ACCESS, entity.lastAccess())
+                .set(KEY.IS_PRIVATE, entity.isPrivate())
                 .returning(KEY.KEY_ID)
                 .fetchOne(KEY.KEY_ID);
     }
@@ -71,7 +72,7 @@ public class KeyRepositoryImpl implements KeyRepository {
     }
 
     @Override
-    public List<KeyEntity> getAllKeys(Integer build, Integer room) {
+    public List<KeyEntity> getAllKeys(Integer build, Integer room, Boolean isPrivate) {
         var query = create.selectFrom(KEY);
 
         Condition condition = DSL.trueCondition();
@@ -82,6 +83,10 @@ public class KeyRepositoryImpl implements KeyRepository {
 
         if (room != null) {
             condition = condition.and(KEY.ROOM.eq(room));
+        }
+
+        if (isPrivate != null) {
+            condition = condition.and(KEY.IS_PRIVATE.eq(isPrivate));
         }
 
         return query.where(condition)
@@ -105,6 +110,7 @@ public class KeyRepositoryImpl implements KeyRepository {
                 .set(KEY.ROOM, entity.roomId())
                 .set(KEY.BUILD, entity.buildId())
                 .set(KEY.LAST_ACCESS, entity.lastAccess())
+                .set(KEY.IS_PRIVATE, entity.isPrivate())
                 .where(KEY.KEY_ID.eq(entity.keyId()))
                 .execute();
     }

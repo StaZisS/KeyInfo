@@ -17,15 +17,13 @@ import org.example.key_info.public_interface.application.DeclineApplicationDto;
 import org.example.key_info.public_interface.application.GetAllApplicationsDto;
 import org.example.key_info.public_interface.deaneries.AcceptKeyDeaneriesDto;
 import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
+import org.example.key_info.public_interface.key.ChangePrivateStatusKeyDto;
 import org.example.key_info.public_interface.key.GetKeysDto;
 import org.example.key_info.public_interface.key.KeyCreateDto;
 import org.example.key_info.public_interface.key.KeyDeleteDto;
-import org.example.key_info.public_interface.key.KeyDto;
 import org.example.key_info.rest.controller.application.ApplicationResponseDto;
-import org.example.key_info.rest.controller.key.ResponseKeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -151,7 +149,8 @@ public class RestDeaneriesController {
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestParam(required = false, name = "key_status") String keyStatus,
                                                            @RequestParam(required = false) Integer build,
-                                                           @RequestParam(required = false) Integer room) {
+                                                           @RequestParam(required = false) Integer room,
+                                                           @RequestParam(required = false, name = "is_private") Boolean isPrivate) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
         var getKeysDto = new GetKeysDto(
@@ -159,15 +158,13 @@ public class RestDeaneriesController {
                 infoAboutClient.clientRoles(),
                 keyStatus,
                 build,
-                room
+                room,
+                isPrivate
         );
 
         var keys = keyService.getAllKeys(getKeysDto);
-        var body = keys.parallelStream()
-                .map(this::mapToResponseDto)
-                .toList();
 
-        return ResponseEntity.ok(body);
+        return ResponseEntity.ok(keys);
     }
 
     @Operation(summary = "Добавить новый ключ")
@@ -181,7 +178,8 @@ public class RestDeaneriesController {
                 infoAboutClient.clientId(),
                 infoAboutClient.clientRoles(),
                 dto.room(),
-                dto.build()
+                dto.build(),
+                dto.isPrivate()
         );
 
         var keyId = keyService.createKey(keyCreateDto);
@@ -203,6 +201,25 @@ public class RestDeaneriesController {
         );
 
         keyService.deleteKey(keyDeleteDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Изменить приватность ключа")
+    @PatchMapping("/keys/replacing")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Void> changePrivateKey(@RequestBody ChangePrivateKeyDto dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
+
+        var changePrivateStatusKeyDto = new ChangePrivateStatusKeyDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                dto.keyId(),
+                dto.isPrivate()
+        );
+
+        keyService.changePrivateKey(changePrivateStatusKeyDto);
 
         return ResponseEntity.ok().build();
     }
@@ -243,15 +260,6 @@ public class RestDeaneriesController {
         keyService.acceptKeyDeaneries(acceptKeyDeaneriesDto);
 
         return ResponseEntity.ok().build();
-    }
-
-    private ResponseKeyDto mapToResponseDto(KeyDto dto) {
-        return new org.example.key_info.rest.controller.key.ResponseKeyDto(
-                dto.keyId(),
-                dto.buildId(),
-                dto.roomId(),
-                dto.lastAccess()
-        );
     }
 
     private ApplicationResponseDto mapToResponseDto(ApplicationDto dto) {

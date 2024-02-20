@@ -6,12 +6,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.key_info.core.key.service.KeyService;
 import org.example.key_info.public_interface.key.KeyDto;
+import org.example.key_info.rest.controller.deanery.ResponseKeyDto;
 import org.example.key_info.rest.util.JwtTools;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +27,7 @@ public class RestKeyController {
     @Operation(summary = "Получить все ключи пользователя (на руках)")
     @GetMapping()
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<List<ResponseKeyDto>> getMyKeys() {
+    public ResponseEntity<List<ResponseMyKeyDto>> getMyKeys() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
 
@@ -40,11 +39,12 @@ public class RestKeyController {
         return ResponseEntity.ok(body);
     }
 
-    private ResponseKeyDto mapToResponseDto(KeyDto dto) {
-        return new ResponseKeyDto(
+    private ResponseMyKeyDto mapToResponseDto(KeyDto dto) {
+        return new ResponseMyKeyDto(
                 dto.keyId(),
                 dto.buildId(),
                 dto.roomId(),
+                dto.status().name(),
                 dto.lastAccess()
         );
     }
