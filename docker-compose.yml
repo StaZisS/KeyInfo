@@ -1,0 +1,94 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  liquibase:
+    image: liquibase/liquibase:latest
+    container_name: liquibase
+    env_file:
+      - .env
+    environment:
+      - port=5432
+      - host=postgres
+      - tmout=28800
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/db/changelog:/liquibase/changelog
+      - ./liquibase_policy_init.sh:/liquibase/liquibase_policy_init.sh:ro
+      - ./nc.sh:/liquibase/nc.sh:ro
+      - ./wait_for_port.sh:/liquibase/wait_for_port.sh:ro
+    entrypoint: ./liquibase_policy_init.sh
+    networks:
+      - my_network
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/var/lib/redis/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    networks:
+      - my_network
+
+  key-info:
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${KEY_INFO_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    build:
+      dockerfile: backend/Dockerfile
+      network: host
+      args:
+        - DB_URL=jdbc:postgresql://localhost:5432/${KEY_INFO_DB}
+        - DB_USERNAME=${POSTGRES_USER}
+        - DB_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+    networks:
+      - my_network
+
+volumes:
+  postgres:
+    driver: local
+  redis:
+    driver: local
+
+networks:
+  my_network:
+    driver: bridge

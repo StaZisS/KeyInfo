@@ -1,0 +1,47 @@
+[versions]
+spring-boot = "3.2.2"
+testcontainer = "1.19.4"
+spring-security = "6.2.1"
+jjwt = "0.12.3"
+grpc = "1.58.0"
+
+[plugins]
+liquibase-plugin = { id = "org.liquibase.gradle", version = "2.2.1" }
+jooq-plugin = { id = "nu.studer.jooq", version = "8.2" }
+protobuf-plugin = { id = "com.google.protobuf", version = "0.9.4" }
+
+[libraries]
+#Spring lib
+spring-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+
+#security
+spring-security-core = { module = "org.springframework.security:spring-security-core", version.ref = "spring-security" }
+spring-security-web = { module = "org.springframework.security:spring-security-web", version.ref = "spring-security" }
+spring-security-config = { module = "org.springframework.security:spring-security-config", version.ref = "spring-security" }
+
+#Test lib
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainer" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainer" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainer" }
+testcontainers-redis = { module = "com.redis:testcontainers-redis", version = "2.0.1"}
+
+#Jooq lib
+jooq-start = { module = "org.springframework.boot:spring-boot-starter-jooq", version.ref = "spring-boot" }
+jooq-codegen = { module = "org.jooq:jooq-codegen", version = "3.18.6" }
+
+#Database driver
+postgresql-driver = { module = "org.postgresql:postgresql", version = "42.6.0" }
+spring-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
+
+#Liquebase lib
+liquibase-core = { module = "org.liquibase:liquibase-core", version = "" }
+picocli = { module = "info.picocli:picocli", version = "4.6.3" }
+
+#Tomcat lib
+tomcat-annotations-api = { module = "org.apache.tomcat:annotations-api", version = "6.0.53" }
+
+#Jwt libs
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jakarta-bind-api = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version = "4.0.1" }

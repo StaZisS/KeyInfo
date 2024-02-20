@@ -1,0 +1,133 @@
+import nu.studer.gradle.jooq.JooqEdition
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+    alias(libs.plugins.liquibase.plugin)
+    alias(libs.plugins.jooq.plugin)
+}
+
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation libs.spring.web
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' exclude(group: "com.vaadin.external.google", module:"android-json")
+    testImplementation libs.testcontainers.core
+    testImplementation libs.testcontainers.junit.jupiter
+    testImplementation libs.testcontainers.postgresql
+
+    runtimeOnly libs.postgresql.driver
+
+    implementation libs.jooq.codegen
+    implementation libs.jooq.start
+    jooqGenerator libs.postgresql.driver
+
+    implementation libs.liquibase.core
+    liquibaseRuntime libs.liquibase.core
+    liquibaseRuntime libs.postgresql.driver
+    liquibaseRuntime libs.picocli
+
+    compileOnly libs.tomcat.annotations.api
+
+    runtimeOnly libs.jjwt.impl
+    runtimeOnly libs.jjwt.jackson
+    implementation libs.jjwt.api
+    implementation libs.jakarta.bind.api
+
+    implementation libs.spring.security.core
+    implementation  libs.spring.security.web
+    implementation  libs.spring.security.config
+
+    implementation libs.spring.data.redis
+    implementation 'redis.clients:jedis:5.1.0'
+
+    implementation libs.testcontainers.redis
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def db = [
+        url: System.getenv('DB_URL') ?: 'jdbc:postgresql://localhost:5432/KeyInfo',
+        username: System.getenv('DB_USERNAME') ?: 'postgres',
+        password: System.getenv('DB_PASSWORD') ?: '123',
+        changelogFilePath: 'src/main/resources/db/changelog/db.changelog-init.yaml'
+]
+
+liquibase {
+    activities {
+        main {
+            changelogFile "${db.changelogFilePath}"
+            url "${db.url}"
+            username "${db.username}"
+            password "${db.password}"
+        }
+    }
+    runList = 'main'
+}
+
+jooq {
+    version = dependencyManagement.importedProperties['jooq.version']
+    edition = JooqEdition.OSS
+
+    configurations {
+        main {
+            generationTool {
+
+                logging = org.jooq.meta.jaxb.Logging.ERROR
+
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = "${db.url}"
+                    user = "${db.username}"
+                    password = "${db.password}"
+                    properties {
+                        property {
+                            key = 'PAGE_SIZE'
+                            value = 2048
+                        }
+                    }
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        includes = 'public.*'
+                        excludes = 'public\\.(Databasechangelog|Databasechangeloglock)'
+                    }
+                    target {
+                        packageName = 'com.example.shop'
+                    }
+                    strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+                }
+            }
+        }
+    }
+}
