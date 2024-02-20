@@ -1,0 +1,32 @@
+
+.link-hover{
+    transition: background-color 0.35s ease;
+}
+.link-hover:focus{
+    color: white !important;
+}
+
+
+
+
+.link-hover:hover{
+    color: white;
+}
+
+@media (min-width: 992px) {
+    .link-hover:hover{
+        background-color: var(--color-blue);
+    }
+}
+
+.header *{
+    color: var(--color-header-font);
+}
+
+.header-logo{
+    color: white;
+}
+
+.header-logo:hover{
+    color: white;
+}
