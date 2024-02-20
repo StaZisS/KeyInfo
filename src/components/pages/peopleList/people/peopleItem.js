@@ -18,9 +18,9 @@ export const PeopleItem = ({userId, name, email, roles}) => {
     }
 
     return (
-        <div className='w-100 d-flex item border flex-nowrap justify-content-between'>
+        <div className='w-100 d-flex item border flex-wrap justify-content-between'>
 
-            <div className='d-flex h-100 align-items-center'>
+            <div className='d-flex h-100 align-items-center py-3'>
                 <div className='ps-3 d-flex align-items-center flex-grow-0 gap-3 number'>
                     <span>ФИО: <span className={'fw-bold'}>{name}</span></span>
                     <span>Email: <span className={'fw-bold'}>{email}</span></span>
