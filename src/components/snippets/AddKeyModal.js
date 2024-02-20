@@ -20,6 +20,9 @@ export const AddKeyModal = (props) => {
             setBuild("")
             setRoom("")
             queryClient.invalidateQueries(['keys'])
+        },
+        onError(){
+            alert('Для данного ключа нет аудитории')
         }
     })
 

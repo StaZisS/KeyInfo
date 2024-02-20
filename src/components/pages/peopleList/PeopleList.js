@@ -35,7 +35,6 @@ export const PeopleList = () => {
         )
     }
 
-
     return (
         <Container className='mt-5'>
             <Card className={'rounded-0'}>

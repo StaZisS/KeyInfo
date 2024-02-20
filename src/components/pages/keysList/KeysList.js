@@ -31,12 +31,6 @@ export const KeysList = observer(() => {
         )
     }
 
-    if (error) {
-        return (
-            <p>Ошибка</p>
-        )
-    }
-
 
     return (
         <>
