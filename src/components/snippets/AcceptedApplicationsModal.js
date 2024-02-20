@@ -62,7 +62,6 @@ export const AcceptedApplicationsModal = (props) => {
 
                                 <Col className={`flex-grow-1 ${styles.wrap}`}>
                                     {app.owner_email}
-                                    gdgdgd
                                 </Col>
                                 <Col className={`flex-grow-1 ${styles.wrap}`}>
                                 {app.owner_name}
