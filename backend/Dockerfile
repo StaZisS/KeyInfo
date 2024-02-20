@@ -18,7 +18,7 @@ ENV DB_USERNAME=${DB_USERNAME}
 ENV DB_PASSWORD=${DB_PASSWORD}
 
 WORKDIR /home/gradle/project
-COPY --chown=gradle:gradle . .
+COPY --chown=gradle:gradle .. .
 RUN gradle build --no-daemon --exclude-task test
 
 FROM openjdk:21

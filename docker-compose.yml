@@ -65,7 +65,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     build:
-      dockerfile: Dockerfile
+      dockerfile: backend/Dockerfile
       network: host
       args:
         - DB_URL=jdbc:postgresql://localhost:5432/${KEY_INFO_DB}
