@@ -68,7 +68,7 @@ public class AccommodationService {
     }
 
     private void checkExistenceKey(int buildId, int roomId) {
-        var keys = keyRepository.getAllKeys(buildId, roomId);
+        var keys = keyRepository.getAllKeys(buildId, roomId, null);
 
         if (!keys.isEmpty()) {
             throw new ExceptionInApplication("Нельзя удалить аудиторию, в которой есть ключи", ExceptionType.INVALID);

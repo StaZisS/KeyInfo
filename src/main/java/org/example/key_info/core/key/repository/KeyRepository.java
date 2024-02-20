@@ -9,7 +9,7 @@ public interface KeyRepository {
     UUID createKey(KeyEntity entity);
     void deleteKey(UUID keyId);
     List<KeyEntity> getAllKeys(FilterKeyDto dto);
-    List<KeyEntity> getAllKeys(Integer build, Integer room);
+    List<KeyEntity> getAllKeys(Integer build, Integer room, Boolean isPrivate);
     Optional<KeyEntity> getKey(UUID keyId);
     void updateKey(KeyEntity entity);
     void updateKeyHolder(UUID keyId, UUID keyHolderId);

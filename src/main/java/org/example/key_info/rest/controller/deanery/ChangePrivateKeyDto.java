@@ -1,8 +1,9 @@
 package org.example.key_info.rest.controller.deanery;
 
-public record AddKeyDto(
-        int build,
-        int room,
+import java.util.UUID;
+
+public record ChangePrivateKeyDto(
+        UUID keyId,
         boolean isPrivate
 ) {
 }

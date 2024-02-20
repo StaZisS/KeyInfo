@@ -235,7 +235,9 @@ VALUES ('c308ebf6-adf9-472f-89fe-7305fc6a441e', '8936215c-c56e-4463-b7fb-b9520c1
        ('1a5c46f8-07e1-442c-9f15-dd7dc52843f9', '8936215c-c56e-4463-b7fb-b9520c1a90f4', '2024-02-24 12:25:00.0 +00:00', '2024-02-24 14:00:00.0 +00:00', 'IN_PROCESS', CURRENT_TIMESTAMP, 1, 4, false, null);
 
 --changeset gordey_dovydenko:12
-
 INSERT INTO Key
 VALUES
        ('b4335b92-9fcc-4dbf-931c-9edf6e52b7a6', 'IN_HAND', '8936215c-c56e-4463-b7fb-b9520c1a90f4', 2, 4, CURRENT_TIMESTAMP);
+
+--changeset T9404:13
+ALTER TABLE Key ADD COLUMN is_private BOOLEAN DEFAULT FALSE;

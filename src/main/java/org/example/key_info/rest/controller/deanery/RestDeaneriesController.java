@@ -17,6 +17,7 @@ import org.example.key_info.public_interface.application.DeclineApplicationDto;
 import org.example.key_info.public_interface.application.GetAllApplicationsDto;
 import org.example.key_info.public_interface.deaneries.AcceptKeyDeaneriesDto;
 import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
+import org.example.key_info.public_interface.key.ChangePrivateStatusKeyDto;
 import org.example.key_info.public_interface.key.GetKeysDto;
 import org.example.key_info.public_interface.key.KeyCreateDto;
 import org.example.key_info.public_interface.key.KeyDeleteDto;
@@ -148,7 +149,8 @@ public class RestDeaneriesController {
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<ResponseKeyDto>> getAllKeys(@RequestParam(required = false, name = "key_status") String keyStatus,
                                                            @RequestParam(required = false) Integer build,
-                                                           @RequestParam(required = false) Integer room) {
+                                                           @RequestParam(required = false) Integer room,
+                                                           @RequestParam(required = false, name = "is_private") Boolean isPrivate) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
         var getKeysDto = new GetKeysDto(
@@ -156,7 +158,8 @@ public class RestDeaneriesController {
                 infoAboutClient.clientRoles(),
                 keyStatus,
                 build,
-                room
+                room,
+                isPrivate
         );
 
         var keys = keyService.getAllKeys(getKeysDto);
@@ -175,7 +178,8 @@ public class RestDeaneriesController {
                 infoAboutClient.clientId(),
                 infoAboutClient.clientRoles(),
                 dto.room(),
-                dto.build()
+                dto.build(),
+                dto.isPrivate()
         );
 
         var keyId = keyService.createKey(keyCreateDto);
@@ -197,6 +201,25 @@ public class RestDeaneriesController {
         );
 
         keyService.deleteKey(keyDeleteDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Изменить приватность ключа")
+    @PatchMapping("/keys/replacing")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Void> changePrivateKey(@RequestBody ChangePrivateKeyDto dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var infoAboutClient = jwtTools.getClientInfoFromAccessToken(auth);
+
+        var changePrivateStatusKeyDto = new ChangePrivateStatusKeyDto(
+                infoAboutClient.clientId(),
+                infoAboutClient.clientRoles(),
+                dto.keyId(),
+                dto.isPrivate()
+        );
+
+        keyService.changePrivateKey(changePrivateStatusKeyDto);
 
         return ResponseEntity.ok().build();
     }

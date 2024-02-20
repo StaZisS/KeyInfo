@@ -9,6 +9,7 @@ public record KeyCreateDto(
         UUID clientId,
         Set<ClientRole> clientRoles,
         int roomId,
-        int buildId
+        int buildId,
+        boolean isPrivate
 ) {
 }

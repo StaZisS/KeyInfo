@@ -9,6 +9,7 @@ public record KeyEntity(
         UUID keyHolderId,
         int roomId,
         int buildId,
-        OffsetDateTime lastAccess
+        OffsetDateTime lastAccess,
+        boolean isPrivate
 ) {
 }

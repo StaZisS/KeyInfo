@@ -18,6 +18,9 @@ public record ResponseKeyDto(
         @JsonProperty("last_access")
         OffsetDateTime lastAccess,
 
-        ClientProfileDto client
+        ClientProfileDto client,
+
+        @JsonProperty("is_private")
+        boolean isPrivate
 ) {
 }

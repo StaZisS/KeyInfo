@@ -13,7 +13,8 @@ public class KeyEntityMapper implements RecordMapper<KeyRecord, KeyEntity> {
                 record.getKeyHolderId(),
                 record.getRoom(),
                 record.getBuild(),
-                record.getLastAccess()
+                record.getLastAccess(),
+                record.getIsPrivate()
         );
     }
 }

@@ -11,6 +11,7 @@ public record KeyDto(
         UUID keyHolderId,
         int roomId,
         int buildId,
-        OffsetDateTime lastAccess
+        OffsetDateTime lastAccess,
+        boolean isPrivate
 ){
 }

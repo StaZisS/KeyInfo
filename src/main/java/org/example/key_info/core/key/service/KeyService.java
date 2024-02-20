@@ -13,10 +13,8 @@ import org.example.key_info.public_interface.deaneries.AcceptKeyDeaneriesDto;
 import org.example.key_info.public_interface.deaneries.GiveKeyDeaneriesDto;
 import org.example.key_info.public_interface.exception.ExceptionInApplication;
 import org.example.key_info.public_interface.exception.ExceptionType;
-import org.example.key_info.public_interface.key.GetKeysDto;
-import org.example.key_info.public_interface.key.KeyCreateDto;
-import org.example.key_info.public_interface.key.KeyDeleteDto;
-import org.example.key_info.public_interface.key.KeyDto;
+import org.example.key_info.public_interface.key.*;
+import org.example.key_info.rest.controller.deanery.ChangePrivateKeyDto;
 import org.example.key_info.rest.controller.deanery.ResponseKeyDto;
 import org.springframework.stereotype.Service;
 
@@ -48,12 +46,32 @@ public class KeyService {
                             keyDto.roomId(),
                             keyDto.status().name(),
                             keyDto.lastAccess(),
-                            clientDto
+                            clientDto,
+                            keyDto.isPrivate()
                     );
                 })
                 .toList();
 
         return responseKeyDto;
+    }
+
+    public void changePrivateKey(ChangePrivateStatusKeyDto dto) {
+        checkClientRoles(dto.roles());
+
+        var key = keyRepository.getKey(dto.keyId())
+                .orElseThrow(() -> new ExceptionInApplication("Ключ не найден", ExceptionType.NOT_FOUND));
+
+        var updatedKey = new KeyEntity(
+                key.keyId(),
+                key.status(),
+                key.keyHolderId(),
+                key.roomId(),
+                key.buildId(),
+                OffsetDateTime.now(),
+                dto.isPrivate()
+        );
+
+        keyRepository.updateKey(updatedKey);
     }
 
     private ClientProfileDto getClientProfileDto(KeyDto keyDto) {
@@ -83,7 +101,7 @@ public class KeyService {
     }
 
     private List<KeyDto> getAllKeyDto(GetKeysDto dto) {
-        return keyRepository.getAllKeys(dto.buildId(), dto.roomId())
+        return keyRepository.getAllKeys(dto.buildId(), dto.roomId(), dto.isPrivate())
                 .stream()
                 .map(this::mapEntityToDto)
                 .toList();
@@ -93,7 +111,8 @@ public class KeyService {
         var filterKeyDto = new FilterKeyDto(
                 KeyStatus.getKeyStatusByName(dto.keyStatus()),
                 dto.buildId(),
-                dto.roomId()
+                dto.roomId(),
+                dto.isPrivate()
         );
 
         return keyRepository.getAllKeys(filterKeyDto)
@@ -120,7 +139,8 @@ public class KeyService {
                 null,
                 dto.roomId(),
                 dto.buildId(),
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                dto.isPrivate()
         );
 
         return keyRepository.createKey(keyEntity);
@@ -138,13 +158,18 @@ public class KeyService {
         var key = keyRepository.getKey(dto.keyId())
                 .orElseThrow(() -> new ExceptionInApplication("Ключ не найден", ExceptionType.NOT_FOUND));
 
+        if (key.isPrivate()) {
+            throw new ExceptionInApplication("Нельзя выдать внутренний ключ", ExceptionType.INVALID);
+        }
+
         var updatedKey = new KeyEntity(
                 key.keyId(),
                 KeyStatus.IN_HAND,
                 dto.receiverId(),
                 key.roomId(),
                 key.buildId(),
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                key.isPrivate()
         );
         keyRepository.updateKey(updatedKey);
     }
@@ -161,7 +186,8 @@ public class KeyService {
                 null,
                 key.roomId(),
                 key.buildId(),
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                key.isPrivate()
         );
         keyRepository.updateKey(updatedKey);
     }
@@ -173,7 +199,8 @@ public class KeyService {
                 entity.keyHolderId(),
                 entity.roomId(),
                 entity.buildId(),
-                entity.lastAccess()
+                entity.lastAccess(),
+                entity.isPrivate()
         );
     }
 
