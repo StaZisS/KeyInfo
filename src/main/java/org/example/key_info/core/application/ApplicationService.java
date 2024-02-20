@@ -119,10 +119,6 @@ public class ApplicationService {
             throw new ExceptionInApplication("Вы не можете изменить чужую заявку", ExceptionType.INVALID);
         }
 
-        if(application.status() != ApplicationStatus.IN_PROCESS) {
-            throw new ExceptionInApplication("Вы не можете изменить завершенную заявку", ExceptionType.INVALID);
-        }
-
         var updatedApplication = new ApplicationEntity(
                 dto.applicationId(),
                 dto.clientId(),
@@ -146,10 +142,6 @@ public class ApplicationService {
         checkClientRoles(dto.clientRoles());
         var application = applicationRepository.getApplication(dto.applicationId())
                 .orElseThrow(() -> new ExceptionInApplication("Заявка не найдена", ExceptionType.NOT_FOUND));
-
-        if(application.status() != ApplicationStatus.IN_PROCESS) {
-            throw new ExceptionInApplication("Вы не можете изменить завершенную заявку", ExceptionType.INVALID);
-        }
 
         var updatedApplication = new ApplicationEntity(
                 application.applicationId(),
