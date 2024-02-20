@@ -4,6 +4,7 @@ import KeyService from "../services/KeyService";
 class KeysStore {
 
     keys_status = undefined
+    is_private = undefined
     build = undefined
     room = undefined
 
@@ -24,9 +25,13 @@ class KeysStore {
         this.room = room
     }
 
+    setIsPrivate(bool){
+        this.is_private = bool
+    }
+
     async getKeys() {
         try {
-            const response = await KeyService.getKeys(this.keys_status, this.build, this.room)
+            const response = await KeyService.getKeys(this.keys_status, this.build, this.room, this.is_private)
             return response
         } catch (e) {
             console.log(e)
@@ -42,9 +47,9 @@ class KeysStore {
         }
     }
 
-    async deleteKey(keyId){
+    async hideKey(keyId,status){
         try {
-            await KeyService.deleteKey(keyId)
+            await KeyService.hideKey(keyId, status)
         }catch (e){
             console.log(e)
         }
