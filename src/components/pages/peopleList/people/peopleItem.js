@@ -27,12 +27,12 @@ export const PeopleItem = ({userId, name, email, roles}) => {
                 </div>
             </div>
             <div className="buttons d-flex h-100 align-items-center">
-                {roles.includes('TEACHER') &&
-                    <ButtonTeacher roles={roles} callback={() => handleAddRole(['TEACHER'])}/>
-                }
-                {roles.includes('STUDENT') &&
-                    <ButtonStudent roles={roles} callback={() => handleAddRole(['STUDENT'])}/>
-                }
+                {/*{roles.includes('TEACHER') &&*/}
+                {/*    <ButtonTeacher roles={roles} callback={() => handleAddRole(['TEACHER'])}/>*/}
+                {/*}*/}
+                {/*{roles.includes('STUDENT') &&*/}
+                {/*    <ButtonStudent roles={roles} callback={() => handleAddRole(['STUDENT'])}/>*/}
+                {/*}*/}
                 {roles.includes('UNSPECIFIED') &&
                     <>
                         <ButtonStudent roles={roles} callback={() => handleAddRole(['STUDENT'])}/>
