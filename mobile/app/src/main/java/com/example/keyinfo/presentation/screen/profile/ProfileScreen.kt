@@ -228,6 +228,7 @@ fun BottomSheetContent(
                         Font(R.font.poppins)
                     ),
                     textAlign = TextAlign.Center,
+                    color = AccentColor
                 )
             )
             Spacer(modifier = Modifier.height(32.dp))

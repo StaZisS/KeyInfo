@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KeyInfo</string>
+    <string name="app_name">TSU.KeyInfo</string>
     <string name="logo">FИЛЬМУС</string>
     <string name="registration">Регистрация</string>
     <string name="to_register">Зарегистрироваться</string>
