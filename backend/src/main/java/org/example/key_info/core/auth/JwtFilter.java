@@ -47,7 +47,7 @@ public class JwtFilter extends GenericFilterBean {
 
             String url = ((HttpServletRequest) request).getRequestURI();
 
-            if(!url.contains("auth") && jwtInfoToken.getAuthorities().contains(Role.UNSPECIFIED)) {
+            if(!(url.contains("auth") || url.contains("profiles")) && jwtInfoToken.getAuthorities().contains(Role.UNSPECIFIED)) {
                 throw new ExceptionInApplication("Access denied for UNSPECIFIED role", ExceptionType.FORBIDDEN);
             }
         } catch (ExceptionInApplication e) {
