@@ -29,8 +29,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.keyinfo.R
 import com.example.keyinfo.common.Constants.CLASSES
 import com.example.keyinfo.domain.model.schedule.Audience
-import com.example.keyinfo.presentation.screen.keytransfer.dialog.ConfirmDialog
+import com.example.keyinfo.presentation.screen.schedule.components.ConfirmDialog
 import com.example.keyinfo.presentation.screen.main.KeyCard
+import com.example.keyinfo.presentation.screen.main.WaitScreen
 import com.example.keyinfo.presentation.screen.schedule.components.BuildingsRow
 import com.example.keyinfo.presentation.screen.schedule.components.Day
 import com.example.keyinfo.presentation.screen.schedule.components.DaysOfWeekTitle
@@ -109,112 +110,127 @@ fun ScheduleScreen() {
             audienceInfo = currentAudience!!
         )
     }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 40.dp, start = 16.dp, bottom = 48.dp, end = 16.dp)
-    ) {
-        item {
-            Text(text = "${
-                state.lastVisibleMonth.yearMonth.month.getDisplayName(
-                    TextStyle.FULL_STANDALONE, Locale.getDefault()
-                )
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            } ${state.lastVisibleMonth.yearMonth.year}",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontSize = 22.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins)),
-                    color = CalendarDayColor
-                ),
-                modifier = Modifier.padding(start = 14.dp))
-            Spacer(modifier = Modifier.height(28.dp))
-        }
-        item {
-            HorizontalCalendar(
-                contentPadding = PaddingValues(0.dp),
-                state = state,
-                modifier = Modifier.fillMaxWidth(),
-                dayContent = { day ->
-                    Day(day, isSelected = selectedDate == day.date) { curDay ->
-                        selectedDate = if (selectedDate == curDay.date) null else curDay.date
-                    }
-                },
-                monthHeader = {
-                    DaysOfWeekTitle(daysOfWeek = daysOfWeek)
-                },
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-        }
-        item {
-            AnimatedVisibility(visible = selectedDate != null) {
-                BuildingsRow(
-                    viewModel.selectedBuilding, viewModel.buildings
-                )
-            }
-            Spacer(Modifier.height(10.dp))
-        }
-        item {
-            AnimatedVisibility(visible = selectedBuilding != null && selectedDate != null) {
-                if (selectedTimeIndex == null) {
-                    TimeRow(viewModel.dialogVisible, null)
-                } else {
-                    TimeRow(viewModel.dialogVisible, CLASSES[selectedTimeIndex!!])
-                }
-            }
-            Spacer(Modifier.height(10.dp))
-        }
-        val filteredAudiences = filterAudiences(viewModel.audiences, searchText)
-        Log.d("ScheduleScreen", "filteredAudiences: $filteredAudiences")
-        if (viewModel.isLoading.value) {
-            item {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp),
-                    color = AccentColor,
-                    trackColor = SecondButtonColor
-                )
-
-            }
+    if (viewModel.isLoading.value && !allParamsSelected) {
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp),
+            color = AccentColor,
+            trackColor = SecondButtonColor
+        )
+    } else {
+        if (viewModel.isUnspecified.value) {
+            WaitScreen()
         } else {
-            item {
-                AnimatedVisibility(visible = allParamsSelected) {
-                    SearchRow(
-                        text = stringResource(id = R.string.schedule_search),
-                        viewModel.searchText,
-                        KeyboardOptions(keyboardType = KeyboardType.Number),
-                    )
-                }
-            }
-            if (filteredAudiences.isEmpty() && allParamsSelected) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 40.dp, start = 16.dp, bottom = 48.dp, end = 16.dp)
+            ) {
                 item {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = "Нет доступных аудиторий",
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins)),
-                        ),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            } else {
-                items(filteredAudiences.size) {
-                    val audience = filteredAudiences[it]
-                    AnimatedVisibility(visible = allParamsSelected) {
-                        KeyCard(
-                            audience = audience.audience,
-                            building = audience.building,
-                            startDate = audience.startTime,
-                            endDate = audience.endTime,
-                            status = audience.status,
-                            onClick = {
-                                currentAudience = audience
-                                confirmDialogOpened = true
-                            },
-                            modifier = Modifier.padding(bottom = 16.dp)
+                    Text(text = "${
+                        state.lastVisibleMonth.yearMonth.month.getDisplayName(
+                            TextStyle.FULL_STANDALONE, Locale.getDefault()
                         )
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    } ${state.lastVisibleMonth.yearMonth.year}",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 22.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins)),
+                            color = CalendarDayColor
+                        ),
+                        modifier = Modifier.padding(start = 14.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
+                }
+                item {
+                    HorizontalCalendar(
+                        contentPadding = PaddingValues(0.dp),
+                        state = state,
+                        modifier = Modifier.fillMaxWidth(),
+                        dayContent = { day ->
+                            Day(day, isSelected = selectedDate == day.date) { curDay ->
+                                selectedDate =
+                                    if (selectedDate == curDay.date) null else curDay.date
+                            }
+                        },
+                        monthHeader = {
+                            DaysOfWeekTitle(daysOfWeek = daysOfWeek)
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
+                item {
+                    AnimatedVisibility(visible = selectedDate != null) {
+                        BuildingsRow(
+                            viewModel.selectedBuilding, viewModel.buildings
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                item {
+                    AnimatedVisibility(visible = selectedBuilding != null && selectedDate != null) {
+                        if (selectedTimeIndex == null) {
+                            TimeRow(viewModel.dialogVisible, null)
+                        } else {
+                            TimeRow(viewModel.dialogVisible, CLASSES[selectedTimeIndex!!])
+                        }
+                    }
+                    Spacer(Modifier.height(10.dp))
+                }
+                val filteredAudiences = filterAudiences(viewModel.audiences, searchText)
+                Log.d("ScheduleScreen", "filteredAudiences: $filteredAudiences")
+                if (viewModel.isLoading.value) {
+                    item {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(4.dp),
+                            color = AccentColor,
+                            trackColor = SecondButtonColor
+                        )
+
+                    }
+                } else {
+                    item {
+                        AnimatedVisibility(visible = allParamsSelected) {
+                            SearchRow(
+                                text = stringResource(id = R.string.schedule_search),
+                                viewModel.searchText,
+                                KeyboardOptions(keyboardType = KeyboardType.Number),
+                            )
+                        }
+                    }
+                    if (filteredAudiences.isEmpty() && allParamsSelected) {
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Text(
+                                text = "Нет доступных аудиторий",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontSize = 14.sp,
+                                    fontFamily = FontFamily(Font(R.font.poppins)),
+                                ),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    } else {
+                        items(filteredAudiences.size) {
+                            val audience = filteredAudiences[it]
+                            AnimatedVisibility(visible = allParamsSelected) {
+                                KeyCard(
+                                    audience = audience.audience,
+                                    building = audience.building,
+                                    startDate = audience.startTime,
+                                    endDate = audience.endTime,
+                                    status = audience.status,
+                                    onClick = {
+                                        currentAudience = audience
+                                        confirmDialogOpened = true
+                                    },
+                                    modifier = Modifier.padding(bottom = 16.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }

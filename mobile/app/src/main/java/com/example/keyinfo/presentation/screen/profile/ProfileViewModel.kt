@@ -3,6 +3,7 @@ package com.example.keyinfo.presentation.screen.profile
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.keyinfo.common.Constants
@@ -27,6 +28,7 @@ import java.net.SocketTimeoutException
 class ProfileViewModel(val context: Context) : ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> get() = _state
+    var showSheet = mutableStateOf(false)
 
     private val getProfileUseCase = GetProfileUseCase()
     private val postLogoutUseCase = PostLogoutUseCase()

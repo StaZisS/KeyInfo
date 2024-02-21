@@ -27,14 +27,14 @@ fun WaitScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             painter = painterResource(id = R.drawable.waiting),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 60.dp, bottom = 35.dp)
+                .padding(top = 100.dp, bottom = 35.dp)
         )
 
         Text(

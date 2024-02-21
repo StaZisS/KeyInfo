@@ -40,6 +40,7 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
     var currentAudience = mutableStateOf<Audience?>(null)
 
     var isLoading = mutableStateOf(false)
+    var isUnspecified = mutableStateOf(false)
 
 
     private val getBuildingsUseCase = GetBuildingsUseCase()
@@ -48,6 +49,7 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
 
 
     fun getBuildings() {
+        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getBuildingsUseCase.invoke()
@@ -69,6 +71,8 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
                     Log.d("ScheduleViewModel", "getBuildings: ${e.message}")
                     showToast("Произошла ошибка: ${e.message}")
                 }
+            } finally {
+                isLoading.value = false
             }
         }
     }
@@ -173,8 +177,8 @@ class ScheduleViewModel(val context: Context) : ViewModel() {
         when (exception) {
             is HttpException -> {
                 when (exception.code()) {
-                    400 -> showToast("Не удалось создать дублирующуюся заявку")
-                    401 -> showToast("Ошибка авторизации")
+                    400 -> showToast("Не удалось создать заявку")
+                    401 -> isUnspecified.value = true
                     403 -> showToast("Доступ запрещен")
                     404 -> showToast("Ресурс не найден")
                     500 -> showToast("Внутренняя ошибка сервера")

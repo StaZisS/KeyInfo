@@ -144,7 +144,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val result = getRequestsUseCase.invoke(TransferStatus.DECLINED)
                 withContext(Dispatchers.Main) {
                     result.fold(
-                        onSuccess = {request ->
+                        onSuccess = { request ->
                             _state.value = state.value.copy(declinedRequests = request)
                         },
                         onFailure = { exception ->
@@ -173,6 +173,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
         when (exception) {
             is HttpException -> when (exception.code()) {
                 400 -> showToast("Something went wrong...")
+                401 -> {}
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
 

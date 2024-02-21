@@ -315,6 +315,7 @@ class KeyTransferViewModel(private val context: Context) : ViewModel() {
         when (exception) {
             is HttpException -> when (exception.code()) {
                 400 -> showToast("Something went wrong...")
+                401 -> {}
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
 

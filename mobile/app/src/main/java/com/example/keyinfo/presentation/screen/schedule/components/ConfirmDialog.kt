@@ -1,4 +1,4 @@
-package com.example.keyinfo.presentation.screen.keytransfer.dialog
+package com.example.keyinfo.presentation.screen.schedule.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,8 +39,9 @@ import com.example.keyinfo.domain.model.schedule.Audience
 import com.example.keyinfo.domain.model.schedule.AudienceStatus
 import com.example.keyinfo.presentation.screen.components.PairButtons
 import com.example.keyinfo.presentation.screen.main.KeyCard
-import com.example.keyinfo.presentation.screen.schedule.components.CustomDateField
 import com.example.keyinfo.ui.theme.AccentColor
+import com.example.keyinfo.ui.theme.BaseButtonColor
+import com.example.keyinfo.ui.theme.Values
 import com.example.keyinfo.ui.theme.Values.BasePadding
 import com.example.keyinfo.ui.theme.Values.CenterPadding
 import com.example.keyinfo.ui.theme.Values.DialogRound
@@ -48,6 +55,7 @@ fun ConfirmDialog(
     untilDate: MutableState<String>,
     audienceInfo: Audience
 ) {
+    val infoDialogOpen = remember { mutableStateOf(false) }
     Dialog(
         onDismissRequest = {
             onCancelClick()
@@ -100,7 +108,7 @@ fun ConfirmDialog(
                         )
                     )
                     Text(
-                        text = stringResource(id = R.string.dublicate),
+                        text = stringResource(id = R.string.duplicate),
                         style = TextStyle(
                             fontSize = 15.sp,
                             fontWeight = FontWeight.W600,
@@ -108,6 +116,20 @@ fun ConfirmDialog(
                         ),
                         textAlign = TextAlign.Center,
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = { infoDialogOpen.value = true },
+                        modifier = Modifier
+                            .padding(end = BasePadding)
+                            .size(20.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = AccentColor
+                        )
+                    }
+
                 }
                 if (checkBoxChecked.value) {
                     CustomDateField(
@@ -133,6 +155,54 @@ fun ConfirmDialog(
                     secondClick = { onCancelClick() },
                     modifier = Modifier.padding(top = 16.dp)
                 )
+            }
+        }
+    }
+    if (infoDialogOpen.value) {
+        Dialog(
+            onDismissRequest = { infoDialogOpen.value = false }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(BasePadding),
+                shape = RoundedCornerShape(DialogRound),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(BasePadding)
+                        .size(100.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.duplicate_info_description),
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.W600,
+                            textAlign = TextAlign.Center,
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = { infoDialogOpen.value = false },
+                        shape = RoundedCornerShape(Values.BigRound),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(Values.ButtonHeight),
+                        colors = BaseButtonColor
+                    ) {
+                        Text(
+                            text = stringResource(R.string.ok),
+                            style = TextStyle(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.W600
+                            )
+                        )
+                    }
+                }
             }
         }
     }

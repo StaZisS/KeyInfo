@@ -62,6 +62,8 @@ class LoadingViewModel(private val context: Context) : ViewModel() {
         when (exception) {
             is HttpException -> when (exception.code()) {
                 400 -> showToast("Something went wrong...")
+                401 -> showToast("Необходима повторная авторизация")
+
                 500 -> {
                     Log.d("LoadingViewModel", "Error: ${exception.message()}")
                     Log.d("LoadingViewModel", "Error: ${exception.response()}")

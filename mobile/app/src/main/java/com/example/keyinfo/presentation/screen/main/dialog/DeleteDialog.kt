@@ -48,7 +48,7 @@ fun DeleteDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Values.BasePadding),
-            shape = RoundedCornerShape(Values.LittleRound),
+            shape = RoundedCornerShape(Values.DialogRound),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(

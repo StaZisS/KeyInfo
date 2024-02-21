@@ -75,8 +75,8 @@
     <string name="error_description">Попробуйте проверить интернет-соединение или перезайдите в аккаунт</string>
     <string name="to_main">На главный</string>
 
-    <string name="registration_wait_title">Ваша заявка на регистрацию находится на рассмотрении</string>
-    <string name="registration_wait_description">Как только деканат подтвердит заявку, вы получите уведомление</string>
+    <string name="registration_wait_title">Ваша заявка на регистрацию в рассмотрении</string>
+    <string name="registration_wait_description">Дождитесь подтверждения заявки деканатом</string>
 
     <string name="main_approved">Одобренные заявки</string>
     <string name="main_cancelled">Отклоненные заявки</string>
@@ -99,8 +99,11 @@
     <string name="reject">Отклонить</string>
     <string name="want_transfer">хочет передать вам ключ</string>
 
-    <string name="dublicate">Дублировать бронь</string>
+    <string name="duplicate">Дублировать бронь</string>
     <string name="keys_empty">У вас нет ключей на руках</string>
 
     <string name="not_found">Никого не найдено</string>
+
+    <string name="duplicate_info_title">Дублирование брони</string>
+    <string name="duplicate_info_description">Создавать дублирующиеся заявки могут только преподаватели</string>
 </resources>
