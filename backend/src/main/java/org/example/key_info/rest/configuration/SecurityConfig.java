@@ -47,7 +47,8 @@ public class SecurityConfig {
             "/api/v1/schedules/**",
             "/api/v1/auth/refresh",
             "/swagger-ui/**",
-            "/v3/api-docs/**"
+            "/v3/api-docs/**",
+            "/api/v1/profiles"
     };
 
     private final JwtFilter jwtFilter;
