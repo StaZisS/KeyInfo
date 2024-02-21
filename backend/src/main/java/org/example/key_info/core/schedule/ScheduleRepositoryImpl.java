@@ -49,14 +49,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public List<AudienceEntity> getFreeAudience(GetFreeAudienceDto dto) {
-        Condition condition = DSL.trueCondition();
+        Condition conditionStudyRoom= DSL.trueCondition();
+        Condition conditionRequest = DSL.trueCondition();
 
         if (dto.buildId() != null) {
-            condition = condition.and(STUDYROOM.BUILD.eq(dto.buildId()));
+            conditionStudyRoom = conditionStudyRoom.and(STUDYROOM.BUILD.eq(dto.buildId()));
+            conditionRequest  = conditionRequest.and(REQUEST.BUILD.eq(dto.buildId()));
         }
 
         if (dto.roomId() != null) {
-            condition = condition.and(STUDYROOM.ROOM.eq(dto.roomId()));
+            conditionStudyRoom = conditionStudyRoom.and(STUDYROOM.ROOM.eq(dto.roomId()));
+            conditionRequest  = conditionRequest.and(REQUEST.ROOM.eq(dto.roomId()));
         }
 
         return Stream.concat(
@@ -67,7 +70,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                                         .where(REQUEST.START_TIME.eq(dto.startTime()))
                                         .and(REQUEST.END_TIME.eq(dto.endTime()))
                                         .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
-                        )).and(condition)
+                        )).and(conditionStudyRoom)
                         .fetch(r -> new AudienceEntity(
                                         r.getBuild(),
                                         r.getRoom(),
@@ -80,7 +83,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                         .where(REQUEST.START_TIME.eq(dto.startTime()))
                         .and(REQUEST.END_TIME.eq(dto.endTime()))
                         .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
-                        .and(condition)
+                        .and(conditionRequest)
                         .fetch(r -> new AudienceEntity(
                                 r.getBuild(),
                                 r.getRoom(),
