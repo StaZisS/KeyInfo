@@ -65,6 +65,10 @@ public class KeyRepositoryImpl implements KeyRepository {
             condition = condition.and(KEY.ROOM.eq(dto.roomId()));
         }
 
+        if (dto.isPrivate() != null) {
+            condition = condition.and(KEY.IS_PRIVATE.eq(dto.isPrivate()));
+        }
+
         return query.where(condition)
                 .fetchStream()
                 .map(keyEntityMapper)

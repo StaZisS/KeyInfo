@@ -80,6 +80,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                         .where(REQUEST.START_TIME.eq(dto.startTime()))
                         .and(REQUEST.END_TIME.eq(dto.endTime()))
                         .and(REQUEST.STATUS.ne(ApplicationStatus.ACCEPTED.name()))
+                        .and(condition)
                         .fetch(r -> new AudienceEntity(
                                 r.getBuild(),
                                 r.getRoom(),
