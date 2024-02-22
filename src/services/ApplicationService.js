@@ -19,6 +19,8 @@ export default class ApplicationService {
 
     static async getAcceptedApplications({status = 'ACCEPTED', buildId, roomId}) {
         let currentDate = new Date()
+        currentDate.setUTCHours(currentDate.getUTCHours() + 7)
+        console.log(currentDate.toISOString())
         return $api.get(`deaneries/applications`, {
             params: {
                 status: status,
