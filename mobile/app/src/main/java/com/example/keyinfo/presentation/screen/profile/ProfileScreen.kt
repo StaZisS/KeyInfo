@@ -9,6 +9,7 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
+import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -67,11 +68,15 @@ fun ProfileScreen(
     val state by viewModel.state.collectAsState()
 
     val context = LocalContext.current
-    val vibratorManager =
-        context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-    val vibrator = vibratorManager.defaultVibrator
-    val sensorManager =
-        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibratorManager.defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
+    val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
     DisposableEffect(state.isShaking) {
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
@@ -92,13 +97,10 @@ fun ProfileScreen(
                 }
             }
 
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            }
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
 
-        sensorManager.registerListener(
-            sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL
-        )
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
 
         onDispose {
             sensorManager.unregisterListener(sensorEventListener)
