@@ -3,6 +3,11 @@ import $api from "../http/api";
 export default class ApplicationService {
 
     static async getApplications({status = 'IN_PROCESS', start, end, buildId, roomId}) {
+        if (start === undefined){
+            start = new Date()
+            start.setUTCHours(start.getUTCHours() + 7)
+            start = start.toISOString()
+        }
         return $api.get(`deaneries/applications`, {
             params: {
                 status: status,
