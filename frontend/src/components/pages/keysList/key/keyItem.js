@@ -1,23 +1,17 @@
-
-import {ButtonDel} from './buttonDel'
-import {ButtonGet} from './buttonGet'
-import {Mark} from './mark'
 import {useState} from "react";
 import {AcceptedApplicationsModal} from "../../../snippets/AcceptedApplicationsModal";
 import {Button, Col, Container, Row} from "react-bootstrap";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import ApplicationService from "../../../../services/ApplicationService";
-import {Loading} from "../../../snippets/Loading";
 import KeyService from "../../../../services/KeyService";
-import {RiDeleteBin7Line} from "react-icons/ri";
 import styles from "./style.module.css";
+import {BiSolidHide} from "react-icons/bi";
+import {PiLockSimpleBold, PiLockSimpleOpenBold} from "react-icons/pi";
+
 import('../../../../styles/keysItem.css')
 
 
-
-
-
-export const KeysItem = ({id, build, room, location, owner}) => {
+export const KeysItem = ({id, build, room, location, owner, isPrivate}) => {
 
     const [acceptedApplicationsModal, setAcceptedApplicationsModal] = useState(false)
     const queryClient = useQueryClient()
@@ -36,23 +30,21 @@ export const KeysItem = ({id, build, room, location, owner}) => {
 
     const mutationTake = useMutation(() => KeyService.takeKey(id, owner.client_id), {
         onSuccess() {
-            alert(`Ключ успешно принят`)
             queryClient.invalidateQueries(['keys'])
         }
     })
 
-    const mutationDelete = useMutation(() => KeyService.deleteKey(id), {
+    const mutationHide = useMutation(() => KeyService.hideKey(id, !isPrivate), {
         onSuccess() {
-            alert(`Ключ успешно удалён`)
             queryClient.invalidateQueries(['keys'])
         }
     })
 
-    const handleTakeKey =() =>{
+    const handleTakeKey = () => {
         mutationTake.mutate()
     }
-    const handleDeleteKey =() =>{
-        mutationDelete.mutate()
+    const handleHideKey = () => {
+        mutationHide.mutate()
     }
 
     if (isLoading) {
@@ -62,12 +54,13 @@ export const KeysItem = ({id, build, room, location, owner}) => {
     }
     return (
         <>
-            {data.data.length!==0   &&
+            {data.data.length !== 0 &&
                 <AcceptedApplicationsModal key_id={id} data={data.data} build={build} room={room}
                                            show={acceptedApplicationsModal}
                                            onHide={() => setAcceptedApplicationsModal(false)}></AcceptedApplicationsModal>}
 
-            <Container className='d-flex border rounded-3 pt-2 pb-2 mb-3'>
+            <Container
+                className={(isPrivate === true) ? 'd-flex border border-black rounded-3 pt-2 pb-2 mb-3 opacity-25 bg-opacity-10' : 'd-flex border rounded-3 pt-2 pb-2 mb-3'}>
                 <Row className='d-flex justify-content-between align-items-center w-100'>
                     <Col className='d-flex gap-3'>
                         <span className='key-number'>Корпус <span className='fw-bold'>{build}</span></span>
@@ -88,13 +81,22 @@ export const KeysItem = ({id, build, room, location, owner}) => {
                             </Button>
                         }
                         {
-                            (location === 'IN_DEANERY' && data.data.length === 0) &&
-                            <Button onClick={handleDeleteKey} title={'Удалить ключ'} className={'bg-transparent border-0 rounded-0'}>
-                                <RiDeleteBin7Line className={'text-black'} />
+                            (location === 'IN_DEANERY' && isPrivate === false && data.data.length === 0) &&
+                            <Button onClick={handleHideKey} title={'Скрыть ключ'}
+                                    className={'bg-transparent border-0 rounded-0'}>
+                                <PiLockSimpleBold className={'text-black'}/>
+                            </Button>
+                        }
+                        {
+                            (isPrivate === true) &&
+                            <Button onClick={handleHideKey} title={isPrivate ? 'Скрыть ключ' : 'Открыть ключ'}
+                                    className={'bg-transparent border-0 rounded-0'}>
+                                <PiLockSimpleOpenBold className={'text-black opacity-100'}/>
                             </Button>
                         }
                         {(location === 'IN_HAND') &&
-                            <Button onClick={handleTakeKey} className={`btn rounded-5 w-100 delit border-0 ${styles.button}`}>
+                            <Button onClick={handleTakeKey}
+                                    className={`btn rounded-5 w-100 delit border-0 ${styles.button}`}>
                                 Забрать
                             </Button>
                         }

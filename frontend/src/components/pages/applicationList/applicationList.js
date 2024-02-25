@@ -37,11 +37,6 @@ export const ApplicationList = () => {
         )
     }
 
-    if (error) {
-        <>Ошибка запроса заявок</>
-    }
-
-
     if (!data.length){
         return(
             <Container className='text-center text-danger fs-1 fw-bold mt-5'>Нет заявок</Container>

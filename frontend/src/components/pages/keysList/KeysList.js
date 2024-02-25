@@ -7,7 +7,6 @@ import {observer} from "mobx-react-lite";
 import {Loading} from "../../snippets/Loading";
 import {AddKeyModal} from "../../snippets/AddKeyModal";
 import {useState} from "react";
-import KeyService from "../../../services/KeyService";
 
 
 export const KeysList = observer(() => {
@@ -18,7 +17,7 @@ export const KeysList = observer(() => {
         data,
         isLoading,
         error
-    } = useQuery(['keys', KeysStore.keys_status, KeysStore.build, KeysStore.room], () => KeysStore.getKeys(), {
+    } = useQuery(['keys', KeysStore.keys_status, KeysStore.build, KeysStore.room, KeysStore.is_private], () => KeysStore.getKeys(), {
         refetchOnWindowFocus: false,
         keepPreviousData: true
     })
@@ -53,6 +52,7 @@ export const KeysList = observer(() => {
                                         room={key.room}
                                         location={key.key_status}
                                         owner={key.client}
+                                        isPrivate={key.is_private}
                                     />
                                 ))}
                             </CardBody>

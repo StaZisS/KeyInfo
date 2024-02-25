@@ -59,7 +59,7 @@ export const ApplicationItem = ({id, dublicate_end, build, room, name, email, st
                         <Row className='w-100 d-flex align-items-center'>
 
                             <Col xs={12} md={8} lg={8} className={'d-flex card-text gap-3 align-items-end'}>
-                                <span className='text-muted'>Фио: <span
+                                <span className='text-muted'>ФИО: <span
                                     className={'fs-5 text-black'}>{name}</span> </span>
                                 <span className='text-muted'>Email: <span
                                     className={'fs-5 text-black'}>{email}</span> </span>
