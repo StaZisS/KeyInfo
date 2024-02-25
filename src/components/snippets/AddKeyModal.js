@@ -47,9 +47,9 @@ export const AddKeyModal = (props) => {
                 <Container>
                     <Row className='d-flex'>
                         <Col className='col-6'>
-                            <FormLabel>Здание</FormLabel>
+                            <FormLabel>Корпус</FormLabel>
                             <FormControl className='col-6' onChange={(e) => setBuild(e.target.value)} value={build}
-                                         placeholder='Номер здания' type='number' min={0}></FormControl>
+                                         placeholder='Номер корпуса' type='number' min={0}></FormControl>
                         </Col>
                         <Col className='col-6'>
                             <FormLabel>Аудитория</FormLabel>
