@@ -48,6 +48,7 @@ export const Header = observer(() => {
                                     <Link to={'/key'} className='nav-link link-hover p-lg-4'>Ключи</Link>
                                     <Link to={'/application'} className='nav-link link-hover p-lg-4'>Заявки</Link>
                                     <Link to={'/people'} className='nav-link link-hover p-lg-4'>Пользователи</Link>
+                                    <Link to={'/buildings'} className='nav-link link-hover p-lg-4'>Корпуса</Link>
                                 </>
                             }
 
