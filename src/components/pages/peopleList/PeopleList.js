@@ -1,9 +1,11 @@
 import {PeopleItem} from "./people/peopleItem";
-import {Card, CardBody, CardHeader, CardTitle, Collapse, Container} from "react-bootstrap";
+import {Accordion, Card, CardBody, CardHeader, CardTitle, Collapse, Container, ListGroup} from "react-bootstrap";
 import {useQuery} from "react-query";
 import UserService from "../../../services/UserService";
 import {Loading} from "../../snippets/Loading";
 import {useState} from "react";
+import {PeopleAccordionItem} from "./PeopleAccordionItem";
+import {ListHeader} from "./ListHeader";
 
 
 export const PeopleList = () => {
@@ -29,78 +31,51 @@ export const PeopleList = () => {
         )
     }
 
-    if (error) {
-        return (
-            <>Ошибка фетча пользователей</>
-        )
-    }
 
     return (
         <Container className='mt-5'>
-            <Card className={'rounded-0'}>
-                <CardHeader onClick={() => setUnspOpen(!unspOpen)}>
-                    <CardTitle className='user-select-none'>Неверифицированные пользователи ({data.UNSPECIFIED.length})</CardTitle>
-                </CardHeader>
-                <Collapse in={unspOpen}>
-                    <div>
-                        <CardBody>
-                            {data.UNSPECIFIED.map((user) => (
-                                <PeopleItem
-                                    key={user.clientId}
-                                    name={user.name}
-                                    email={user.email}
-                                    userId={user.clientId}
-                                    roles={'UNSPECIFIED'}
-                                />
-                            ))}
-                        </CardBody>
-                    </div>
-                </Collapse>
-            </Card>
-
-            <Card className={'rounded-0 mt-3'}>
-                <CardHeader onClick={() => setTchOpen(!tchOpen)}>
-                    <CardTitle className='user-select-none'>Преподаватели ({data.TEACHERS.length})</CardTitle>
-                </CardHeader>
-                <Collapse in={tchOpen}>
-                    <div>
-                        <CardBody>
-                            {data.TEACHERS.map((user) => (
-                                <PeopleItem
-                                    key={user.clientId}
-                                    name={user.name}
-                                    email={user.email}
-                                    userId={user.clientId}
-                                    roles={'TEACHER'}
-                                />
-                            ))}
-                        </CardBody>
-                    </div>
-                </Collapse>
-            </Card>
-
-            <Card className={'rounded-0 mt-3'}>
-                <CardHeader onClick={() => setStdOpen(!stdsOpen)}>
-                    <CardTitle className='user-select-none'>Студенты ({data.STUDENTS.length})</CardTitle>
-                </CardHeader>
-                <Collapse in={stdsOpen}>
-                    <div>
-                        <CardBody>
-                            {data.STUDENTS.map((user) => (
-                                <PeopleItem
-                                    key={user.clientId}
-                                    name={user.name}
-                                    email={user.email}
-                                    userId={user.clientId}
-                                    roles={'STUDENT'}
-                                />
-                            ))}
-                        </CardBody>
-                    </div>
-                </Collapse>
-
-            </Card>
-
+            <Accordion>
+                <Accordion.Item eventKey={'UNSPECIFIED'}>
+                    <Accordion.Header>Неверифицированные пользователи ({data.UNSPECIFIED.length})</Accordion.Header>
+                    <Accordion.Body>
+                        <ListHeader/>
+                        <ListGroup>
+                            {data.UNSPECIFIED.map((user) => {
+                                return (
+                                    <PeopleAccordionItem user={user}/>
+                                )
+                            })}
+                        </ListGroup>
+                    </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey={'TEACHER'}>
+                    <Accordion.Header>Преподаватели ({data.TEACHERS.length})</Accordion.Header>
+                    <Accordion.Body>
+                        <ListHeader/>
+                        <ListGroup>
+                            {data.TEACHERS.map((user) => {
+                                return (
+                                    <PeopleAccordionItem user={user}/>
+                                )
+                            })}
+                        </ListGroup>
+                    </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey={'STUDENT'}>
+                    <Accordion.Header>Студенты ({data.STUDENTS.length})</Accordion.Header>
+                    <Accordion.Body>
+                        <ListHeader/>
+                        <ListGroup>
+                            {data.STUDENTS.map((user) => {
+                                return (
+                                    <PeopleAccordionItem user={user}/>
+                                )
+                            })}
+                        </ListGroup>
+                    </Accordion.Body>
+                </Accordion.Item>
+            </Accordion>
         </Container>
+
     )
 }
