@@ -30,7 +30,6 @@ export const KeysList = observer(() => {
         )
     }
 
-    console.log(data.data)
 
     return (
         <>
