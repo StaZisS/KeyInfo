@@ -1,8 +1,8 @@
 import('../../../../styles/peopleItem.css')
 
-export const ButtonStudent = ({roles,callback}) => {
+export const ButtonStudent = ({callback}) => {
     return(
-        <button onClick={callback} className={`${roles.includes('STUDENT') ? 'button-role' : 'button-role'} py-2 px-4`}>
+        <button onClick={callback} className={'btn text-bg-warning'}>
             <span className='buttonName'>Студент</span>
         </button>
     )

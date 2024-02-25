@@ -38,11 +38,15 @@ export const PeopleList = () => {
                 <Accordion.Item eventKey={'UNSPECIFIED'}>
                     <Accordion.Header>Неверифицированные пользователи ({data.UNSPECIFIED.length})</Accordion.Header>
                     <Accordion.Body>
-                        <ListHeader/>
+                        <div className={'d-flex justify-content-between border-bottom'}>
+                            <span className={'ms-3 fw-bold d-none d-md-block flex-grow-1'}>ФИО</span>
+                            <span className={'fw-bold text-start d-none d-md-block flex-grow-1'}>Email</span>
+                            <span className={'me-3 fw-bold text-end d-none d-md-block flex-grow-1 '}>Назначить</span>
+                        </div>
                         <ListGroup>
                             {data.UNSPECIFIED.map((user) => {
                                 return (
-                                    <PeopleAccordionItem user={user}/>
+                                    <PeopleAccordionItem user={user} key={user.clientId}/>
                                 )
                             })}
                         </ListGroup>
@@ -55,7 +59,7 @@ export const PeopleList = () => {
                         <ListGroup>
                             {data.TEACHERS.map((user) => {
                                 return (
-                                    <PeopleAccordionItem user={user}/>
+                                    <PeopleAccordionItem user={user} key={user.clientId}/>
                                 )
                             })}
                         </ListGroup>
@@ -68,7 +72,7 @@ export const PeopleList = () => {
                         <ListGroup>
                             {data.STUDENTS.map((user) => {
                                 return (
-                                    <PeopleAccordionItem user={user}/>
+                                    <PeopleAccordionItem user={user} key={user.clientId}/>
                                 )
                             })}
                         </ListGroup>
