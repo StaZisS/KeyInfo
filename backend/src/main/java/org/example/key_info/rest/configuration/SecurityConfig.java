@@ -39,13 +39,10 @@ import java.io.IOException;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final String[] whiteList = new String[] {
-            "/api/v1/auth/login",
-            "/api/v1/auth/register",
+            "/api/v1/auth/**",
             "/api/v1/schedules",
-            "/api/v1/auth/token",
             "/api/v1/audiences/**",
             "/api/v1/schedules/**",
-            "/api/v1/auth/refresh",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/api/v1/profiles"

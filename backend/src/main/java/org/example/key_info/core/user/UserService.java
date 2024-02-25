@@ -45,7 +45,7 @@ public class UserService {
         return result.stream()
                 .filter(client -> client.role().stream().allMatch(role -> role.equals(ClientRole.STUDENT) ||
                         role.equals(ClientRole.UNSPECIFIED)))
-                .map(client -> new ClientProfileDto(null, client.name(), null,
+                .map(client -> new ClientProfileDto(client.clientId(), client.name(), client.email(),
                         client.gender(), client.createdDate(), client.role()))
                 .toList();
     }
