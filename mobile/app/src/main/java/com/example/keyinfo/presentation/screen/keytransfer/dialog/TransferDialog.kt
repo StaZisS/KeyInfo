@@ -32,10 +32,11 @@ fun TransferDialog(
     name: String,
     onAcceptClick: () -> Unit,
     onRejectClick: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     Dialog(
         onDismissRequest = {
-            onRejectClick()
+            onDismiss()
         },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
@@ -45,7 +46,7 @@ fun TransferDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Values.BasePadding),
-            shape = RoundedCornerShape(Values.LittleRound),
+            shape = RoundedCornerShape(Values.DialogRound),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(

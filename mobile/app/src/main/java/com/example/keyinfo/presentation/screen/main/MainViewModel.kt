@@ -22,6 +22,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
     private val _state = MutableStateFlow(MainState())
     val state: StateFlow<MainState> get() = _state
 
+
     private val getRequestsUseCase = GetRequestsUseCase()
     private val deleteRequestUseCase = DeleteRequestUseCase()
 
@@ -81,9 +82,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { request ->
+                            Log.d("Sss", request.toString())
                             _state.value = state.value.copy(acceptedRequests = request)
                         },
                         onFailure = { exception ->
+                            Log.d("Sss exception", exception.message.toString())
                             handleRegistrationError(exception)
                         }
                     )
@@ -167,6 +170,13 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 _state.value.isLoading = false
             }
         }
+    }
+
+    fun resetState() {
+        _state.value = state.value.copy(declinedRequests = listOf())
+        _state.value = state.value.copy(acceptedRequests = listOf())
+        _state.value = state.value.copy(processRequests = listOf())
+        _state.value = state.value.copy(currentRequest = null)
     }
 
     private fun handleRegistrationError(exception: Throwable) {
