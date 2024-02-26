@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers(whiteList).permitAll()
-                                .anyRequest().hasAnyAuthority("DEANERY", "ADMIN", "STUDENT")
+                                .anyRequest().hasAnyAuthority("DEANERY", "ADMIN", "STUDENT", "TEACHER")
                 )
                 .authenticationProvider(provider())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
