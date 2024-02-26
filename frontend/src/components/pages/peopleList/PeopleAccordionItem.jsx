@@ -3,8 +3,9 @@ import {useMutation, useQueryClient} from "react-query";
 import UserService from "../../../services/UserService";
 import {ButtonStudent} from "./people/studentRoleButton";
 import {ButtonTeacher} from "./people/teacherRoleButton";
+import {ButtonDaenery} from "./people/daeneryRoleButton";
 
-export const PeopleAccordionItem = ({user}) => {
+export const PeopleAccordionItem = ({role,user}) => {
     const {clientId, roles} = user
     const queryClient = useQueryClient()
     const mutation = useMutation((params) => UserService.addRole(params.clientId, params.clientRole), {
@@ -39,6 +40,9 @@ export const PeopleAccordionItem = ({user}) => {
                         <div className={'d-flex gap-2 justify-content-center justify-content-md-end'}>
                             <ButtonStudent callback={() => handleAddRole(['STUDENT'])}/>
                             <ButtonTeacher callback={() => handleAddRole(['TEACHER'])}/>
+                            {role.includes('ADMIN') &&
+                                <ButtonDaenery callback={() => handleAddRole(['DEANERY'])}/>
+                            }
                         </div>
                     </Col>
                 </Row>
