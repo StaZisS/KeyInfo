@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.keyinfo.domain.model.request.Request
 import com.example.keyinfo.domain.model.request.TransferStatus
 import com.example.keyinfo.domain.state.MainState
 import com.example.keyinfo.domain.usecase.DeleteRequestUseCase
@@ -167,6 +168,13 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 _state.value.isLoading = false
             }
         }
+    }
+
+    fun resetState(){
+        _state.value = state.value.copy(declinedRequests = listOf())
+        _state.value = state.value.copy(acceptedRequests = listOf())
+        _state.value = state.value.copy(processRequests = listOf())
+        _state.value = state.value.copy(currentRequest = null)
     }
 
     private fun handleRegistrationError(exception: Throwable) {
