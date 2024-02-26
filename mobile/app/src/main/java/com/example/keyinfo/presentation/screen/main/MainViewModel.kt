@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.keyinfo.domain.model.request.Request
 import com.example.keyinfo.domain.model.request.TransferStatus
 import com.example.keyinfo.domain.state.MainState
 import com.example.keyinfo.domain.usecase.DeleteRequestUseCase
@@ -22,6 +21,7 @@ import java.net.SocketTimeoutException
 class MainViewModel(private val context: Context) : ViewModel() {
     private val _state = MutableStateFlow(MainState())
     val state: StateFlow<MainState> get() = _state
+
 
     private val getRequestsUseCase = GetRequestsUseCase()
     private val deleteRequestUseCase = DeleteRequestUseCase()
@@ -82,9 +82,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = { request ->
+                            Log.d("Sss", request.toString())
                             _state.value = state.value.copy(acceptedRequests = request)
                         },
                         onFailure = { exception ->
+                            Log.d("Sss exception", exception.message.toString())
                             handleRegistrationError(exception)
                         }
                     )
@@ -170,7 +172,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun resetState(){
+    fun resetState() {
         _state.value = state.value.copy(declinedRequests = listOf())
         _state.value = state.value.copy(acceptedRequests = listOf())
         _state.value = state.value.copy(processRequests = listOf())
