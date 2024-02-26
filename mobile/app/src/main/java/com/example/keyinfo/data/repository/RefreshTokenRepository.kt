@@ -6,11 +6,11 @@ import com.example.keyinfo.domain.model.RefreshToken
 import retrofit2.Response
 
 class RefreshTokenRepository {
-    suspend fun getNewToken(refresh: RefreshToken) : Response<TokenResponse>{
+    suspend fun getNewToken(refresh: RefreshToken): Response<TokenResponse> {
         return NetworkService.refreshTokenApiService.getNewToken(refresh)
     }
 
-    suspend fun getNewRefreshToken(refresh: RefreshToken) : Response<TokenResponse>{
+    suspend fun getNewRefreshToken(refresh: RefreshToken): Response<TokenResponse> {
         return NetworkService.refreshTokenApiService.getNewRefreshToken(refresh)
     }
 }

@@ -64,7 +64,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
         }
     }
 
-    fun refreshToken() {
+    private fun refreshToken() {
         val token = LocalStorage(context).getToken().refreshToken
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -73,6 +73,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                     withContext(Dispatchers.Main) {
                         result.fold(
                             onSuccess = {
+                                Log.d("ProfileViewModel", "success!!")
                                 LocalStorage(context).saveToken(
                                     TokenResponse(
                                         it.accessToken,
@@ -82,6 +83,7 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                                 NetworkService.setAuthToken(it.accessToken)
                             },
                             onFailure = { exception ->
+                                Log.d("ProfileViewModel", "failed ${exception}")
                                 handleRegistrationError(exception)
                             }
                         )
@@ -113,10 +115,10 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                 withContext(Dispatchers.Main) {
                     result.fold(
                         onSuccess = {
-                            _state.value.name = result.getOrNull()!!.name;
-                            if (_state.value.name == "UNSPECIFIED") {
-                                refreshToken()
-                            }
+                            _state.value.name = result.getOrNull()!!.name
+//                            if (_state.value.name == "UNSPECIFIED") {
+                            refreshToken()
+//                            }
                             _state.value.role =
                                 Formatter.getNormalRoleString(result.getOrNull()!!.roles)
                         },
@@ -150,7 +152,10 @@ class ProfileViewModel(val context: Context) : ViewModel() {
                 else -> showToast("Неизвестная ошибка: ${exception.code()}")
             }
 
-            else -> showToast("Ошибка соединения с сервером")
+            else -> {
+                Log.d("Profile", "exception ${exception}")
+                showToast("Ошибка соединения с сервером")
+            }
         }
     }
 

@@ -270,6 +270,9 @@ fun KeyTransferScreen(
                     onRejectClick = {
                         viewModel.declineRequest(state.currentTransfer!!.transfer_id)
                         viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
+                    },
+                    onDismiss = {
+                        viewModel.processIntent(KeyTransferIntent.UpdateTransferDialogState)
                     }
                 )
             } else {
